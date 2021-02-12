@@ -121,13 +121,13 @@ public class _2DMap {
 		if (!isLegalPosition(endPos)) {return false;}
 		
 		for (Object obj: map[startPos.y][startPos.x]) {
-			if (obj.getName() == name) {
+			if (obj.getName().equals(name)) {
+				System.out.println(true);
 				map[endPos.y][endPos.x].add(obj);
 				map[startPos.y][startPos.x].remove(obj);
 				return true;
 			}
 		}
-		
 		return false;
 	}
 	
