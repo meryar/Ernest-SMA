@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Scanner;
 
 import main.Main;
@@ -76,6 +75,7 @@ public class _2DMap {
 		
 		
 	public Object char_reader(String tile_type, int posX, int posY) throws Exception{
+		
 		switch (tile_type) {
 			case "w":
 				object_number.compute("wall", (k,v) -> (v==null) ? 1 : v+1);
@@ -165,8 +165,63 @@ public class _2DMap {
 	public List<Object>[][] getMap() {
 		return map;
 	}
+	
+	public List<Object> getTypedObjects(Environment.Touch type, Point position){
+		ArrayList<Object> res = new ArrayList<Object>();
+		
+		for (Object obj: map[position.y][position.x]) {
+			if (obj.getTouch() == type) {
+				res.add(obj);
+			}
+		}
+		return res;
+	}
 
 	public int getHeight() {return height;}
 
 	public int getWidth() {return width;}
+
+	public boolean isBigFood(Point location) {
+		for (Object obj: map[location.y][location.x]) {
+			if (obj.getTouch() == Environment.Touch.BIGFOOD) {return true;}
+		}
+		return false;
+	}
+	
+	public boolean isClass(Point location, Class class_) {
+		for (Object obj: map[location.y][location.x]) {
+			if (obj.getClass() == class_) {return true;}
+		}
+		return false;
+	}
+	
+	public Point getOrientedRelPos(Point startPos, Direction direction, Point relPos) {
+		Point res = (Point) startPos.clone();
+		
+		try {
+			switch(direction) {
+				case NORTH:
+					res.y += relPos.y;
+					res.x += relPos.x;
+					break;
+				case SOUTH:
+					res.y -= relPos.y;
+					res.x -= relPos.x;
+					break;
+				case WEST:
+					res.y -= relPos.x;
+					res.x += relPos.y;
+					break;
+				case EAST:
+					res.y += relPos.x;
+					res.x -= relPos.y;
+					break;
+				default:
+					throw new IllegalStateException("unknown direction: " + direction);
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return (res);
+	}
 }

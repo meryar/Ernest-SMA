@@ -3,21 +3,17 @@ package view;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
-import java.util.List;
-
 import javax.swing.JPanel;
 
-import environment.Block;
 import environment.Direction;
 import environment._2DMap;
 import environment.Object;
 
 public class ViewPanel extends JPanel{
+	
+	private static final long serialVersionUID = 1L;
 	
 	private int pan_height,pan_width,env_height,env_width;
 	private _2DMap map;

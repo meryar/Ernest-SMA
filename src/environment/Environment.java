@@ -1,8 +1,11 @@
 package environment;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.math.BigInteger;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -10,6 +13,7 @@ import java.util.Scanner;
 import javax.swing.JFrame;
 
 import agents.Agent;
+import agents.AgentDeveloppemental;
 import main.Main;
 import view.View;
 
@@ -69,13 +73,32 @@ public class Environment {
 	}
 
 	public void step() {
-		// TODO Auto-generated method stub
-		//main_frame.update();
+		
+		for (Agent ag: agents_list) {
+			ag.act();
+		}
+		for (Agent ag: agents_list) {
+			ag.getResults();
+		}
+
+		map.moveObject("robot_1", new Point(13,1), new Point(13,5));
+		map.moveObject("robot_2", new Point(13,1), new Point(13,5));
+		map.moveObject("robot_3", new Point(13,1), new Point(13,5));
+		map.moveObject("robot_4", new Point(13,1), new Point(13,5));
+		
+		try {
+			Thread.sleep(1000);
+		} catch (Exception e) {
+			
+		}
+		
+		main_frame.updateView();;
+		
 	}
 
 	public void addAgent(Robot rob) {
 		nb_agents += 1;
-		agents_list.add(new Agent(rob));
+		agents_list.add(new AgentDeveloppemental(rob));
 		
 	}
 	

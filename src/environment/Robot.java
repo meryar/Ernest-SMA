@@ -2,9 +2,11 @@ package environment;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Vector;
+
 
 import robot.Action;
 import robot.InteractionSec;
@@ -91,9 +93,9 @@ public class Robot extends Object{
 		
 		if (map.isBlocked(newPosition)) {return Action.BUMP;}
 		
-		if (map.isFood(newPosition)) {
-			return eat(newPosition);
-		}
+		if (map.isFood(newPosition)) {return eat(newPosition);}
+		
+		if (map.isBigFood(newPosition)) {return hunt(newPosition);}
 		
 		map.moveObject(getName(), position, newPosition);
 		
@@ -101,9 +103,23 @@ public class Robot extends Object{
 		return null;
 	}
 
-	private Action eat(Point newPosition) {
-		// TODO Auto-generated method stub
+	private Action hunt(Point newPosition) {
+		Point[] helperPos = {new Point(-1,-1),new Point(0,-2), new Point(1,-1)};
+		
+		
 		return null;
+	}
+
+	private Action eat(Point newPosition) {
+		ArrayList<Object> target = (ArrayList<Object>) map.getTypedObjects(Environment.Touch.FOOD, newPosition);
+		
+		if (!target.isEmpty()) {
+			map.randomMove(target.get(0).getName(), newPosition);
+		} else {
+			return Action.BUMP;
+		}
+		
+		return Action.EAT;
 	}
 
 	public Point getPosition() {return position;}
