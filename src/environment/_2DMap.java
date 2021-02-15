@@ -200,7 +200,7 @@ public class _2DMap {
 
 	public int getWidth() {return width;}
 	
-	public boolean isClass(Point location, Class class_) {
+	public boolean isClass(Point location, Class<?> class_) {
 		for (Object obj: map[location.y][location.x]) {
 			if (obj.getClass() == class_) {return true;}
 		}

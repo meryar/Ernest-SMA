@@ -25,7 +25,7 @@ public class Robot extends Object{
 	public Robot(_2DMap map_, Color color_, Environment.Touch touch_, String name_,
 			boolean visible_, Point position, double visionRange) {
 		super(color_, touch_, name_, visible_, map_, position);
-		trace = new LinkedList();
+		trace = new LinkedList<Vector>();
 		
 		sensors_number = 0;
 		sensors = new Vector<Sensor>();
@@ -45,7 +45,7 @@ public class Robot extends Object{
 			boolean visible_, Direction direction_ , Point position, double visionRange) {
 		super(imageName, color, touch_, name_, visible_, direction_, map_, position);
 
-		trace = new LinkedList();
+		trace = new LinkedList<Vector>();
 		
 		sensors_number = 0;
 		sensors = new Vector<Sensor>((int) (6*visionRange));
@@ -78,6 +78,8 @@ public class Robot extends Object{
 		case ROTATE_LEFT:
 			break;
 		case ROTATE_RIGHT:
+			break;
+		default:
 			break;
 		}
 		
