@@ -2,7 +2,6 @@ package objects;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -12,9 +11,7 @@ import environment.Direction;
 import environment.Environment;
 import environment.Object;
 import environment._2DMap;
-import environment.Environment.Touch;
 import robot.Action;
-import robot.InteractionSec;
 import sensory_system.Sensor;
 import sensory_system.VisualSensor;
 

@@ -7,7 +7,6 @@ import environment.Direction;
 import environment.Environment;
 import environment.Object;
 import environment._2DMap;
-import environment.Environment.Touch;
 
 public class Block extends Object{
 	

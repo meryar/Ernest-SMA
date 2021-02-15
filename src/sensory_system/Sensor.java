@@ -1,6 +1,5 @@
 package sensory_system;
 
-import environment.Environment;
 import environment._2DMap;
 import objects.Robot;
 

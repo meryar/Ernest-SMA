@@ -1,20 +1,10 @@
 package environment;
 
 import java.awt.Color;
-import java.awt.Point;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.math.BigInteger;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-
-import javax.swing.JFrame;
-
 import agents.Agent;
 import agents.AgentDeveloppemental;
-import main.Main;
 import objects.Robot;
 import view.View;
 
