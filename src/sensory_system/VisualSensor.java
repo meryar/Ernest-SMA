@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.awt.Point;
 
 import environment.Direction;
-import environment.Robot;
 import environment._2DMap;
+import objects.Robot;
 
 public class VisualSensor extends Sensor<Color>{
 	

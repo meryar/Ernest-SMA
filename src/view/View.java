@@ -29,6 +29,7 @@ public class View extends JFrame {
 		pan_height = (int) (screenSize.getHeight() * 0.9);
 		pan_width = (int) (screenSize.getWidth() * 0.6);
 		
+		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		panel=new ViewPanel(map, pan_height, pan_width, env_height, env_width);
@@ -41,7 +42,7 @@ public class View extends JFrame {
 	}
 	
 	public void updateView() {
-		panel.paint(getGraphics());
+		panel.repaint();
 	}
 
 }

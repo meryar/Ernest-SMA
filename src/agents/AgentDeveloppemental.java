@@ -1,18 +1,28 @@
 package agents;
 
-import environment.Robot;
+import objects.Robot;
+import robot.Action;
+import robot.InteractionSec;
 
 public class AgentDeveloppemental extends Agent{
+	
+	InteractionSec last_inter;
 
 	public AgentDeveloppemental(Robot robot_) {
 		super(robot_);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	@Override
-	public void act() {
-		// TODO Auto-generated method stub
-		
+	public void commandRobot() {
+		Action command = decideAction();
+		last_inter = new InteractionSec(command, robot.getSensorNb());
+		robot.prepareAction(command);
+	}
+
+	private Action decideAction() {
+		// TODO: decision system
+		return Action.MOVE_FWD;
 	}
 
 	@Override

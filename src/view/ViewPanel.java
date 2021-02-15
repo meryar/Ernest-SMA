@@ -35,34 +35,45 @@ public class ViewPanel extends JPanel{
 		// drawing objects in environment
 		for (int l=0; l< env_height; l++) {
 			for (int c=0; c<env_width; c++) {
-				// TODO: draw color corresponding to object
+				// draw color or image corresponding to object
 				for (Object obj: map.getMap()[l][c]) {
-					if (obj.getName() != "empty") {
+					if (obj.getName() != "empty" && obj.getVisible()) {
 						drawObject(obj, g, l, c);
 					}
 				}
 			}
-		}		
+		}
 	}
 
 	private void drawObject(Object obj, Graphics g2d, int line, int column) {
-		int v_offset = Math.round(pan_width/env_width);
-		int h_offset = Math.round(pan_height/env_height);
+		int v_offset = (int)Math.floor(pan_width/env_width);
+		int h_offset = (int)Math.floor(pan_height/env_height);
+
+		int drawLocationX, drawLocationY;
+		drawLocationX = column * v_offset;
+		drawLocationY = line * h_offset;
 		
 		if (obj.getImage() == null) {
 			g2d.setColor(obj.getColor());
-			g2d.fillRect(column*v_offset, line*h_offset, v_offset, h_offset);
+			g2d.fillRect(drawLocationX, drawLocationY, v_offset, h_offset);
 		} else{
-			
 			BufferedImage image = (BufferedImage) obj.getImage();
-			int drawLocationX = column*v_offset;
-			int drawLocationY = line*h_offset;
 			double angle = directionToAngle(obj.getDirection());
 			
 			AffineTransform backup = ((Graphics2D) g2d).getTransform();
 			AffineTransform a = AffineTransform.getRotateInstance(Math.toRadians(angle), drawLocationX + v_offset/2, drawLocationY + h_offset/2);
 			((Graphics2D) g2d).setTransform(a);
-			g2d.drawImage(image, drawLocationX, drawLocationY, v_offset, h_offset, null);
+			if (angle == 90 || angle == 270) {
+				g2d.drawImage(image, 
+						drawLocationX + v_offset/2 - h_offset/2, 
+						drawLocationY + h_offset/2 - v_offset/2, 
+						h_offset, v_offset, null);
+			} else {
+				g2d.drawImage(image, 
+						drawLocationX, 
+						drawLocationY, 
+						v_offset, h_offset, null);
+			}
 			((Graphics2D) g2d).setTransform(backup);
 		}
 	}
@@ -74,7 +85,7 @@ public class ViewPanel extends JPanel{
 			case SOUTH:
 				return 180;
 			case WEST:
-				return -90;
+				return 270;
 			case EAST:
 				return 90;
 		}

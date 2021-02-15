@@ -1,8 +1,8 @@
 package sensory_system;
 
 import environment.Environment;
-import environment.Robot;
 import environment._2DMap;
+import objects.Robot;
 
 public abstract class Sensor<T> {
 	

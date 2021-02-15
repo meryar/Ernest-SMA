@@ -15,12 +15,13 @@ import javax.swing.JFrame;
 import agents.Agent;
 import agents.AgentDeveloppemental;
 import main.Main;
+import objects.Robot;
 import view.View;
 
 public class Environment {
 	
 	//tactile properties
-	public enum Touch{EMPTY,BIGFOOD,FOOD,HARD};
+	public enum Touch{EMPTY,FOOD,HARD};
 	
 	// visual properties
 	public static final Color FIELD_COLOR 	= Color.white; 
@@ -35,13 +36,13 @@ public class Environment {
 	//public static final Color BOX			= new Color(200,200,0);
 	
 	// bloc types
-	public static Block empty=new Block(Touch.EMPTY, FIELD_COLOR,"empty",false);
-	public static Block wall =new Block(Touch.HARD , WALL1,"wall1", true);
+	//public static Block empty=new Block(Touch.EMPTY, FIELD_COLOR,"empty",false);
+	//public static Block wall =new Block(Touch.HARD , WALL1,"wall1", true);
 	//public static Block wall2=new Block(Touch.HARD , WALL2,"wall2", true);
 	//public static Block alga1=new Block(Touch.SMOOTH,ALGA1,"alga1", true);
 	//public static Block alga2=new Block(Touch.SMOOTH,ALGA2,"alga2", true);
-	public static Block fish1=new Block(Touch.FOOD ,"small_fish.jpg","fish1", true, Direction.NORTH);
-	public static Block fish2=new Block(Touch.FOOD  ,"big_fish.png","fish2", true, Direction.NORTH);
+	//public static Block fish1=new Block(Touch.FOOD ,"small_fish.jpg","fish1", true, Direction.NORTH);
+	//public static Block fish2=new Block(Touch.FOOD  ,"big_fish.png","fish2", true, Direction.NORTH);
 	//public static Block tile =new Block(Touch.SMOOTH,TILE,"tile",true);
 
 	
@@ -75,24 +76,30 @@ public class Environment {
 	public void step() {
 		
 		for (Agent ag: agents_list) {
-			ag.act();
+			ag.commandRobot();
 		}
 		for (Agent ag: agents_list) {
 			ag.getResults();
 		}
 
-		map.moveObject("robot_1", new Point(13,1), new Point(13,5));
-		map.moveObject("robot_2", new Point(13,1), new Point(13,5));
-		map.moveObject("robot_3", new Point(13,1), new Point(13,5));
-		map.moveObject("robot_4", new Point(13,1), new Point(13,5));
+		
+		
+		// Tests
+		
+		//map.randomMove("robot_0", map.getRobot(0).getPosition());
+		//map.moveObject("robot_1", map.getRobot(1).getPosition(), new Point(1,1));
+		//map.randomMove("robot_1", map.getRobot(1).getPosition());
+		//map.randomMove("robot_2", map.getRobot(2).getPosition());
+		//map.randomMove("robot_3", map.getRobot(3).getPosition());
+		
+		main_frame.updateView();
+		
 		
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(200);
 		} catch (Exception e) {
 			
 		}
-		
-		main_frame.updateView();;
 		
 	}
 

@@ -1,6 +1,6 @@
 package agents;
 
-import environment.Robot;
+import objects.Robot;
 
 public abstract class Agent {
 	
@@ -10,7 +10,7 @@ public abstract class Agent {
 		robot = robot_;
 	}
 
-	public abstract void act();
+	public abstract void commandRobot();
 
 	public abstract void getResults();
 
