@@ -26,6 +26,7 @@ public abstract class Object {
 		visible = visible_;
 		direction = Direction.NORTH;
 		map = map_;
+		setPosition(position);
 	}
 	
 	public Object(String imageName, Color color, Environment.Touch touch, String name, boolean visible, Direction direction_, _2DMap map, Point position) {
