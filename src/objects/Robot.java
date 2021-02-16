@@ -37,7 +37,7 @@ public class Robot extends Object{
 			for (int j=0; j<2*visionRange; j++) {
 				if (Math.sqrt(Math.pow(i-Math.floor(visionRange), 2) + Math.pow(j-Math.floor(visionRange), 2)) <= visionRange) {
 					Point location = new Point(i - (int) Math.floor(visionRange), j - (int) Math.floor(visionRange));
-					sensors.put(Sensor.translate(location), new VisualSensor(this, getMap(), location));
+					sensors.put(Sensor.translate(location), new VisualSensor(this, getMap(), location, sensors_number));
 					sensors_number += 1;
 				}
 			}
@@ -56,7 +56,7 @@ public class Robot extends Object{
 			for (int j=0; j<2*visionRange; j++) {
 				if (Math.sqrt(Math.pow(i-Math.floor(visionRange), 2) + Math.pow(j-Math.floor(visionRange), 2)) <= visionRange) {
 					Point location = new Point(i - (int) Math.floor(visionRange), j - (int) Math.floor(visionRange));
-					sensors.put(Sensor.translate(location), new VisualSensor(this, getMap(), location));
+					sensors.put(Sensor.translate(location), new VisualSensor(this, getMap(), location, sensors_number));
 					sensors_number += 1;
 				}
 			}
