@@ -13,6 +13,7 @@ import main.Main;
 import objects.Fish;
 import objects.Block;
 import objects.Robot;
+import robot.Action;
 
 public class _2DMap {
 	private List<Object>[][] map;
@@ -122,12 +123,12 @@ public class _2DMap {
 			case "*":
 				object_number.compute("small_fish", (k,v) -> (v==null) ? 1 : v+1);
 				return new Fish("small_fish.jpg", Environment.FISH1, Environment.Touch.FOOD, "small_fish"  + (object_number.get("small_fish") - 1)
-						, true, Direction.NORTH, this, position, 1, Fish.on_death.RESPAWN_ELSEWHERE);
+						, true, Direction.NORTH, this, position, 1, Fish.on_death.RESPAWN_ELSEWHERE, Action.EAT);
 				
 			case "°":
 				object_number.compute("big_fish", (k,v) -> (v==null) ? 1 : v+1);
 				return new Fish("big_fish.png", Environment.FISH2, Environment.Touch.FOOD, "big_fish" + (object_number.get("big_fish") - 1), 
-						true, Direction.NORTH, this, position, 2, Fish.on_death.RESPAWN_ELSEWHERE);
+						true, Direction.NORTH, this, position, 2, Fish.on_death.RESPAWN_ELSEWHERE, Action.FEAST);
 				
 			default:
 				throw new IllegalStateException(tile_type);
