@@ -15,9 +15,9 @@ public class AgentDeveloppemental extends Agent{
 
 	@Override
 	public void commandRobot() {
-		Action command = decideAction();
-		last_inter = new InteractionSec(command, robot.getSensorNb());
-		robot.prepareAction(command);
+		Action intended = decideAction();
+		last_inter = new InteractionSec(intended, robot.getSensorNb());
+		robot.prepareAction(intended);
 	}
 
 	private Action decideAction() {
