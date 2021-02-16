@@ -156,12 +156,12 @@ public class _2DMap {
 			newPos.x = (int)(Math.random() * width);
 			newPos.y = (int)(Math.random() * height);
 			count--;
-		} while ((isBlocked(newPos) || isFood(newPos))&& count > 0);
+		} while ((isHard(newPos) || isFood(newPos))&& count > 0);
 		
 		return moveObject(name, startPos, newPos);
 	}
 	
-	public boolean isBlocked(Point location) {
+	public boolean isHard(Point location) {
 		for (Object obj: map[location.y][location.x]) {
 			if (obj.getTouch() == Environment.Touch.HARD) {return true;}
 		}
