@@ -2,8 +2,10 @@ package objects;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Vector;
 
@@ -21,7 +23,7 @@ public class Robot extends Object{
 	
 	private Queue<Vector> trace;
 	private int sensors_number;
-	private Vector<Sensor> sensors;  
+	private Map<String,Sensor> sensors;  
 	private Action pending;
 	
 	public Robot(_2DMap map_, Color color_, Environment.Touch touch_, String name_,
@@ -30,13 +32,12 @@ public class Robot extends Object{
 		trace = new LinkedList<Vector>();
 		
 		sensors_number = 0;
-		sensors = new Vector<Sensor>();
+		sensors = new HashMap<String,Sensor>();
 		for (int i= 0; i<2*visionRange; i++) {
 			for (int j=0; j<2*visionRange; j++) {
 				if (Math.sqrt(Math.pow(i-Math.floor(visionRange), 2) + Math.pow(j-Math.floor(visionRange), 2)) <= visionRange) {
-					sensors.add(new VisualSensor(this, getMap(), 
-							i - (int) Math.floor(visionRange), 
-							j - (int) Math.floor(visionRange)));
+					Point location = new Point(i - (int) Math.floor(visionRange), j - (int) Math.floor(visionRange));
+					sensors.put(Sensor.translate(location), new VisualSensor(this, getMap(), location));
 					sensors_number += 1;
 				}
 			}
@@ -50,13 +51,12 @@ public class Robot extends Object{
 		trace = new LinkedList<Vector>();
 		
 		sensors_number = 0;
-		sensors = new Vector<Sensor>((int) (6*visionRange));
+		sensors = new HashMap<String,Sensor>();
 		for (int i= 0; i<2*visionRange; i++) {
 			for (int j=0; j<2*visionRange; j++) {
 				if (Math.sqrt(Math.pow(i-Math.floor(visionRange), 2) + Math.pow(j-Math.floor(visionRange), 2)) <= visionRange) {
-					sensors.add(new VisualSensor(this, getMap(), 
-							i - (int) Math.floor(visionRange), 
-							j - (int) Math.floor(visionRange)));
+					Point location = new Point(i - (int) Math.floor(visionRange), j - (int) Math.floor(visionRange));
+					sensors.put(Sensor.translate(location), new VisualSensor(this, getMap(), location));
 					sensors_number += 1;
 				}
 			}

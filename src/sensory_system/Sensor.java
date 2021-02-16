@@ -1,5 +1,7 @@
 package sensory_system;
 
+import java.awt.Point;
+
 import environment._2DMap;
 import objects.Robot;
 
@@ -13,6 +15,10 @@ public abstract class Sensor<T> {
 		map = map_;
 	}
 	
-	abstract T getSensoryInformation() throws Exception; 
+	abstract T getSensoryInformation();
+
+	public static String translate(Point location) {
+		return "(" + location.x + ", " + location.y + ")";
+	} 
 	
 }
