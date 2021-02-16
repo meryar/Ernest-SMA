@@ -142,9 +142,7 @@ public class _2DMap {
 			if (obj.getName().equals(name)) {
 				map[endPos.y][endPos.x].add(obj);
 				map[startPos.y][startPos.x].remove(obj);
-				if (obj instanceof Robot) {
-					((Robot) obj).setPosition(endPos);
-				}
+				obj.setPosition(endPos);
 				return true;
 			}
 		}
