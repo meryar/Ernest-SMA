@@ -70,8 +70,7 @@ public class Robot extends Object{
 		
 		switch(command) {
 		case MOVE_FWD:
-			Point newPos = getMap().getOrientedRelPos(getPosition(), getDirection(), new Point(0,1));
-			
+			Point newPos = getMap().getOrientedRelPos(getPosition(), getDirection(), new Point(0,-1));
 			if (getMap().isLegalPosition(newPos) && getMap().isFood(newPos)) {
 				List<Object> targets = getMap().getTypedObjects(Environment.Touch.FOOD, newPos);
 				for (Object fish: targets) {
