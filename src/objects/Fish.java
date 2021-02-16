@@ -67,6 +67,7 @@ public class Fish extends Object{
 		} else {return false;}
 	}
 	
+	@Override
 	public void reset() {
 		hunters.clear();
 		eaten = false;

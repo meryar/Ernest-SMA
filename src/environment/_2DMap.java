@@ -237,4 +237,15 @@ public class _2DMap {
 	}
 	
 	public Robot getRobot(int id) {return robot_list.get(id);}
+	
+	public void reset() {
+		for (List<Object>[] line: map) {
+			for (List<Object> location: line) {
+				for (Object obj: location) {
+					obj.reset();
+				}
+			}
+			
+		}
+	}
 }

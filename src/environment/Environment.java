@@ -65,6 +65,8 @@ public class Environment {
 
 	public void step() {
 		
+		map.reset();
+		
 		for (Agent ag: agents_list) {
 			ag.commandRobot();
 		}

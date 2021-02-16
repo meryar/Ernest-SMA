@@ -65,4 +65,6 @@ public abstract class Object {
 	public void setDirection(Direction newDir) {
 		this.direction = newDir;
 	}
+	
+	public void reset() {}
 }
