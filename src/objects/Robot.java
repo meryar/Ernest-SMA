@@ -2,12 +2,18 @@ package objects;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.Vector;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import environment.Direction;
 import environment.Environment;
@@ -25,11 +31,13 @@ public class Robot extends Object{
 	private int sensors_number;
 	private Map<String,Sensor> sensors;  
 	private Action pending;
+	private Vector<Color> knownColors;
 	
 	public Robot(_2DMap map_, Color color_, Environment.Touch touch_, String name_,
 			boolean visible_, Point position, double visionRange) {
 		super(color_, touch_, name_, visible_, map_, position);
 		trace = new LinkedList<Vector>();
+		knownColors = new Vector<Color>();
 		
 		sensors_number = 0;
 		sensors = new HashMap<String,Sensor>();
@@ -49,6 +57,7 @@ public class Robot extends Object{
 		super(imageName, color, touch_, name_, visible_, direction_, map_, position);
 
 		trace = new LinkedList<Vector>();
+		knownColors = new Vector<Color>();
 		
 		sensors_number = 0;
 		sensors = new HashMap<String,Sensor>();
@@ -149,5 +158,32 @@ public class Robot extends Object{
 			default:
 				throw new IllegalStateException("can only rotate 'left' or 'right' and not: " + side);
 		};
+	}
+	
+	public Vector<Boolean> getSensoryInformation(){
+		Vector<Boolean> res = new Vector<Boolean>();
+		res.ensureCapacity(knownColors.size() * getSensorNb());
+		
+		for(String key: sensors.keySet()) {
+			Color seen = ((VisualSensor)sensors.get(key)).getSensoryInformation();
+			if (!knownColors.contains(seen)) {
+				knownColors.add(seen);
+				
+				res.ensureCapacity(knownColors.size() * getSensorNb());
+			}
+			res.set((getColorId(seen) -1) * (sensors_number) + sensors.get(key).getId(), true);
+		}
+
+		Collections.replaceAll(res, null, false);  
+		
+		return null;
+	}
+
+	private int getColorId(Color seen) {
+		for (int i=0; i<knownColors.size(); i++) {
+			if (knownColors.get(i).equals(seen)) {return i;}
+		}
+		System.out.println("Error: unknown color seen by " + getName() + ": " + seen);
+		return -1;
 	}
 }
