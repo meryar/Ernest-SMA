@@ -61,4 +61,8 @@ public abstract class Object {
 	public void setPosition(Point position) {
 		this.position = position;
 	}
+	
+	public void setDirection(Direction newDir) {
+		this.direction = newDir;
+	}
 }
