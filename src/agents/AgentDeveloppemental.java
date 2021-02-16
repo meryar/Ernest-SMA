@@ -27,8 +27,9 @@ public class AgentDeveloppemental extends Agent{
 
 	@Override
 	public void getResults() {
-		// TODO Auto-generated method stub
+		Action enacted = robot.getResults();
 		
+		// TODO: learn from result
 	}
 
 }
