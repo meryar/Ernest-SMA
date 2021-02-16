@@ -26,9 +26,15 @@ public class Fish extends Object{
 	private Action afforded_on_death;
 	
 	public Fish(Color color_, Touch touch_, String name_, boolean visible_, _2DMap map, Point position, 
-			int huntMax) {
+			int huntMax, on_death resp_cond, Action reward_for_killing) {
 		super(color_, touch_, name_, visible_, map, position);
 		// TODO Auto-generated constructor stub
+		
+		huntersMaxNb = huntMax;
+		hunters = new Vector<String>();
+		eaten = false;
+		respawn = resp_cond;
+		afforded_on_death = reward_for_killing;
 	}
 	
 	public Fish(String imageName, Color color, Environment.Touch touch_, String name_, boolean visible_, Direction direction_, _2DMap map, Point position,
