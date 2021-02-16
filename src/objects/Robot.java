@@ -112,13 +112,43 @@ public class Robot extends Object{
 				throw new IllegalStateException("Robot " + getName() + " is trying to exit map!");
 			}
 		case ROTATE_LEFT:
-			break;
+			setDirection(rotatedDirection(getDirection(), "left"));
+			return Action.ROTATE_LEFT;
 		case ROTATE_RIGHT:
-			break;
+			setDirection(rotatedDirection(getDirection(), "right"));
+			return Action.ROTATE_RIGHT;
 		default:
 			throw new IllegalStateException("Illegal command pending: " + pending);
 		}
-		
-		return null;
+	}
+
+	private Direction rotatedDirection(Direction direction, String side) {
+		return switch (side) {
+			case "left":
+				yield (switch (direction) {
+				case NORTH:
+					yield (Direction.WEST);
+				case WEST:
+					yield (Direction.SOUTH);
+				case SOUTH:
+					yield (Direction.EAST);
+				case EAST:
+					yield (Direction.NORTH);
+				});
+			case "right":
+				yield (switch (direction) {
+				case NORTH:
+					yield (Direction.EAST);
+				case EAST:
+					yield (Direction.SOUTH);
+				case SOUTH:
+					yield (Direction.WEST);
+				case WEST:
+					yield (Direction.NORTH);
+				});
+			
+			default:
+				throw new IllegalStateException("can only rotate 'left' or 'right' and not: " + side);
+		};
 	}
 }
