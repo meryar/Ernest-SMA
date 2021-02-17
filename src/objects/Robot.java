@@ -163,20 +163,25 @@ public class Robot extends Object{
 	public Vector<Boolean> getSensoryInformation(){
 		Vector<Boolean> res = new Vector<Boolean>();
 		res.ensureCapacity(knownColors.size() * getSensorNb());
+		for (int i=0; i<getSensorNb()*knownColors.size(); i++) {res.add(false);}
+	 
 		
 		for(String key: sensors.keySet()) {
-			Color seen = ((VisualSensor)sensors.get(key)).getSensoryInformation();
-			if (!knownColors.contains(seen)) {
-				knownColors.add(seen);
-				
-				res.ensureCapacity(knownColors.size() * getSensorNb());
+			
+			if (((VisualSensor)sensors.get(key)).isAvailable()) {
+				Color seen = ((VisualSensor)sensors.get(key)).getSensoryInformation();
+				if (!knownColors.contains(seen)) {
+					knownColors.add(seen);
+					
+					res.ensureCapacity(knownColors.size() * getSensorNb());
+					for (int i=0; i<getSensorNb(); i++) {res.add(false);}
+				}
+				res.set(getColorId(seen) * (sensors_number) + sensors.get(key).getId(), true);
 			}
-			res.set((getColorId(seen) -1) * (sensors_number) + sensors.get(key).getId(), true);
 		}
 
-		Collections.replaceAll(res, null, false);  
 		
-		return null;
+		return res;
 	}
 
 	private int getColorId(Color seen) {

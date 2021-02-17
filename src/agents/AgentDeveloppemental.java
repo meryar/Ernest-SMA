@@ -1,5 +1,7 @@
 package agents;
 
+import java.util.Vector;
+
 import objects.Robot;
 import robot.Action;
 import robot.InteractionSec;
@@ -30,6 +32,7 @@ public class AgentDeveloppemental extends Agent{
 		Action enacted = robot.getResults();
 		
 		// TODO: learn from result
+		Vector<Boolean> sight = robot.getSensoryInformation();
 	}
 
 }

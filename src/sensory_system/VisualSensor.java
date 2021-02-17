@@ -69,5 +69,9 @@ public class VisualSensor extends Sensor<Color>{
 		
 		return res;
 	}
+
+	public boolean isAvailable() {
+		return map.isLegalPosition(map.getOrientedRelPos(robot.getPosition(), robot.getDirection(), relPos));
+	}
 	
 }
