@@ -2,6 +2,7 @@ package objects;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,7 +21,7 @@ import sensory_system.VisualSensor;
 
 public class Robot extends Object{
 	
-	private Queue<Point> trace;
+	private List<Point> trace;
 	private int sensors_number;
 	private Map<String,Sensor> sensors;  
 	private Action pending;
@@ -29,7 +30,7 @@ public class Robot extends Object{
 	public Robot(_2DMap map_, Color color_, Environment.Touch touch_, String name_,
 			boolean visible_, Point position, double visionRange) {
 		super(color_, touch_, name_, visible_, map_, position);
-		trace = new LinkedList<Point>();
+		trace = new ArrayList<Point>();
 		knownColors = new Vector<Color>();
 		
 		sensors_number = 0;
@@ -49,7 +50,7 @@ public class Robot extends Object{
 			boolean visible_, Direction direction_ , Point position, double visionRange) {
 		super(imageName, color, touch_, name_, visible_, direction_, map_, position);
 
-		trace = new LinkedList<Point>();
+		trace = new ArrayList<Point>();
 		knownColors = new Vector<Color>();
 		
 		sensors_number = 0;
@@ -182,14 +183,14 @@ public class Robot extends Object{
 	
 	@Override
 	public void move(Point newPosition) {
-		trace.add(newPosition);
+		trace.add((Point)newPosition.clone());
 		if (trace.size() > Main.trace_size) {
-			trace.remove();
+			trace.remove(0);
 		}
 		getMap().moveObject(getName(), getPosition(), newPosition);
 	}
 	
-	public Queue<Point> getTrace(){
+	public List<Point> getTrace(){
 		return trace;
 	}
 }
