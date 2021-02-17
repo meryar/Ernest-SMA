@@ -12,6 +12,7 @@ import environment.Direction;
 import environment.Environment;
 import environment.Object;
 import environment._2DMap;
+import main.Main;
 import robot.Action;
 import sensory_system.Sensor;
 import sensory_system.VisualSensor;
@@ -104,7 +105,7 @@ public class Robot extends Object{
 					}
 					return Action.FIGHT;
 				} else {
-					getMap().moveObject(getName(), getPosition(), newPos);
+					move(newPos);
 					return Action.MOVE_FWD;
 				}
 			} else {
@@ -177,5 +178,18 @@ public class Robot extends Object{
 		}
 		System.out.println("Error: unknown color seen by " + getName() + ": " + seen);
 		return -1;
+	}
+	
+	@Override
+	public void move(Point newPosition) {
+		trace.add(newPosition);
+		if (trace.size() > Main.trace_size) {
+			trace.remove();
+		}
+		getMap().moveObject(getName(), getPosition(), newPosition);
+	}
+	
+	public Queue<Point> getTrace(){
+		return trace;
 	}
 }
