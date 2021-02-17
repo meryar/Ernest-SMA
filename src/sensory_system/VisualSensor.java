@@ -36,9 +36,15 @@ public class VisualSensor extends Sensor<Color>{
 		double dy = relativePos.y;
 		boolean reverse = (dy < dx);
 		double er = 0;
-		double er10 = !reverse ? dy/dx : dx/dy;
+		double er10;
+		try {
+			er10 = !reverse ? dy/dx : dx/dy;      
+		} catch (Exception e) {
+			er10 = 0;
+		}
 		double er01 = -1;
-		int sign = !reverse ? relativePos.x / Math.abs(relativePos.x) : relativePos.y / Math.abs(relativePos.y);
+		int sign = (int) (!reverse ? Math.signum(relativePos.x) : Math.signum(relativePos.y));
+		if (sign == 0) {sign = 1;}
 		
 		if (!reverse) {
 			for (int x = relativePos.x; x != 0; x-= 1*sign) {
