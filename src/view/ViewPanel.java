@@ -3,12 +3,14 @@ package view;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
 import environment.Direction;
 import environment._2DMap;
+import objects.Robot;
 import environment.Object;
 
 public class ViewPanel extends JPanel{
@@ -37,6 +39,9 @@ public class ViewPanel extends JPanel{
 				for (Object obj: map.getMap()[l][c]) {
 					// draw color or image corresponding to object
 					if (obj.getVisible()) {
+						if (obj instanceof Robot) {
+							drawTrace(obj, g);
+						}
 						drawObject(obj, g, l, c);
 					}
 				}
@@ -89,5 +94,22 @@ public class ViewPanel extends JPanel{
 				return 90;
 		}
 		return 0;
+	}
+
+	private void drawTrace(Object obj, Graphics g2d) {
+		int v_offset = (int)Math.floor(pan_width/env_width);
+		int h_offset = (int)Math.floor(pan_height/env_height);
+		Robot robot = (Robot) obj;
+		g2d.setColor(new Color(robot.getId()*(100000/map.getNbRobot())));
+		Point buffer = null;
+		for(Point nextPos: robot.getTrace()) {
+			if (buffer != null) {
+				g2d.drawLine((int)((buffer.x + 0.5)*v_offset), 
+						(int) ((buffer.y+0.5)*h_offset), 
+						(int) ((nextPos.x+0.5)*v_offset), 
+						(int) ((nextPos.y+0.5)*h_offset));
+			}
+			buffer = nextPos;
+		}
 	}
 }

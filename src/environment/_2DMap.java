@@ -246,4 +246,9 @@ public class _2DMap {
 			}
 		}
 	}
+	
+	public int getNbRobot() {
+		return robot_list.size();
+	}
+	
 }

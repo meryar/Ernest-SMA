@@ -193,4 +193,9 @@ public class Robot extends Object{
 	public List<Point> getTrace(){
 		return trace;
 	}
+	
+	public int getId() {
+		String name = getName();
+		return Integer.parseInt(String.valueOf(name.charAt(name.length()-1)));
+	}
 }
