@@ -36,7 +36,7 @@ public class Environment {
 	//public static Block tile =new Block(Touch.SMOOTH,TILE,"tile",true);
 
 	
-	private List<Agent> agents_list;
+	private List<InterfaceAgentRobot> agents_list;
 	int nb_agents;
 	private _2DMap map;
 	private int env_height;
@@ -46,7 +46,7 @@ public class Environment {
 	public Environment(String env_layout) {
 		
 		nb_agents = 0;
-		agents_list = new ArrayList<Agent>(nb_agents);
+		agents_list = new ArrayList<InterfaceAgentRobot>(nb_agents);
 		
 		// create map from file "env_layout"
 		try{
@@ -67,10 +67,10 @@ public class Environment {
 		
 		map.reset();
 		
-		for (Agent ag: agents_list) {
+		for (InterfaceAgentRobot ag: agents_list) {
 			ag.commandRobot();
 		}
-		for (Agent ag: agents_list) {
+		for (InterfaceAgentRobot ag: agents_list) {
 			ag.getResults();
 		}
 
@@ -81,7 +81,7 @@ public class Environment {
 
 	public void addAgent(Robot rob) {
 		nb_agents += 1;
-		agents_list.add(new AgentDeveloppemental(rob));
+		agents_list.add(new InterfaceAgentRobot(rob));
 	}
 	
 	public void setDimentions(int height, int width) {

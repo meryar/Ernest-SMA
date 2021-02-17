@@ -2,36 +2,40 @@ package agents;
 
 import java.util.Vector;
 
+import agent_developpemental.Perceptron;
+import main.Main;
 import objects.Robot;
 import robot.Action;
 import robot.InteractionSec;
 
 public class AgentDeveloppemental extends Agent{
 	
-	InteractionSec last_inter;
+	Perceptron perceptron;
 
-	public AgentDeveloppemental(Robot robot_) {
-		super(robot_);
+	public AgentDeveloppemental(int input_size, int output_size) {
+		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public void commandRobot() {
+	public Action decide(Vector<Float> resultsTMoins1) {
 		Action intended = decideAction();
-		last_inter = new InteractionSec(intended, robot.getSensorNb());
-		robot.prepareAction(intended);
+		//last_inter = new InteractionSec(intended, robot.getSensorNb());
+		return intended;
 	}
 
 	private Action decideAction() {
-		// TODO: decision system
+		
+		//Vector<Double> predictions
+		
 		return Action.MOVE_FWD;
 	}
 
 	@Override
-	public void getResults() {
-		Action enacted = robot.getResults();
+	public void learn(Vector<Float> results) {
+		//Action enacted = robot.getResults();
 		
 		// TODO: learn from result
-		Vector<Boolean> sight = robot.getSensoryInformation();
+		//Vector<Boolean> sight = robot.getSensoryInformation();
 	}
 
 }
