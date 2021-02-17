@@ -12,7 +12,6 @@ public class AgentDeveloppemental extends Agent{
 
 	public AgentDeveloppemental(Robot robot_) {
 		super(robot_);
-		
 	}
 
 	@Override

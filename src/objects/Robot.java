@@ -2,22 +2,14 @@ package objects;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
 import java.util.Vector;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-
 import environment.Direction;
 import environment.Environment;
-import environment.Environment.Touch;
 import environment.Object;
 import environment._2DMap;
 import robot.Action;
@@ -27,7 +19,7 @@ import sensory_system.VisualSensor;
 
 public class Robot extends Object{
 	
-	private Queue<Vector> trace;
+	private Queue<Point> trace;
 	private int sensors_number;
 	private Map<String,Sensor> sensors;  
 	private Action pending;
@@ -36,7 +28,7 @@ public class Robot extends Object{
 	public Robot(_2DMap map_, Color color_, Environment.Touch touch_, String name_,
 			boolean visible_, Point position, double visionRange) {
 		super(color_, touch_, name_, visible_, map_, position);
-		trace = new LinkedList<Vector>();
+		trace = new LinkedList<Point>();
 		knownColors = new Vector<Color>();
 		
 		sensors_number = 0;
@@ -56,7 +48,7 @@ public class Robot extends Object{
 			boolean visible_, Direction direction_ , Point position, double visionRange) {
 		super(imageName, color, touch_, name_, visible_, direction_, map_, position);
 
-		trace = new LinkedList<Vector>();
+		trace = new LinkedList<Point>();
 		knownColors = new Vector<Color>();
 		
 		sensors_number = 0;
@@ -93,7 +85,6 @@ public class Robot extends Object{
 		default:
 			throw new IllegalStateException("Illegal command from agent: " + command);
 		}
-		
 	}
 
 	public Action getResults() {
@@ -131,6 +122,7 @@ public class Robot extends Object{
 	}
 
 	private Direction rotatedDirection(Direction direction, String side) {
+		
 		return switch (side) {
 			case "left":
 				yield (switch (direction) {
@@ -165,22 +157,17 @@ public class Robot extends Object{
 		res.ensureCapacity(knownColors.size() * getSensorNb());
 		for (int i=0; i<getSensorNb()*knownColors.size(); i++) {res.add(false);}
 	 
-		
 		for(String key: sensors.keySet()) {
-			
 			if (((VisualSensor)sensors.get(key)).isAvailable()) {
 				Color seen = ((VisualSensor)sensors.get(key)).getSensoryInformation();
 				if (!knownColors.contains(seen)) {
 					knownColors.add(seen);
-					
 					res.ensureCapacity(knownColors.size() * getSensorNb());
 					for (int i=0; i<getSensorNb(); i++) {res.add(false);}
 				}
 				res.set(getColorId(seen) * (sensors_number) + sensors.get(key).getId(), true);
 			}
 		}
-
-		
 		return res;
 	}
 

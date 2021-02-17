@@ -55,15 +55,15 @@ public class Environment {
 			System.out.println("Error: map width is not consistent");
 		}
 		
-		main_frame = new View(this, map, env_height, env_width,"window");
-		
+		// create window
+		main_frame = new View(this, map, env_height, env_width, "window");
 		main_frame.pack();
         main_frame.setVisible(true);
-        
-        
 	}
 
 	public void step() {
+		
+		main_frame.updateView();
 		
 		map.reset();
 		
@@ -74,31 +74,14 @@ public class Environment {
 			ag.getResults();
 		}
 
-		
-		
-		// Tests
-		
-		//map.randomMove("robot_0", map.getRobot(0).getPosition());
-		//map.moveObject("robot_1", map.getRobot(1).getPosition(), new Point(1,1));
-		//map.randomMove("robot_1", map.getRobot(1).getPosition());
-		//map.randomMove("robot_2", map.getRobot(2).getPosition());
-		//map.randomMove("robot_3", map.getRobot(3).getPosition());
-		
-		main_frame.updateView();
-		
-		
 		try {
-			Thread.sleep(200);
-		} catch (Exception e) {
-			
-		}
-		
+			Thread.sleep(500);
+		} catch (Exception e) {}	
 	}
 
 	public void addAgent(Robot rob) {
 		nb_agents += 1;
 		agents_list.add(new AgentDeveloppemental(rob));
-		
 	}
 	
 	public void setDimentions(int height, int width) {
@@ -107,5 +90,4 @@ public class Environment {
 	}
 	
 	public _2DMap getMap() {return map;}
-
 }

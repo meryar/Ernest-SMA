@@ -25,7 +25,7 @@ public class _2DMap {
 	public _2DMap(int height_, int width_) {
 		height = height_;
 		width = width_;
-		map = (ArrayList<Object> [][]) new ArrayList[height][width];
+		map = (ArrayList<environment.Object> [][]) new ArrayList[height][width];
 		object_number = new HashMap<String,Integer>();
 		robot_list = new ArrayList<Robot>();
 	}
@@ -34,10 +34,9 @@ public class _2DMap {
 		object_number = new HashMap<String,Integer>();
 		robot_list = new ArrayList<Robot>();
 		env = env_;
-		
-		List<String[]> file_copy = new ArrayList<String[]>();
-		
+				
 		// reading and copying file
+		List<String[]> file_copy = new ArrayList<String[]>();
 		try {
 		      File myObj = new File(fileName);
 		      Scanner myReader = new Scanner(myObj);
@@ -60,7 +59,7 @@ public class _2DMap {
 			if (line.length != width) throw new IllegalStateException("Width not consistent!");
 		}
 		
-		//
+		// setting map's width and height in environment
 		env.setDimentions(height, width);
 		
 		// filling map
@@ -245,7 +244,6 @@ public class _2DMap {
 					obj.reset();
 				}
 			}
-			
 		}
 	}
 }

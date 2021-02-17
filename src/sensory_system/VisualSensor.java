@@ -65,8 +65,6 @@ public class VisualSensor extends Sensor<Color>{
 				}
 			}
 		}
-		
-		
 		return res;
 	}
 

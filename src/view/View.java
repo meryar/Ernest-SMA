@@ -16,10 +16,6 @@ public class View extends JFrame {
 	private int env_height,env_width;
 	private ViewPanel panel; 
 
-	public View() {
-		
-	}
-
 	public View(Environment env_, _2DMap map, int env_height_, int env_width_, String name) {
 		super(name);
 		env_height = env_height_;
@@ -28,8 +24,7 @@ public class View extends JFrame {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		pan_height = (int) (screenSize.getHeight() * 0.9);
 		pan_width = (int) (screenSize.getWidth() * 0.6);
-		
-		
+	
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		panel=new ViewPanel(map, pan_height, pan_width, env_height, env_width);

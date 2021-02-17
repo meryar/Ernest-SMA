@@ -29,15 +29,14 @@ public class ViewPanel extends JPanel{
 	@Override
 	public void paintComponent(Graphics g){
 		g.setColor(Color.WHITE);
-		
 		g.fillRect(0, 0, pan_width, pan_height);
 		
-		// drawing objects in environment
+		// for all objects in environment
 		for (int l=0; l< env_height; l++) {
 			for (int c=0; c<env_width; c++) {
-				// draw color or image corresponding to object
 				for (Object obj: map.getMap()[l][c]) {
-					if (obj.getName() != "empty" && obj.getVisible()) {
+					// draw color or image corresponding to object
+					if (obj.getVisible()) {
 						drawObject(obj, g, l, c);
 					}
 				}

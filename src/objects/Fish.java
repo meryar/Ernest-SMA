@@ -28,7 +28,6 @@ public class Fish extends Object{
 	public Fish(Color color_, Touch touch_, String name_, boolean visible_, _2DMap map, Point position, 
 			int huntMax, on_death resp_cond, Action reward_for_killing) {
 		super(color_, touch_, name_, visible_, map, position);
-		// TODO Auto-generated constructor stub
 		
 		huntersMaxNb = huntMax;
 		hunters = new Vector<String>();
@@ -87,7 +86,6 @@ public class Fish extends Object{
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + respawn);
 		}
-		
 	}
 	
 	public Action getAffordedOnDeath() {

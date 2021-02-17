@@ -31,13 +31,13 @@ public abstract class Object {
 	
 	public Object(String imageName, Color color, Environment.Touch touch, String name, boolean visible, Direction direction_, _2DMap map, Point position) {
 		this(color, touch, name, visible, map, position);
+		direction = direction_;
 		
 		try {
 		    image = ImageIO.read(new File("ressources/images/" + imageName));
 		} catch (IOException e) {
 			System.out.println("file " + imageName + " could not be found or read in ressources/images");
 		}
-		direction = direction_;
 	}
 	
 	public Environment.Touch getTouch() {return touch;}
