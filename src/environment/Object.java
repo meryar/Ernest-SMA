@@ -67,4 +67,16 @@ public abstract class Object {
 	}
 	
 	public void reset() {}
+	
+	public void move(Point newPosition) {
+		map.moveObject(name, position, newPosition);
+	}
+	
+	public void randomTeleport() {
+		map.randomMove(name, position);
+	}
+
+	public void makeDisappear() {
+		map.getMap()[position.y][position.x].remove(this);
+	}
 }
