@@ -75,11 +75,11 @@ public class Fish extends Object{
 	private void die() {
 		switch (respawn) {
 		case DISSAPEAR: 
-			this.getMap().getMap()[getPosition().y][getPosition().x].remove(this);
+			makeDisappear();
 			break;
 		case RESPAWN_ELSEWHERE:
 			reset();
-			getMap().randomMove(getName(), getPosition());
+			randomTeleport();
 			break;
 		case UNDYING:
 			reset();
