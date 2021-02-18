@@ -19,7 +19,7 @@ public class AgentDeveloppemental extends Agent{
 	}
 
 	@Override
-	public Action decide(Vector<Float> resultsTMoins1) {
+	public Action decide(Vector<Float> resultsTMinus1) {
 		Action intended = decideAction();
 		//last_inter = new InteractionSec(intended, robot.getSensorNb());
 		return intended;
@@ -34,7 +34,6 @@ public class AgentDeveloppemental extends Agent{
 
 	@Override
 	public void learn(Vector<Float> results) {
-		//Action enacted = robot.getResults();
 		
 		// TODO: learn from result
 		//Vector<Boolean> sight = robot.getSensoryInformation();

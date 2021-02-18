@@ -13,7 +13,7 @@ public class InterfaceAgentRobot {
 
 	private Agent agent;
 	private Robot robot;
-	private Action lastEnacted;
+	private Action lastEnacted, lastIntended;
 	private Vector<Boolean> lastSeen;
 	
 	public InterfaceAgentRobot(Robot rob) {
@@ -23,8 +23,8 @@ public class InterfaceAgentRobot {
 	}
 
 	public void commandRobot() {
-		Action intended = agent.decide(entryForDeciding());
-		switch (intended) {
+		lastIntended = agent.decide(entryForDeciding());
+		switch (lastIntended) {
 		case BUMP:
 		case EAT:
 		case FEAST:
