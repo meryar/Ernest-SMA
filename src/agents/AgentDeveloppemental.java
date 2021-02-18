@@ -10,7 +10,9 @@ import robot.InteractionSec;
 
 public class AgentDeveloppemental extends Agent{
 	
-	Perceptron perceptron;
+	private static final float certitude_treshold = 0.8f;
+	
+	private Perceptron perceptron;
 
 	public AgentDeveloppemental(int input_size, int output_size) {
 		// TODO Auto-generated constructor stub

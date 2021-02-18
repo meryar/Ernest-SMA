@@ -4,12 +4,12 @@ import java.util.Vector;
 
 public class Perceptron {
 
-	Vector<Neuron> neurons;
-	float bias;
+	private static final float bias = 1f;
+	
+	private Vector<Neuron> neurons;
 	
 	public Perceptron() {
 		neurons = new Vector<Neuron>();
-		bias = (float) 1;
 	}
 	
 	public Perceptron(int input_size, int output_size) {

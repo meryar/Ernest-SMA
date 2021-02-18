@@ -65,15 +65,14 @@ public class InterfaceAgentRobot {
 			}
 			if (lastEnacted != act) {
 				inter.replaceAll(b -> false);
-				enact.add((float)0.0);
+				enact.add(0f);
 			} else {
-				enact.add((float)1.0);
+				enact.add(1f);
 			}
-			res.addAll(inter.stream().map(b -> b ? (float)1.0 : (float)0.0).collect(Collectors.toList()));
+			res.addAll(inter.stream().map(b -> b ? 1f : 0f).collect(Collectors.toList()));
 		}
 		// then we add the primary interaction (touch)
 		res.addAll(enact);
-		System.out.println(res.size());
 		return res;
 	}
 	
