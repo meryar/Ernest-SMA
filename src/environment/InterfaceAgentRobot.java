@@ -44,6 +44,7 @@ public class InterfaceAgentRobot {
 	public void getResults() {
 		lastEnacted = robot.getResults();
 		lastSeen = robot.getSensoryInformation();
+		//agent.learn(entryForDeciding(), entryForLearning());
 	}
 	
 	private Vector<Float> entryForDeciding(){
@@ -73,6 +74,31 @@ public class InterfaceAgentRobot {
 		}
 		// then we add the primary interaction (touch)
 		res.addAll(enact);
+
+		return res;
+	}
+	
+	private Vector<Float> entryForLearning() {
+		Vector<Float> res = new Vector<>();
+		Vector<Action> alternates = new Vector<Action>();
+		alternates.add(Action.MOVE_FWD);
+		alternates.add(Action.BUMP);
+		alternates.add(Action.FIGHT);
+		alternates.add(Action.EAT);
+		alternates.add(Action.FEAST);
+		
+		for (Action act: Action.values()) {
+			res.add(act == lastEnacted? 1f: 0f);
+		}
+		
+		if (alternates.contains(lastEnacted)) {
+			for (int i=0; i<alternates.size(); i++) {
+				if (lastEnacted != alternates.get(i)) {
+					res.set(i, -1f);
+				}
+			}
+		}
+		
 		return res;
 	}
 	
