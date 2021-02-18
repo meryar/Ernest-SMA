@@ -3,7 +3,6 @@ package agent_developpemental;
 import java.util.Vector;
 
 public class Neuron {
-
 	
 	private int entries_number;
 	private Vector<Float> weights;
@@ -17,8 +16,14 @@ public class Neuron {
 	}
 
 	public Float compute(Vector<Float> entry) {
-		// TODO Auto-generated method stub
-		return null;
+		if (entry.size() != entries_number) {
+			throw new IllegalStateException("illegal number of entries: " + entry.size() + " instead of " + entries_number);
+		}
+		Float sum = (float) 0;
+		for (int i=0; i<entries_number; i++) {
+			sum += weights.get(i) * entry.get(i);
+		}
+		return (float) ( 1 / (1+Math.exp(-sum)))*2-1;
 	}
 
 }
