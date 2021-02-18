@@ -2,6 +2,7 @@ package environment;
 
 import java.util.Vector;
 import java.util.stream.Collectors;
+
 import agents.Agent;
 import agents.AgentDeveloppemental;
 import main.Main;
@@ -17,9 +18,8 @@ public class InterfaceAgentRobot {
 	
 	public InterfaceAgentRobot(Robot rob) {
 		robot = rob;
-		int input_size = 100;
-		int output_size = 10;
-		agent = new AgentDeveloppemental(input_size, output_size);
+		int input_size = (Main.nb_colors * robot.getSensorNb() + 1) * Action.values().length; 
+		agent = new AgentDeveloppemental(input_size);
 	}
 
 	public void commandRobot() {

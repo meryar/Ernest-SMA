@@ -14,8 +14,8 @@ public class AgentDeveloppemental extends Agent{
 	
 	private Perceptron perceptron;
 
-	public AgentDeveloppemental(int input_size, int output_size) {
-		// TODO Auto-generated constructor stub
+	public AgentDeveloppemental(int input_size) {
+		perceptron = new Perceptron(input_size, input_size);
 	}
 
 	@Override
