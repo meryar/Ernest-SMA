@@ -100,7 +100,7 @@ public class ViewPanel extends JPanel{
 		int v_offset = (int)Math.floor(pan_width/env_width);
 		int h_offset = (int)Math.floor(pan_height/env_height);
 		Robot robot = (Robot) obj;
-		g2d.setColor(new Color(robot.getId()*(100000/map.getNbRobot())));
+		g2d.setColor(new Color(robot.getId()*(16777216/map.getNbRobot())));
 		Point buffer = null;
 		for(Point nextPos: robot.getTrace()) {
 			if (buffer != null) {
