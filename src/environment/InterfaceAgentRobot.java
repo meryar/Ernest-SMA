@@ -1,14 +1,10 @@
 package environment;
 
-import java.util.Collections;
 import java.util.Vector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import agents.Agent;
 import agents.AgentDeveloppemental;
 import main.Main;
-import jdk.internal.org.jline.reader.Widget;
 import objects.Robot;
 import robot.Action;
 
