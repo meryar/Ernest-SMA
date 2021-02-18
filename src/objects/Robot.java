@@ -24,12 +24,14 @@ public class Robot extends Object{
 	private Map<String,Sensor> sensors;  
 	private Action pending;
 	private Vector<Color> knownColors;
+	private int nbColors;
 	
 	public Robot(_2DMap map_, Color color_, Environment.Touch touch_, String name_,
 			boolean visible_, Point position, double visionRange) {
 		super(color_, touch_, name_, visible_, map_, position);
 		trace = new ArrayList<Point>();
 		knownColors = new Vector<Color>();
+		nbColors = Main.nb_colors;
 		
 		sensors_number = 0;
 		sensors = new HashMap<String,Sensor>();
@@ -50,6 +52,7 @@ public class Robot extends Object{
 
 		trace = new ArrayList<Point>();
 		knownColors = new Vector<Color>();
+		nbColors = Main.nb_colors;
 		
 		sensors_number = 0;
 		sensors = new HashMap<String,Sensor>();
@@ -154,16 +157,14 @@ public class Robot extends Object{
 	
 	public Vector<Boolean> getSensoryInformation(){
 		Vector<Boolean> res = new Vector<Boolean>();
-		res.ensureCapacity(knownColors.size() * getSensorNb());
-		for (int i=0; i<getSensorNb()*knownColors.size(); i++) {res.add(false);}
+		res.ensureCapacity(nbColors * getSensorNb());
+		for (int i=0; i<getSensorNb()*nbColors; i++) {res.add(false);}
 	 
 		for(String key: sensors.keySet()) {
 			if (((VisualSensor)sensors.get(key)).isAvailable()) {
 				Color seen = ((VisualSensor)sensors.get(key)).getSensoryInformation();
 				if (!knownColors.contains(seen)) {
 					knownColors.add(seen);
-					res.ensureCapacity(knownColors.size() * getSensorNb());
-					for (int i=0; i<getSensorNb(); i++) {res.add(false);}
 				}
 				res.set(getColorId(seen) * (sensors_number) + sensors.get(key).getId(), true);
 			}
