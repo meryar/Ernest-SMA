@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 
 import agents.Agent;
 import agents.AgentDeveloppemental;
+import main.Main;
 import jdk.internal.org.jline.reader.Widget;
 import objects.Robot;
 import robot.Action;
@@ -45,22 +46,39 @@ public class InterfaceAgentRobot {
 	}
 
 	public void getResults() {
-		Action enacted = robot.getResults();
+		lastEnacted = robot.getResults();
+		lastSeen = robot.getSensoryInformation();
 	}
 	
 	private Vector<Float> entryForDeciding(){
-		Vector<Float> res = new Vector();
+		Vector<Float> res = new Vector<>();
+		Vector<Float> enact = new Vector<>();
 		
 		// first we add the secondary interaction's information (the sight)
-		Vector<Boolean> perception = robot.getSensoryInformation();
 		for (Action act: Action.values()) {
-			Vector<Boolean> inter = (Vector<Boolean>) perception.clone();
+			Vector<Boolean> inter;
+			if (lastSeen != null) {
+				inter = (Vector<Boolean>) lastSeen.clone();
+			} else {
+				inter = new Vector<Boolean>();
+				for (int s=0; s<robot.getSensorNb(); s++) {
+					for (int c=0; c<Main.nb_colors; c++) {
+						inter.add(false);
+					}
+				}
+			}
 			if (lastEnacted != act) {
 				inter.replaceAll(b -> false);
+				enact.add((float)0.0);
+			} else {
+				enact.add((float)1.0);
 			}
-			//res.addAll(inter.stream().map(b -> b ? 1 : 0).collect(Collectors.toList()));
+			res.addAll(inter.stream().map(b -> b ? (float)1.0 : (float)0.0).collect(Collectors.toList()));
 		}
-		return null;
+		// then we add the primary interaction (touch)
+		res.addAll(enact);
+		System.out.println(res.size());
+		return res;
 	}
 	
 }
