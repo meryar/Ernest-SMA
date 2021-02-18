@@ -7,9 +7,11 @@ public class Perceptron {
 	private static final float bias = 1f;
 	
 	private Vector<Neuron> neurons;
+	private Vector<Float> lastPrediction;
 	
 	public Perceptron() {
 		neurons = new Vector<Neuron>();
+		lastPrediction = new Vector<Float>();
 	}
 	
 	public Perceptron(int input_size, int output_size) {
@@ -21,9 +23,13 @@ public class Perceptron {
 	
 	public Vector<Float> compute(Vector<Float> entry){
 		Vector<Float> res = new Vector<Float>();
+		entry.add(bias);
+		lastPrediction.clear();
 		
 		for (Neuron neuron: neurons) {
-			res.add(neuron.compute(entry));
+			float certitude = neuron.compute(entry);
+			lastPrediction.add(certitude);
+			res.add(certitude);
 		}
 		
 		return res;
