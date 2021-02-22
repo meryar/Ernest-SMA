@@ -51,8 +51,8 @@ public class Robot extends Object{
 		
 		sensors_number = 0;
 		sensors = new Vector<Sensor>();
-		for (int i= 0; i<2*visionRange; i++) {
-			for (int j=0; j<2*visionRange; j++) {
+		for (int i= 0; i<2*visionRange + 1; i++) {
+			for (int j=0; j<2*visionRange + 1; j++) {
 				Point location = new Point(j - (int) Math.floor(visionRange), i - (int) Math.floor(visionRange));
 				sensors.add(new VisualSensor(this, getMap(), location, sensors_number));
 				sensors_number += 1;

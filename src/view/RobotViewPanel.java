@@ -25,8 +25,8 @@ public class RobotViewPanel extends JPanel{
 		nb_colors = Main.colors.length;
 		nb_interactions = robot.Action.values().length;
 		screen_height = pan_height_/2;
-		x_offset = pan_width_ / (int)(Math.floor(Main.robot_vision_range * 2));
-		y_offset = screen_height / (int)(Math.floor(Main.robot_vision_range * 2));
+		x_offset = pan_width_ / (int)(Math.floor(Main.robot_vision_range * 2) + 1);
+		y_offset = screen_height / (int)(Math.floor(Main.robot_vision_range * 2 + 1));
 	}
 	
 	@Override
@@ -53,12 +53,12 @@ public class RobotViewPanel extends JPanel{
 					}
 					g.setColor(new Color(colorMap[s][0],colorMap[s][1],colorMap[s][2]));
 					g.fillRect(
-							(int)((s % (2*Main.robot_vision_range)) * x_offset), 
-							(int) (Math.floor(s/(Main.robot_vision_range*2))*y_offset), 
+							(int)((s % (2*Main.robot_vision_range + 1)) * x_offset), 
+							(int) (Math.floor(s/(Main.robot_vision_range*2 + 1))*y_offset), 
 							x_offset, 
 							y_offset);
 					g.setColor(new Color(colorMap[s][3],colorMap[s][4],0));
-					g.fillRect((int)(s % (Main.robot_vision_range*2) * x_offset), (int) (screen_height + y_offset* Math.floor(s/(Main.robot_vision_range*2))), x_offset, y_offset);
+					g.fillRect((int)(s % (Main.robot_vision_range*2 + 1) * x_offset), (int) (screen_height + y_offset* Math.floor(s/(Main.robot_vision_range*2 + 1))), x_offset, y_offset);
 					
 				}
 			}
