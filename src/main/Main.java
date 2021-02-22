@@ -14,6 +14,7 @@ public class Main {
 	public static final double robot_vision_range 	= 5;	// distance at which the robot is able to see
 	public static final int nb_colors               = 5;	// number of color than the robot will be able to see (1 per object type)
 	
+	public static final float learning_rate			= 0.001f; // learning rate of the agent's perceptron
 	public Main() {
 		
 		// create environment (agents are created by the environment)

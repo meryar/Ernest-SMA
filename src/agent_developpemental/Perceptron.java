@@ -2,6 +2,8 @@ package agent_developpemental;
 
 import java.util.Vector;
 
+import main.Main;
+
 public class Perceptron {
 
 	private static final float bias = 1f;
@@ -17,7 +19,7 @@ public class Perceptron {
 	public Perceptron(int input_size, int output_size) {
 		this();
 		for (int i=0; i<output_size; i++) {
-			neurons.add(new Neuron(input_size + 1));
+			neurons.add(new Neuron(input_size + 1, Main.learning_rate));
 		}
 	}
 	
