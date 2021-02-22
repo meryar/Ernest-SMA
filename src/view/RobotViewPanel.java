@@ -22,7 +22,7 @@ public class RobotViewPanel extends JPanel{
 		pan_height = pan_height_;
 		pan_width = pan_width_;
 		nb_sensors = nb_sensors_;
-		nb_colors = Main.nb_colors;
+		nb_colors = Main.colors.length;
 		nb_interactions = robot.Action.values().length;
 		screen_height = pan_height_/2;
 		x_offset = pan_width_ / (int)(Math.floor(Main.robot_vision_range * 2));

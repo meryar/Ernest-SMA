@@ -21,7 +21,7 @@ public class InterfaceAgentRobot {
 	
 	public InterfaceAgentRobot(Robot rob) {
 		robot = rob;
-		int input_size = (Main.nb_colors * robot.getSensorNb() + 1) * Action.values().length; 
+		int input_size = (Main.colors.length * robot.getSensorNb() + 1) * Action.values().length; 
 		agent = new AgentDeveloppemental(input_size);
 		
 		view = new RobotView("Robot " + robot.getId(), robot.getSensorNb());
@@ -67,7 +67,7 @@ public class InterfaceAgentRobot {
 			} else {
 				inter = new Vector<Boolean>();
 				for (int s=0; s<robot.getSensorNb(); s++) {
-					for (int c=0; c<Main.nb_colors; c++) {
+					for (int c=0; c<Main.colors.length; c++) {
 						inter.add(false);
 					}
 				}

@@ -21,24 +21,22 @@ public class Robot extends Object{
 	
 	private List<Point> trace;
 	private int sensors_number;
-	private Map<String,Sensor> sensors;  
+	private Vector<Sensor> sensors;  
 	private Action pending;
-	private Vector<Color> knownColors;
 	private int nbColors;
 	
 	public Robot(_2DMap map_, Color color_, Environment.Touch touch_, String name_,
 			boolean visible_, Point position, double visionRange) {
 		super(color_, touch_, name_, visible_, map_, position);
 		trace = new ArrayList<Point>();
-		knownColors = new Vector<Color>();
-		nbColors = Main.nb_colors;
+		nbColors = Main.colors.length;
 		
 		sensors_number = 0;
-		sensors = new HashMap<String,Sensor>();
+		sensors = new Vector<Sensor>();
 		for (int i= 0; i<2*visionRange; i++) {
 			for (int j=0; j<2*visionRange; j++) {
 				Point location = new Point(i - (int) Math.floor(visionRange), j - (int) Math.floor(visionRange));
-				sensors.put(Sensor.translate(location), new VisualSensor(this, getMap(), location, sensors_number));
+				sensors.add(new VisualSensor(this, getMap(), location, sensors_number));
 				sensors_number += 1;
 			}
 		}
@@ -49,15 +47,14 @@ public class Robot extends Object{
 		super(imageName, color, touch_, name_, visible_, direction_, map_, position);
 
 		trace = new ArrayList<Point>();
-		knownColors = new Vector<Color>();
-		nbColors = Main.nb_colors;
+		nbColors = Main.colors.length;
 		
 		sensors_number = 0;
-		sensors = new HashMap<String,Sensor>();
+		sensors = new Vector<Sensor>();
 		for (int i= 0; i<2*visionRange; i++) {
 			for (int j=0; j<2*visionRange; j++) {
-				Point location = new Point(i - (int) Math.floor(visionRange), j - (int) Math.floor(visionRange));
-				sensors.put(Sensor.translate(location), new VisualSensor(this, getMap(), location, sensors_number));
+				Point location = new Point(j - (int) Math.floor(visionRange), i - (int) Math.floor(visionRange));
+				sensors.add(new VisualSensor(this, getMap(), location, sensors_number));
 				sensors_number += 1;
 			}
 		}
@@ -156,21 +153,18 @@ public class Robot extends Object{
 		res.ensureCapacity(nbColors * getSensorNb());
 		for (int i=0; i<getSensorNb()*nbColors; i++) {res.add(false);}
 	 
-		for(String key: sensors.keySet()) {
-			if (((VisualSensor)sensors.get(key)).isAvailable()) {
-				Color seen = ((VisualSensor)sensors.get(key)).getSensoryInformation();
-				if (!knownColors.contains(seen)) {
-					knownColors.add(seen);
-				}
-				res.set(getColorId(seen) * (sensors_number) + sensors.get(key).getId(), true);
+		for(int i=0; i<sensors_number; i++) {
+			if (((VisualSensor)sensors.get(i)).isAvailable()) {
+				Color seen = ((VisualSensor)sensors.get(i)).getSensoryInformation();
+				res.set(getColorId(seen) * (sensors_number) + sensors.get(i).getId(), true);
 			}
 		}
 		return res;
 	}
 
 	private int getColorId(Color seen) {
-		for (int i=0; i<knownColors.size(); i++) {
-			if (knownColors.get(i).equals(seen)) {return i;}
+		for (int i=0; i<Main.colors.length; i++) {
+			if (Main.colors[i].equals(seen)) {return i;}
 		}
 		System.out.println("Error: unknown color seen by " + getName() + ": " + seen);
 		return -1;
