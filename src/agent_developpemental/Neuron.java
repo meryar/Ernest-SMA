@@ -18,9 +18,8 @@ public class Neuron {
 	}
 
 	public Float compute(Vector<Float> entry) {
-		if (entry.size() != entries_number) {
-			throw new IllegalStateException("illegal number of entries: " + entry.size() + " instead of " + entries_number);
-		}
+		assert (entry.size() != entries_number): "illegal number of entries: " + entry.size() + " instead of " + entries_number;
+		
 		Float sum = (float) 0;
 		for (int i=0; i<entries_number; i++) {
 			sum += weights.get(i) * entry.get(i);
