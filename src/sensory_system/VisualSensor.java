@@ -11,12 +11,14 @@ import objects.Robot;
 public class VisualSensor extends Sensor<Color>{
 	
 	private Point relPos;
-	Vector<Point> path;
+	//Vector<Point> path;
 
 	public VisualSensor(Robot robot_, _2DMap map_, Point relativePos, int id) {
 		super(robot_, map_, id);
 		relPos = relativePos;
-		path = makePath(relativePos);
+		//System.out.println("alpha: rel pos = " + relPos);
+		//path = makePath(relativePos);
+		//System.out.println("beta: relPos = " + relPos);
 	}
 
 	@Override
