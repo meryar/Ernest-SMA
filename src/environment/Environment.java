@@ -73,10 +73,12 @@ public class Environment {
 		for (InterfaceAgentRobot ag: agents_list) {
 			ag.getResults();
 		}
-
+		
+		/*
 		try {
 			Thread.sleep(500);
 		} catch (Exception e) {}	
+		*/
 	}
 
 	public void addAgent(Robot rob) {

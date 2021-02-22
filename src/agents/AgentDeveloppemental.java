@@ -1,7 +1,6 @@
 package agents;
 
-import java.util.Vector;
-
+import java.util.Vector;import agent_developpemental.Neuron;
 import agent_developpemental.Perceptron;
 import main.Main;
 import objects.Robot;
@@ -20,14 +19,16 @@ public class AgentDeveloppemental extends Agent{
 
 	@Override
 	public Action decide(Vector<Float> resultsTMinus1) {
-		Action intended = decideAction();
+		Action intended = decideAction(resultsTMinus1);
 		//last_inter = new InteractionSec(intended, robot.getSensorNb());
 		return intended;
 	}
 
-	private Action decideAction() {
+	private Action decideAction(Vector<Float> resultsTMinus1) {
 		
-		//Vector<Double> predictions
+		Vector<Float> predictions = perceptron.compute(resultsTMinus1);
+		
+		System.out.println(predictions);
 		
 		return Action.MOVE_FWD;
 	}
