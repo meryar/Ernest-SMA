@@ -1,7 +1,6 @@
 package view;
 
 import java.awt.Color;
-import java.awt.Desktop.Action;
 import java.awt.Graphics;
 import java.util.Vector;
 

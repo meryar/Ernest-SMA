@@ -3,8 +3,6 @@ package environment;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
-import agents.Agent;
-import agents.AgentDeveloppemental;
 import objects.Robot;
 import view.View;
 

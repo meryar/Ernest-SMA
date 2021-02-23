@@ -9,7 +9,6 @@ import main.Main;
 import objects.Robot;
 import robot.Action;
 import view.RobotView;
-import view.View;
 
 public class InterfaceAgentRobot {
 
