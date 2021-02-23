@@ -15,10 +15,10 @@ public class Main {
 	public static final int trace_size 				= 10;	// number of previous actions of the robot displayed
 	public static final int robot_vision_range 		= 5;	// distance at which the robot is able to see
 	public static final float learning_rate			= 0.1f; // learning rate of the agent's perceptron
-	public static final Color[] colors              = {Environment.WALL1,
-													   Environment.FIELD_COLOR,
+	public static final Color[] colors              = {Environment.FISH2,
+													   Environment.WALL1,
+													   //Environment.FIELD_COLOR,
 													   Environment.FISH1,
-													   Environment.FISH2,
 													   Environment.ROBOT_COLOR};	
 
 	public Main() {

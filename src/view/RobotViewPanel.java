@@ -56,7 +56,7 @@ public class RobotViewPanel extends JPanel{
 							(int) (Math.floor(s/(Main.robot_vision_range*2 + 1))*y_offset), 
 							x_offset, 
 							y_offset);
-					g.setColor(new Color(colorMap[s][3],colorMap[s][4],0));
+					g.setColor(new Color(colorMap[s][3], 0, 0));
 					g.fillRect((int)(s % (Main.robot_vision_range*2 + 1) * x_offset), (int) (screen_height + y_offset* Math.floor(s/(Main.robot_vision_range*2 + 1))), x_offset, y_offset);
 					
 				}

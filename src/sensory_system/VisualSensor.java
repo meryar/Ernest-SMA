@@ -7,6 +7,7 @@ import java.util.Vector;
 import environment.Direction;
 import environment.Environment;
 import environment._2DMap;
+import main.Main;
 import objects.Robot;
 
 public class VisualSensor extends Sensor<Color>{
@@ -27,9 +28,11 @@ public class VisualSensor extends Sensor<Color>{
 		Direction robotOrientation = robot.getDirection();
 		Point posSens = map.getOrientedRelPos(robot.getPosition(), robotOrientation, relPos);
 		if (!map.isLegalPosition(posSens)) {return null;}
-		if (map.getMap()[posSens.y][posSens.x].isEmpty()) {return Environment.FIELD_COLOR;}
+		if (map.getMap()[posSens.y][posSens.x].isEmpty()) {return null;}
 		
-		return map.getMap()[posSens.y][posSens.x].get(map.getMap()[posSens.y][posSens.x].size() - 1).getColor();
+		Color res = map.getMap()[posSens.y][posSens.x].get(map.getMap()[posSens.y][posSens.x].size() - 1).getColor();
+		if (res.equals(Environment.FIELD_COLOR)) {return null;}
+		return res;
 	}
 	
 	private Vector<Point> makePath(Point relativePos) {
@@ -71,7 +74,7 @@ public class VisualSensor extends Sensor<Color>{
 	}
 
 	public boolean isAvailable() {
-		return map.isLegalPosition(map.getOrientedRelPos(robot.getPosition(), robot.getDirection(), relPos));
+		return !(getSensoryInformation() == null);
 	}
 	
 }
