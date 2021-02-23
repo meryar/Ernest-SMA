@@ -9,11 +9,11 @@ public class Perceptron {
 	private static final float bias = 1f;
 	
 	private Vector<Neuron> neurons;
-	private Vector<Float> lastPrediction;
+	private Vector<Float> lastEntry;
 	
 	public Perceptron() {
 		neurons = new Vector<Neuron>();
-		lastPrediction = new Vector<Float>();
+		lastEntry = new Vector<Float>();
 	}
 	
 	public Perceptron(int input_size, int output_size) {
@@ -26,15 +26,23 @@ public class Perceptron {
 	public Vector<Float> compute(Vector<Float> entry){
 		Vector<Float> res = new Vector<Float>();
 		entry.add(bias);
-		lastPrediction.clear();
+		lastEntry = (Vector<Float>) entry.clone();
 		
 		for (Neuron neuron: neurons) {
 			float certitude = neuron.compute(entry);
-			lastPrediction.add(certitude);
 			res.add(certitude);
 		}
 		
 		return res;
 	}
 
+	public void learn(Vector<Float> trainingWeights) {
+		assert (trainingWeights.size() == neurons.size()): "error: number of learning weights different from neurons number!";
+		
+		for (int i=0; i<neurons.size(); i++) {
+			if (trainingWeights.get(i) != 0f) {
+				neurons.get(i).learn(lastEntry, trainingWeights.get(i));
+			}
+		}
+	}
 }
