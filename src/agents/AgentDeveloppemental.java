@@ -86,9 +86,7 @@ public class AgentDeveloppemental extends Agent{
 
 	@Override
 	public void learn(Vector<Float> results) {
-		
-		// TODO: learn from result
-		//Vector<Boolean> sight = robot.getSensoryInformation();
+		perceptron.learn(results);
 	}
 
 }

@@ -50,8 +50,18 @@ public class InterfaceAgentRobot {
 	public void getResults() {
 		lastEnacted = robot.getResults();
 		lastSeen = robot.getSensoryInformation();
-		//agent.learn(entryForDeciding(), entryForLearning());
+		
+		Vector<Float> learning_entry = entryForDeciding();
 		view.updateView(entryForDeciding());
+		
+		for (Action act: Action.values()) {
+			learning_entry.remove(learning_entry.size() - 1);
+		}
+		
+		learning_entry.addAll(entryForLearning());
+		
+		agent.learn(learning_entry);
+		
 	}
 	
 	private Vector<Float> entryForDeciding(){
