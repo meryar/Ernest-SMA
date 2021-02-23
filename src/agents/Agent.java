@@ -1,8 +1,6 @@
 package agents;
 
 import java.util.Vector;
-
-import objects.Robot;
 import robot.Action;
 
 public abstract class Agent {

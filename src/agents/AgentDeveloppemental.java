@@ -3,12 +3,10 @@ package agents;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;import agent_developpemental.Neuron;
+import java.util.Vector;
 import agent_developpemental.Perceptron;
 import main.Main;
-import objects.Robot;
 import robot.Action;
-import robot.InteractionSec;
 
 public class AgentDeveloppemental extends Agent{
 	
@@ -32,9 +30,8 @@ public class AgentDeveloppemental extends Agent{
 
 	@Override
 	public Action decide(Vector<Float> resultsTMinus1) {
-		Action intended = decideAction(resultsTMinus1);
-		//last_inter = new InteractionSec(intended, robot.getSensorNb());
-		return intended;
+		
+		return decideAction(resultsTMinus1);
 	}
 
 	private Action decideAction(Vector<Float> resultsTMinus1) {
