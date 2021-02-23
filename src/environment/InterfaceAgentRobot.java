@@ -51,16 +51,9 @@ public class InterfaceAgentRobot {
 		lastEnacted = robot.getResults();
 		lastSeen = robot.getSensoryInformation();
 		
-		Vector<Float> learning_entry = entryForDeciding();
 		view.updateView(entryForDeciding());
 		
-		for (Action act: Action.values()) {
-			learning_entry.remove(learning_entry.size() - 1);
-		}
-		
-		learning_entry.addAll(entryForLearning());
-		
-		agent.learn(learning_entry);
+		agent.learn(entryForLearning());
 		
 	}
 	
@@ -96,7 +89,9 @@ public class InterfaceAgentRobot {
 	}
 	
 	private Vector<Float> entryForLearning() {
-		Vector<Float> res = new Vector<>();
+		int codeEnacted = -1;
+		Vector<Float> base = entryForDeciding();
+		Vector<Float> prim = new Vector<>();
 		Vector<Action> alternates = new Vector<Action>();
 		alternates.add(Action.MOVE_FWD);
 		alternates.add(Action.BUMP);
@@ -105,18 +100,34 @@ public class InterfaceAgentRobot {
 		alternates.add(Action.FEAST);
 		
 		for (Action act: Action.values()) {
-			res.add(act == lastEnacted? 1f: 0f);
+			base.remove(base.size()-1);
+			prim.add(act == lastEnacted? 1f: 0f);
 		}
 		
 		if (alternates.contains(lastEnacted)) {
 			for (int i=0; i<alternates.size(); i++) {
 				if (lastEnacted != alternates.get(i)) {
-					res.set(i, -1f);
+					prim.set(i, -1f);
 				}
 			}
 		}
 		
-		return res;
+		for (int i = 0; i < Action.values().length; i++) {
+			if (Action.values()[i].equals(lastEnacted)) {
+				codeEnacted = i;
+			}
+		}
+		
+		int offset = robot.getSensorNb()*Main.colors.length;
+		for (int i=0; i<offset; i++) {
+			if (base.get(codeEnacted * offset + i) == 0f) {
+				base.set(codeEnacted * offset + i,- 1f);
+			}
+		}
+		
+		base.addAll(prim);
+		
+		return base;
 	}
 	
 }
