@@ -3,17 +3,24 @@ package agent_developpemental;
 import java.util.Vector;
 
 import main.Main;
+import view.PerceptronView;
 
 public class Perceptron {
 
 	private static final float bias = 1f;
 	
 	private Vector<Neuron> neurons;
+
 	private Vector<Float> lastEntry;
+	private PerceptronView view;
 	
 	public Perceptron() {
 		neurons = new Vector<Neuron>();
 		lastEntry = new Vector<Float>();
+		
+		view = new PerceptronView("Signatures", this);
+		view.pack();
+        view.setVisible(true);
 	}
 	
 	public Perceptron(int input_size, int output_size) {
@@ -44,5 +51,9 @@ public class Perceptron {
 				neurons.get(i).learn(lastEntry, trainingWeights.get(i));
 			}
 		}
+	}
+
+	public Vector<Neuron> getNeurons() {
+		return neurons;
 	}
 }
