@@ -42,7 +42,7 @@ public class AgentDeveloppemental extends Agent{
 		
 		// isolate predictions for primary interactions
 		List<Float> primary = predictions.subList(predictions.size() - Action.values().length, predictions.size());
-		System.out.println(primary);
+		//System.out.println(primary);
 		// find the most uncertain prediction
 		float min_abs = 1f;
 		float min = 1f;
@@ -55,7 +55,7 @@ public class AgentDeveloppemental extends Agent{
 		
 		if (min_abs < certitude_treshold) {
 			// if uncertain primary action then explore it
-			System.out.println("learning primary actions!");
+			//System.out.println("learning primary actions!");
 			int min_index = primary.indexOf(min);
 			choice = Action.values()[min_index];
 		} else {
@@ -86,10 +86,10 @@ public class AgentDeveloppemental extends Agent{
 			if (min_abs < certitude_treshold) {
 				// if uncertain secondary action then explore it
 				int min_index = secondary.indexOf(min);
-				System.out.println("learning secondary actions " + min_index + " of certitude " + min);
+				//System.out.println("learning secondary actions " + min_index + " of certitude " + min);
 				choice = Action.values()[(int) Math.floor(min_index / offset)];
 			} else {
-				System.out.println("exploitation");
+				//System.out.println("exploitation");
 				choice = mostUseful(predictions);
 			}
 		} 
@@ -102,11 +102,11 @@ public class AgentDeveloppemental extends Agent{
 		int max_index = Action.values().length - 1;
 
 		List<Float> to_consider = predictions.subList(Action.values().length * Main.colors.length * (int) Math.pow(2*Main.robot_vision_range + 1, 2), predictions.size());
-		System.out.println(to_consider.size());
+		//System.out.println(to_consider.size());
 		
 		for (int i=0; i<to_consider.size(); i++) {
 			if (to_consider.get(i) > 0) {
-				System.out.println(utilities.get(Action.values()[i]) + " ? " + max_utility);
+				//System.out.println(utilities.get(Action.values()[i]) + " ? " + max_utility);
 				if (utilities.get(Action.values()[i]) > max_utility) {
 					max_utility = utilities.get(Action.values()[i]);
 					max_index = i;

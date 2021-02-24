@@ -232,6 +232,7 @@ public class _2DMap {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
+		//System.out.println("entries: (" + startPos.x + "," + startPos.y + "),(" + relPos.x + "," + relPos.y + ") and direction " + direction + " got result (" + res.x + "," + res.y + ")");
 		return (res);
 	}
 	

@@ -7,7 +7,6 @@ import java.util.Vector;
 import environment.Direction;
 import environment.Environment;
 import environment._2DMap;
-import main.Main;
 import objects.Robot;
 
 public class VisualSensor extends Sensor<Color>{
