@@ -17,7 +17,7 @@ public class Neuron {
 		max_abs_weight = 1;
 		
 		for (int i=0; i<entries_number; i++) {
-			weights.add((float)(Math.random() * 2 - 1));
+			weights.add(0f);
 		}
 	}
 
