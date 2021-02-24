@@ -10,24 +10,27 @@ public class Perceptron {
 	private static final float bias = 1f;
 	
 	private Vector<Neuron> neurons;
-
+	public float max_abs_weight;
 	private Vector<Float> lastEntry;
 	private PerceptronView view;
 	
 	public Perceptron() {
 		neurons = new Vector<Neuron>();
 		lastEntry = new Vector<Float>();
-		
-		view = new PerceptronView("Signatures", this);
-		view.pack();
-        view.setVisible(true);
+		max_abs_weight = 1;
 	}
 	
 	public Perceptron(int input_size, int output_size) {
 		this();
+		System.out.println("creating perceptron with " + output_size + " neurons");
 		for (int i=0; i<output_size; i++) {
 			neurons.add(new Neuron(input_size + 1, Main.learning_rate));
 		}
+
+		view = new PerceptronView("Signatures", this);
+		view.pack();
+        view.setVisible(true);
+		
 	}
 	
 	public Vector<Float> compute(Vector<Float> entry){
@@ -48,9 +51,11 @@ public class Perceptron {
 		
 		for (int i=0; i<neurons.size(); i++) {
 			if (trainingWeights.get(i) != 0f) {
-				neurons.get(i).learn(lastEntry, trainingWeights.get(i));
+				float max = neurons.get(i).learn(lastEntry, trainingWeights.get(i));
+				max_abs_weight = Math.max(max_abs_weight, max);
 			}
 		}
+		view.repaint();
 	}
 
 	public Vector<Neuron> getNeurons() {

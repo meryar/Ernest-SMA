@@ -20,8 +20,8 @@ public class PerceptronView extends JFrame{
 		super(name);
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		pan_height = (int) (screenSize.getHeight() * 0.9);
-		pan_width = (int) (screenSize.getWidth() * 0.6);
+		pan_height = (int) (screenSize.getHeight() * 0.4);
+		pan_width = (int) (screenSize.getWidth() * 0.9);
 	
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		

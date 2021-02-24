@@ -8,10 +8,14 @@ public class Neuron {
 	private Vector<Float> weights;
 	private float c; 				// learning rate
 	
+	public float max_abs_weight; 
+	
 	public Neuron(int input_size, float learning_rate) {
 		weights = new Vector<Float>();
 		entries_number = input_size;
 		c = learning_rate;
+		max_abs_weight = 1;
+		
 		for (int i=0; i<entries_number; i++) {
 			weights.add((float)(Math.random() * 2 - 1));
 		}
@@ -27,10 +31,16 @@ public class Neuron {
 		return (float) ( 1 / (1+Math.exp(-sum)))*2-1;
 	}
 	
-	public void learn(Vector<Float> entry, float error) {
+	public float learn(Vector<Float> entry, float error) {
         for (int i = 0; i < weights.size(); i++) {
             weights.set(i, weights.get(i) + c * error * entry.get(i));
+            max_abs_weight = Math.max(Math.abs(weights.get(i)), max_abs_weight);
         }
+        return max_abs_weight;
 	}
 
+
+	public Vector<Float> getWeights() {
+		return weights;
+	}
 }

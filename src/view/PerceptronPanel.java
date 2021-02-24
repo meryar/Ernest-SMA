@@ -32,20 +32,39 @@ public class PerceptronPanel extends JPanel{
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, pan_width, pan_height);
 		
-		int neuron_offset = (int) (Action.values().length * Main.colors.length * nb_sensors);
-		int x_offset = 0;
-		int y_offset = screen_y_offset;
+		int offset_to_prim = (int) (Action.values().length * Main.colors.length * nb_sensors);
+		int offset = (int) (Main.colors.length * nb_sensors);
+		
+		int big_x_offset = 0;
+		int big_y_offset = screen_y_offset;
+		int small_x_offset = (screen_x_offset / (Main.robot_vision_range*2 + 1));
+		int small_y_offset = (screen_y_offset / (Main.robot_vision_range*2 + 1));
 		
 		for (int i=0; i<Action.values().length; i++) {
-			x_offset = i * screen_x_offset;
+			big_x_offset = i * screen_x_offset;
 			
-			Neuron neuron = perceptron.getNeurons().get(neuron_offset + i);
+			Neuron neuron = perceptron.getNeurons().get(offset_to_prim + i);
 			for (int s=0; s<nb_sensors; s++) {
-				int x = x_offset + (screen_x_offset / (Main.robot_vision_range*2 + 1)) * s % (Main.robot_vision_range*2 + 1);
-				int y = ((screen_y_offset / (Main.robot_vision_range*2 + 1)) * s % (Main.robot_vision_range*2 + 1));
-				//g.setColor();
+				int x = big_x_offset + small_x_offset * (s % (Main.robot_vision_range*2 + 1));
+				int y = (int) (small_y_offset * (Math.floor(s / (Main.robot_vision_range*2 + 1))));
+
+				float weight0 = normalize(neuron.getWeights().get(i * offset + 0 * nb_sensors + s), neuron.max_abs_weight);
+				float weight1 = normalize(neuron.getWeights().get(i * offset + 1 * nb_sensors + s), neuron.max_abs_weight);
+				float weight2 = normalize(neuron.getWeights().get(i * offset + 2 * nb_sensors + s), neuron.max_abs_weight);
+				//System.out.println("normalized weigths: " + weight0 + " " + weight1 + " " + weight2);
+				
+				g.setColor(new Color(
+						weight0,
+						weight1,
+						weight2
+						));
+				g.fillRect(x, y, small_x_offset, small_y_offset);
 			}
 		}
+	}
+
+	private float normalize(Float n, float max) {
+		return (n + max) / (2*max);
 	}
 	
 }
