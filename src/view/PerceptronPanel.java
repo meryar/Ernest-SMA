@@ -59,9 +59,9 @@ public class PerceptronPanel extends JPanel{
 						));
 				g.fillRect(x, y, small_x_offset, small_y_offset);
 				
-				float weight0Neg = reverseNormalize(neuron.getWeights().get(i * offset + 0 * nb_sensors + s), neuron.max_abs_weight);
-				float weight1Neg = reverseNormalize(neuron.getWeights().get(i * offset + 1 * nb_sensors + s), neuron.max_abs_weight);
-				float weight2Neg = reverseNormalize(neuron.getWeights().get(i * offset + 2 * nb_sensors + s), neuron.max_abs_weight);
+				float weight0Neg = reverseNormalize(neuron.getWeights().get(i * offset + 0 * nb_sensors + s), neuron.min_weight);
+				float weight1Neg = reverseNormalize(neuron.getWeights().get(i * offset + 1 * nb_sensors + s), neuron.min_weight);
+				float weight2Neg = reverseNormalize(neuron.getWeights().get(i * offset + 2 * nb_sensors + s), neuron.min_weight);
 				
 				g.setColor(new Color(
 						weight0Neg,
@@ -77,8 +77,9 @@ public class PerceptronPanel extends JPanel{
 		return Math.max(0, n/max);
 	}
 	
-	private float reverseNormalize(Float n, float max) {
-		return Math.max(0, n/-max);
+	private float reverseNormalize(Float n, float min) {
+		//System.out.println(n + " / " + min + " = " + Math.max(0, n/min));
+		return Math.max(0, n/min);
 	}
 	
 }
