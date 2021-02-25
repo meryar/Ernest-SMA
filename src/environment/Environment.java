@@ -36,7 +36,7 @@ public class Environment {
 
 	
 	private List<InterfaceAgentRobot> agents_list;
-	int nb_agents;
+	private int nb_agents, step;
 	private _2DMap map;
 	private int env_height;
 	private int env_width;
@@ -44,6 +44,7 @@ public class Environment {
 
 	public Environment(String env_layout) {
 		
+		step = 0;
 		nb_agents = 0;
 		agents_list = new ArrayList<InterfaceAgentRobot>(nb_agents);
 		
@@ -73,6 +74,15 @@ public class Environment {
 			ag.getResults();
 		}
 		
+		
+		if (step % 100 == 0) {
+			System.out.println(
+				"==================================================================== step " +
+				step +
+				" ===================================================================");
+		}
+		step += 1;
+		
 		/*
 		try {
 			Thread.sleep(500);
@@ -91,4 +101,8 @@ public class Environment {
 	}
 	
 	public _2DMap getMap() {return map;}
+
+	public int getStep() {
+		return step;
+	}
 }
