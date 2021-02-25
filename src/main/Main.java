@@ -11,10 +11,10 @@ public class Main {
 	public boolean run;
 	
 	// program arguments (change them here)
-	private static final String env_path 			= "ressources/maps/board_16x16_1.txt";	// path to the file containing the environment layout
+	private static final String env_path 			= "ressources/maps/test_10x10.txt";	// path to the file containing the environment layout
 	public static final int trace_size 				= 10;	// number of previous actions of the robot displayed
-	public static final int robot_vision_range 		= 5;	// distance at which the robot is able to see
-	public static final float learning_rate			= 0.1f; // learning rate of the agent's perceptron
+	public static final int robot_vision_range 		= 2;	// distance at which the robot is able to see
+	public static final float learning_rate			= 0.01f; // learning rate of the agent's perceptron
 	public static final Color[] colors              = {Environment.FISH2,
 													   Environment.WALL1,
 													   //Environment.FIELD_COLOR,
