@@ -23,7 +23,7 @@ public class Main {
 
 	public Main() {
 		
-		// create environment (agents are created by the environment)
+		// create environment
 		env = new Environment(env_path);
 		
 		// launch simulation loop

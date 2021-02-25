@@ -121,7 +121,7 @@ public class InterfaceAgentRobot {
 		int offset = robot.getSensorNb()*Main.colors.length;
 		for (int i=0; i<offset; i++) {
 			if (base.get(codeEnacted * offset + i) == 0f) {
-				base.set(codeEnacted * offset + i,- 1f);
+				base.set(codeEnacted * offset + i, -1f);
 			}
 		}
 		

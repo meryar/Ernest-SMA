@@ -3,8 +3,6 @@ package agent_developpemental;
 import java.util.HashMap;
 import java.util.Vector;
 
-import main.Main;
-
 public class Data {
 	
 	private Vector<Float> data;
