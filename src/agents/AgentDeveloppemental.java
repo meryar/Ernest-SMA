@@ -73,19 +73,20 @@ public class AgentDeveloppemental extends Agent{
 			int offset = (int) Main.colors.length * (int) Math.pow(2*Main.robot_vision_range + 1, 2);
 			min_abs = 1f;
 			min = 1f;
+			int min_index = -1;
 			for (int act: enactable) {
 				for (int i=0; i<offset; i++) {
 					float pred = secondary.get(act*offset + i);
 					if (Math.abs(pred) < min_abs) {
 						min_abs = Math.abs(pred);
 						min = pred;
+						min_index = act*offset + i;
 					}
 				}
 			}
 			
 			if (min_abs < certitude_treshold) {
 				// if uncertain secondary action then explore it
-				int min_index = secondary.indexOf(min);
 				//System.out.println("learning secondary actions " + min_index + " of certitude " + min);
 				choice = Action.values()[(int) Math.floor(min_index / offset)];
 			} else {
