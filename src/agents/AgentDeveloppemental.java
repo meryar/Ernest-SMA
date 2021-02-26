@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+
+import agent_developpemental.Data;
 import agent_developpemental.Perceptron;
 import main.Main;
 import robot.Action;
@@ -29,80 +31,52 @@ public class AgentDeveloppemental extends Agent{
 	}
 
 	@Override
-	public Action decide(Vector<Float> resultsTMinus1) {
+	public Action decide(Data resultsTMinus1) {
 		
 		return decideAction(resultsTMinus1);
 	}
 
-	private Action decideAction(Vector<Float> resultsTMinus1) {
+	private Action decideAction(Data resultsTMinus1) {
 		Action choice;
 		
 		// get predictions of success from perceptron
-		Vector<Float> predictions = perceptron.compute(resultsTMinus1);
+		Vector<Float> prediction = perceptron.compute(resultsTMinus1.getData());
+		Data predictions = new Data(Action.values().length, 
+				Main.colors.length, 
+				(int) (Math.pow(Main.robot_vision_range*2 +1, 2)),
+				prediction);
 		
 		// isolate predictions for primary interactions
-		List<Float> primary = predictions.subList(predictions.size() - Action.values().length, predictions.size());
+		HashMap<Integer, Float> enactable = predictions.getEnactable(certitude_treshold);
 		//System.out.println(primary);
 		// find the most uncertain prediction
 		float min_abs = 1f;
 		float min = 1f;
-		for (float pred: primary) {
-			if (Math.abs(pred) < min_abs) {
-				min_abs = Math.abs(pred);
-				min = pred;
+		int min_index = -1;
+		for (int key: enactable.keySet()) {
+			if (Math.abs(enactable.get(key)) < min_abs) {
+				min_abs = Math.abs(enactable.get(key));
+				min = enactable.get(key);
+				min_index = key;
 			}
 		}
 		
 		if (min_abs < certitude_treshold) {
 			// if uncertain primary action then explore it
 			//System.out.println("learning primary actions!");
-			int min_index = primary.indexOf(min);
-			choice = Action.values()[min_index];
+			choice = Action.values()[predictions.translate(min_index)[0]];
 		} else {
-			// if no uncertain primary then explore secondary actions
-			
-			// find enactable primaries
-			Vector<Integer> enactable = new Vector<Integer>();
-			for (int i=0; i<primary.size(); i++) {
-				if (primary.get(i) > 0) {enactable.add(i);}
-			}
-			
-			List<Float> secondary = predictions.subList(0, predictions.size() - Action.values().length);
-			
-			// find the most uncertain prediction
-			int offset = (int) Main.colors.length * (int) Math.pow(2*Main.robot_vision_range + 1, 2);
-			min_abs = 1f;
-			min = 1f;
-			int min_index = -1;
-			for (int act: enactable) {
-				for (int i=0; i<offset; i++) {
-					float pred = secondary.get(act*offset + i);
-					if (Math.abs(pred) < min_abs) {
-						min_abs = Math.abs(pred);
-						min = pred;
-						min_index = act*offset + i;
-					}
-				}
-			}
-			
-			if (min_abs < certitude_treshold) {
-				// if uncertain secondary action then explore it
-				//System.out.println("learning secondary actions " + min_index + " of certitude " + min);
-				choice = Action.values()[(int) Math.floor(min_index / offset)];
-			} else {
-				//System.out.println("exploitation");
-				choice = mostUseful(predictions);
-			}
+			choice = mostUseful(predictions);
 		} 
 		
 		return choice;
 	}
 
-	private Action mostUseful(Vector<Float> predictions) {
+	private Action mostUseful(Data predictions) {
 		float max_utility = Float.NEGATIVE_INFINITY;
 		int max_index = Action.values().length - 1;
 
-		List<Float> to_consider = predictions.subList(Action.values().length * Main.colors.length * (int) Math.pow(2*Main.robot_vision_range + 1, 2), predictions.size());
+		List<Float> to_consider = predictions.getPrimarys();
 		//System.out.println(to_consider.size());
 		
 		for (int i=0; i<to_consider.size(); i++) {
