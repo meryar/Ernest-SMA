@@ -60,6 +60,16 @@ public class Data {
 		return primarys;
 	}
 	
+	public void replaceData(Vector<Float> new_data) {
+		data.clear();
+		data.addAll(new_data);
+		isComplete();
+	}
+	
+	public void set(int index, float data_) {
+		data.set(index, data_);
+	}
+	
 	public int[] translate(int index){
 		if (index > offsetToPrim - 1) {
 			int[] res = {index - offsetToPrim, -1, -1};
@@ -102,13 +112,25 @@ public class Data {
 	}
 	
 	public boolean isComplete() {
+		if (data.size() != offsetToPrim + nb_interactions) {
+			System.err.println("Warning: data size is incorect!");
+		}
 		if (data.contains(null)) {
 			System.err.println("Warning: data is incomplete!");
 			return false;
 		}
 		return true;
 	}
+	
+	public Vector<Float> getData(){
+		return data;
+	}
+	
+	public int size() {
+		return data.size();
+	}
 
+	/*
 	// For testing purposes
 	public static void main(String[] args){
 		System.out.println("test");
@@ -117,6 +139,6 @@ public class Data {
 		
 		int[] translation = test.translate(1371);
 		System.out.println(translation[0] + " " + translation[1] + " " + translation[2]);
-	}
+	}*/
 }
 
