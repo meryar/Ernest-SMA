@@ -1,14 +1,15 @@
 package main;
 
 import java.awt.Color;
-
 import environment.Environment;
+import view.ControlView;
 
 
 public class Main {
 	
 	public Environment env;
-	public boolean run;
+	public boolean run, pause;
+	public ControlView controlView;
 	
 	// program arguments (change them here)
 	private static final String env_path 			= "ressources/maps/test_10x10.txt";	// path to the file containing the environment layout
@@ -23,15 +24,23 @@ public class Main {
 
 	public Main() {
 		
-		// create environment
+		// create environment and control panel
 		env = new Environment(env_path);
+		controlView = new ControlView("Control panel", this);
+		controlView.pack();
+		controlView.setVisible(true);
 		
 		// launch simulation loop
 		run = true;
+		pause = true;
 		while (run) {
+			while (pause) {
+				try {
+					Thread.sleep(200);
+				} catch (Exception e) {}
+			}
 			env.step();	
 		}
-		
 		
 	}
 	
