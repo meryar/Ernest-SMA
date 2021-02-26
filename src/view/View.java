@@ -14,7 +14,7 @@ public class View extends JFrame {
 	
 	private int pan_height,pan_width;
 	private int env_height,env_width;
-	private ViewPanel panel; 
+	private ViewPanel panel;
 
 	public View(Environment env_, _2DMap map, int env_height_, int env_width_, String name) {
 		super(name);
@@ -30,10 +30,9 @@ public class View extends JFrame {
 		panel=new ViewPanel(map, pan_height, pan_width, env_height, env_width);
     	this.setContentPane(panel);
     	
-		JLabel emptyLabel = new JLabel("");
-        emptyLabel.setPreferredSize(new Dimension(pan_width,pan_height));
-        this.getContentPane().add(emptyLabel, BorderLayout.CENTER);
-        
+    	JLabel emptyLabel = new JLabel("");
+		emptyLabel.setPreferredSize(new Dimension(pan_width,pan_height));
+		this.getContentPane().add(emptyLabel, BorderLayout.CENTER);
 	}
 	
 	public void updateView() {

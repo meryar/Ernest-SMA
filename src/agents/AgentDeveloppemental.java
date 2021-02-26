@@ -46,6 +46,8 @@ public class AgentDeveloppemental extends Agent{
 				(int) (Math.pow(Main.robot_vision_range*2 +1, 2)),
 				prediction);
 		
+		System.out.println(predictions.getPrimarys());
+		
 		// isolate predictions for primary interactions
 		HashMap<Integer, Float> enactable = predictions.getEnactable(certitude_treshold);
 		//System.out.println(primary);

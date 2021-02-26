@@ -44,13 +44,21 @@ public class PerceptronPanel extends JPanel{
 			big_x_offset = i * screen_x_offset;
 			
 			Neuron neuron = perceptron.getNeurons().get(offset_to_prim + i);
+			System.out.println( "Interaction " + Action.values()[i]
+					+ ": max: " + neuron.max_weight 
+					+ " min: " + neuron.min_weight 
+					+ " max abs: " + neuron.max_abs_weight
+					+ " bias: " + neuron.bias);
 			for (int s=0; s<nb_sensors; s++) {
 				int x = big_x_offset + small_x_offset * (s % (Main.robot_vision_range*2 + 1));
 				int y = (int) (small_y_offset * (Math.floor(s / (Main.robot_vision_range*2 + 1))));
 
-				float weight0Pos = normalize(neuron.getWeights().get(i * offset + 0 * nb_sensors + s), neuron.max_abs_weight);
-				float weight1Pos = normalize(neuron.getWeights().get(i * offset + 1 * nb_sensors + s), neuron.max_abs_weight);
-				float weight2Pos = normalize(neuron.getWeights().get(i * offset + 2 * nb_sensors + s), neuron.max_abs_weight);
+				if(neuron.getWeights().get(i * offset + 0 * nb_sensors + s) == neuron.max_weight) {System.err.println("OK");}
+				float weight0Pos = normalize(neuron.getWeights().get(i * offset + 3 * nb_sensors + s), neuron.max_weight);
+				float weight1Pos = normalize(neuron.getWeights().get(i * offset + 1 * nb_sensors + s), neuron.max_weight);
+				float weight2Pos = normalize(neuron.getWeights().get(i * offset + 2 * nb_sensors + s), neuron.max_weight);
+
+				System.out.println("s " + s + " pos: w0 " + weight0Pos + "   w1 " + weight1Pos + "   w2 " + weight2Pos);
 				
 				g.setColor(new Color(
 						weight0Pos,
@@ -59,9 +67,11 @@ public class PerceptronPanel extends JPanel{
 						));
 				g.fillRect(x, y, small_x_offset, small_y_offset);
 				
-				float weight0Neg = reverseNormalize(neuron.getWeights().get(i * offset + 0 * nb_sensors + s), neuron.min_weight);
+				float weight0Neg = reverseNormalize(neuron.getWeights().get(i * offset + 3 * nb_sensors + s), neuron.min_weight);
 				float weight1Neg = reverseNormalize(neuron.getWeights().get(i * offset + 1 * nb_sensors + s), neuron.min_weight);
 				float weight2Neg = reverseNormalize(neuron.getWeights().get(i * offset + 2 * nb_sensors + s), neuron.min_weight);
+				
+				System.out.println("s " + s + " neg: w0 " + weight0Neg + "   w1 " + weight1Neg + "   w2 " + weight2Neg);
 				
 				g.setColor(new Color(
 						weight0Neg,
@@ -73,12 +83,15 @@ public class PerceptronPanel extends JPanel{
 		}
 	}
 
-	private float normalize(Float n, float max) {
+	private float normalize(float n, float max) {
+		if(Float.isInfinite(Math.max(0, n/max))){
+			System.err.println(n + " / " + max + " = infinity");
+		}
+		System.out.println(Math.max(0, n/max));
 		return Math.max(0, n/max);
 	}
 	
 	private float reverseNormalize(Float n, float min) {
-		//System.out.println(n + " / " + min + " = " + Math.max(0, n/min));
 		return Math.max(0, n/min);
 	}
 	

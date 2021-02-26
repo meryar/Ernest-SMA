@@ -63,7 +63,6 @@ public class Environment {
 
 	public void step() {
 		
-		main_frame.updateView();
 		
 		map.reset();
 		
@@ -73,6 +72,8 @@ public class Environment {
 		for (InterfaceAgentRobot ag: agents_list) {
 			ag.getResults();
 		}
+		
+		main_frame.updateView();
 		
 		
 		if (step % 100 == 0) {
