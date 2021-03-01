@@ -33,7 +33,7 @@ public class PerceptronPanel extends JPanel implements ActionListener, MouseList
 		pan_height = pan_height_;
 		pan_width = pan_width_;
 		perceptron = perceptron_;
-		screen_y_offset = (int) (pan_height / 2);
+		screen_y_offset = (int) ((pan_height - 20) / 2);
 		screen_x_offset = (int) (pan_width / Action.values().length);
 		nb_sensors = (int) Math.pow(Main.robot_vision_range*2 + 1, 2);
 		selected = 0;
@@ -61,12 +61,12 @@ public class PerceptronPanel extends JPanel implements ActionListener, MouseList
 		int offset = (int) (Main.colors.length * nb_sensors);
 		
 		int big_x_offset = 0;
-		int big_y_offset = screen_y_offset;
+		int big_y_offset = screen_y_offset + 30;
 		int small_x_offset = (screen_x_offset / (Main.robot_vision_range*2 + 1));
 		int small_y_offset = (screen_y_offset / (Main.robot_vision_range*2 + 1));
 		
 		for (int i=0; i<Action.values().length; i++) {
-			big_x_offset = i * screen_x_offset;
+			big_x_offset = i * (screen_x_offset + 2);
 			
 			Neuron neuron = perceptron.getNeurons().get(offset_to_prim + i);
 			System.out.println( "Interaction " + Action.values()[i]
@@ -103,7 +103,7 @@ public class PerceptronPanel extends JPanel implements ActionListener, MouseList
 						weight1Neg,
 						weight2Neg
 						));
-				g.fillRect(x, y + screen_y_offset, small_x_offset, small_y_offset);
+				g.fillRect(x, y + big_y_offset, small_x_offset, small_y_offset);
 			}
 		}
 	}
