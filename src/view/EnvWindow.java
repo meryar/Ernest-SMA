@@ -27,14 +27,13 @@ public class EnvWindow extends SlaveView{
 		this.setBounds(0, 0, window_base_width, window_base_height);
 		
 		// creating pane
-		panel = new EnvPane();
+		panel = new EnvPane(map);
 		this.setContentPane(panel);
 	}
 
 	@Override
 	public void setFocus(int ID, Environment env) {
-		// TODO Auto-generated method stub
-		
+		panel.setFocus(ID);
 	}
 
 }

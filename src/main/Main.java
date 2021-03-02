@@ -3,13 +3,14 @@ package main;
 import java.awt.Color;
 import environment.Environment;
 import view.ControlView;
+import view.ControlWindow;
 
 
 public class Main {
 	
 	public Environment env;
 	public boolean run, pause, step;
-	public ControlView controlView;
+	public ControlWindow controlView;
 	
 	// program arguments (change them here)
 	private static final String env_path 			= "ressources/maps/test_10x10.txt";	// path to the file containing the environment layout
@@ -26,7 +27,7 @@ public class Main {
 		
 		// create environment and control panel
 		env = new Environment(env_path);
-		controlView = new ControlView("Control panel", this);
+		controlView = new ControlWindow("Control panel", this);
 		controlView.pack();
 		controlView.setVisible(true);
 		
@@ -48,6 +49,7 @@ public class Main {
 			} else {
 				env.step();	
 				step = false;
+				controlView.updateSlaves();
 			}
 		}
 		

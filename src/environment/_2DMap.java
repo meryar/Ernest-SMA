@@ -59,9 +59,6 @@ public class _2DMap {
 			if (line.length != width) throw new IllegalStateException("Width not consistent!");
 		}
 		
-		// setting map's width and height in environment
-		env.setDimentions(height, width);
-		
 		// filling map
 		map = (ArrayList<Object> [][]) new ArrayList[height][width];	
 		for (int l=0; l<height; l++) {

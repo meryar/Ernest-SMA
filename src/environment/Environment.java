@@ -38,9 +38,6 @@ public class Environment {
 	private List<InterfaceAgentRobot> agents_list;
 	private int nb_agents, step;
 	private _2DMap map;
-	private int env_height;
-	private int env_width;
-	private View main_frame;
 
 	public Environment(String env_layout) {
 		
@@ -54,11 +51,6 @@ public class Environment {
 		} catch (Exception e) {
 			System.out.println("Error: map width is not consistent");
 		}
-		
-		// create window
-		main_frame = new View(this, map, env_height, env_width, "window");
-		main_frame.pack();
-        main_frame.setVisible(true);
 	}
 
 	public void step() {
@@ -71,10 +63,7 @@ public class Environment {
 		}
 		for (InterfaceAgentRobot ag: agents_list) {
 			ag.getResults();
-		}
-		
-		main_frame.updateView();
-		
+		}		
 		
 		if (step % 100 == 0) {
 			System.out.println(
@@ -94,11 +83,6 @@ public class Environment {
 	public void addAgent(Robot rob) {
 		nb_agents += 1;
 		agents_list.add(new InterfaceAgentRobot(rob));
-	}
-	
-	public void setDimentions(int height, int width) {
-		env_height = height;
-		env_width = width;
 	}
 	
 	public _2DMap getMap() {return map;}

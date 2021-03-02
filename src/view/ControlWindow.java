@@ -2,6 +2,7 @@ package view;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -14,11 +15,12 @@ public class ControlWindow extends AbstractView{
 	private static final long serialVersionUID = -4609180891346436121L;
 	
 	private Main main;
-	private EnvWindow env_display;
+	private Vector<SlaveView> slaves;
 
 	public ControlWindow(String name, Main main_) {
 		super(name);
 		main = main_;
+		slaves = new Vector<SlaveView>();
 		
 		this.setAlwaysOnTop(true);
 		
@@ -65,7 +67,10 @@ public class ControlWindow extends AbstractView{
 	    
 	    
 	    // creating sub windows
-	    env_display = new EnvWindow("Environment", main.env.getMap());
+	    slaves.add(new EnvWindow("Environment", main.env.getMap()));
+	    
+	    
+	    updateFocus(0);
 	}
 
 	/**
@@ -74,8 +79,16 @@ public class ControlWindow extends AbstractView{
 	 * @param selectedIndex: ID of the robot/agent couple to set as focus
 	 */
 	protected void updateFocus(int selectedIndex) {
-		
-		
+		for (SlaveView slave: slaves) {
+			slave.setFocus(selectedIndex, main.env);
+		}
+		updateSlaves();
+	}
+
+	public void updateSlaves() {
+		for (SlaveView slave: slaves) {
+			slave.repaint();
+		}
 	}
 
 }
