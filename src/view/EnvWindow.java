@@ -5,9 +5,10 @@ import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 
+import environment.Environment;
 import environment._2DMap;
 
-public class EnvWindow extends AbstractView{
+public class EnvWindow extends SlaveView{
 	
 	private _2DMap map;
 	private EnvPane panel;
@@ -28,6 +29,12 @@ public class EnvWindow extends AbstractView{
 		// creating pane
 		panel = new EnvPane();
 		this.setContentPane(panel);
+	}
+
+	@Override
+	public void setFocus(int ID, Environment env) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
