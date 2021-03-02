@@ -64,7 +64,6 @@ public class _2DMap {
 		for (int l=0; l<height; l++) {
 			for (int c=0; c<width; c++) {
 				map[l][c]= new ArrayList<Object>();
-				//map[l][c].add(new Block(this, Environment.Touch.EMPTY, Environment.FIELD_COLOR,"empty", false, new Point(c,l)));
 				try{
 					map[l][c].add(0, char_reader(file_copy.get(l)[c], new Point(c, l)));
 				} catch (Exception e) {
@@ -229,8 +228,8 @@ public class _2DMap {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		//System.out.println("entries: (" + startPos.x + "," + startPos.y + "),(" + relPos.x + "," + relPos.y + ") and direction " + direction + " got result (" + res.x + "," + res.y + ")");
-		return (res);
+		
+		return res;
 	}
 	
 	public Robot getRobot(int id) {return robot_list.get(id);}

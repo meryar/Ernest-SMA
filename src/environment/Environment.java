@@ -15,24 +15,8 @@ public class Environment {
 	public static final Color FIELD_COLOR 	= Color.white; 
 	public static final Color ROBOT_COLOR 	= new Color(50,50,50);
 	public static final Color WALL1       	= new Color(  0,128,  0);
-	//public static final Color WALL2       	= new Color(  0,230, 92);
-	//public static final Color ALGA1       	= new Color(220,50, 50);
-	//public static final Color ALGA2       	= new Color( 46,230,  0);
 	public static final Color FISH1       	= new Color(150,128,255);
 	public static final Color FISH2       	= new Color(250,100,100);
-	//public static final Color TILE			= new Color(200,50,50);
-	//public static final Color BOX			= new Color(200,200,0);
-	
-	// bloc types
-	//public static Block empty=new Block(Touch.EMPTY, FIELD_COLOR,"empty",false);
-	//public static Block wall =new Block(Touch.HARD , WALL1,"wall1", true);
-	//public static Block wall2=new Block(Touch.HARD , WALL2,"wall2", true);
-	//public static Block alga1=new Block(Touch.SMOOTH,ALGA1,"alga1", true);
-	//public static Block alga2=new Block(Touch.SMOOTH,ALGA2,"alga2", true);
-	//public static Block fish1=new Block(Touch.FOOD ,"small_fish.jpg","fish1", true, Direction.NORTH);
-	//public static Block fish2=new Block(Touch.FOOD  ,"big_fish.png","fish2", true, Direction.NORTH);
-	//public static Block tile =new Block(Touch.SMOOTH,TILE,"tile",true);
-
 	
 	private List<InterfaceAgentRobot> agents_list;
 	private int nb_agents, step;
@@ -72,11 +56,6 @@ public class Environment {
 		}
 		step += 1;
 		
-		/*
-		try {
-			Thread.sleep(500);
-		} catch (Exception e) {}	
-		*/
 	}
 
 	public void addAgent(Robot rob) {

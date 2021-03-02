@@ -22,7 +22,6 @@ public class InterfaceAgentRobot {
 		robot = rob;
 		int input_size = (Main.colors.length * robot.getSensorNb() + 1) * Action.values().length; 
 		agent = new AgentDeveloppemental(input_size);
-		
 	}
 
 	public void commandRobot() {

@@ -129,16 +129,6 @@ public class Data {
 	public int size() {
 		return data.size();
 	}
-
-	/*
-	// For testing purposes
-	public static void main(String[] args){
-		System.out.println("test");
-		
-		Data test = new Data(7, 4, 49);
-		
-		int[] translation = test.translate(1371);
-		System.out.println(translation[0] + " " + translation[1] + " " + translation[2]);
-	}*/
+	
 }
 

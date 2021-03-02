@@ -35,12 +35,6 @@ public class Main {
 		pause = true;
 		step = false;
 		while (run) {
-			/*
-			while (pause) {
-				try {
-					Thread.sleep(200);
-				} catch (Exception e) {}
-			}*/
 			if (pause && !step) {
 				try {
 					Thread.sleep(200);

@@ -50,22 +50,19 @@ public class AgentDeveloppemental extends Agent{
 		
 		// isolate predictions for primary interactions
 		HashMap<Integer, Float> enactable = predictions.getEnactable(certitude_treshold);
-		//System.out.println(primary);
+
 		// find the most uncertain prediction
 		float min_abs = 1f;
-		float min = 1f;
 		int min_index = -1;
 		for (int key: enactable.keySet()) {
 			if (Math.abs(enactable.get(key)) < min_abs) {
 				min_abs = Math.abs(enactable.get(key));
-				min = enactable.get(key);
 				min_index = key;
 			}
 		}
 		
 		if (min_abs < certitude_treshold) {
 			// if uncertain primary action then explore it
-			//System.out.println("learning primary actions!");
 			choice = Action.values()[predictions.translate(min_index)[0]];
 		} else {
 			choice = mostUseful(predictions);
@@ -79,11 +76,9 @@ public class AgentDeveloppemental extends Agent{
 		int max_index = Action.values().length - 1;
 
 		List<Float> to_consider = predictions.getPrimarys();
-		//System.out.println(to_consider.size());
 		
 		for (int i=0; i<to_consider.size(); i++) {
 			if (to_consider.get(i) > 0) {
-				//System.out.println(utilities.get(Action.values()[i]) + " ? " + max_utility);
 				if (utilities.get(Action.values()[i]) > max_utility) {
 					max_utility = utilities.get(Action.values()[i]);
 					max_index = i;

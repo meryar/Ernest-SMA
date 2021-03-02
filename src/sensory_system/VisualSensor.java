@@ -34,6 +34,7 @@ public class VisualSensor extends Sensor<Color>{
 		return res;
 	}
 	
+	/*
 	private Vector<Point> makePath(Point relativePos) {
 		Vector<Point> res = new Vector<Point>();
 		double dx = relativePos.x;
@@ -70,7 +71,7 @@ public class VisualSensor extends Sensor<Color>{
 			}
 		}
 		return res;
-	}
+	}*/
 
 	public boolean isAvailable() {
 		return !(getSensoryInformation() == null);

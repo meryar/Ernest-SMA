@@ -10,13 +10,12 @@ import environment._2DMap;
 
 public class EnvWindow extends SlaveView{
 	
-	private _2DMap map;
+	private static final long serialVersionUID = 1L;
+	
 	private EnvPane panel;
 
-	public EnvWindow(String name, _2DMap map_) {
+	public EnvWindow(String name, _2DMap map) {
 		super(name);
-
-		map = map_;
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
