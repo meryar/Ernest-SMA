@@ -9,7 +9,6 @@ import agents.AgentDeveloppemental;
 import main.Main;
 import objects.Robot;
 import robot.Action;
-import view.RobotView;
 
 public class InterfaceAgentRobot {
 
@@ -17,16 +16,13 @@ public class InterfaceAgentRobot {
 	private Robot robot;
 	private Action lastEnacted, lastIntended;
 	private Vector<Boolean> lastSeen;
-	private RobotView view;
+	private Data lastEntry;
 	
 	public InterfaceAgentRobot(Robot rob) {
 		robot = rob;
 		int input_size = (Main.colors.length * robot.getSensorNb() + 1) * Action.values().length; 
 		agent = new AgentDeveloppemental(input_size);
 		
-		view = new RobotView("Robot " + robot.getId(), robot.getSensorNb());
-		view.pack();
-        view.setVisible(true);
 	}
 
 	public void commandRobot() {
@@ -51,9 +47,7 @@ public class InterfaceAgentRobot {
 	public void getResults() {
 		lastEnacted = robot.getResults();
 		lastSeen = robot.getSensoryInformation();
-		Data entry = entryForDeciding();
-		
-		view.updateView(entry.getData());
+		lastEntry = entryForDeciding();
 		
 		agent.learn(entryForLearning());
 		
@@ -90,7 +84,7 @@ public class InterfaceAgentRobot {
 		res.addAll(enact);
 		
 		entry.replaceData(res);
-
+		
 		return entry;
 	}
 	
@@ -136,4 +130,11 @@ public class InterfaceAgentRobot {
 		return base;
 	}
 	
+	public Data getLastData() {
+		return lastEntry;
+	}
+	
+	public Robot getRobot() {
+		return robot;
+	}
 }

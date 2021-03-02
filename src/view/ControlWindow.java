@@ -67,8 +67,8 @@ public class ControlWindow extends AbstractView{
 	    
 	    
 	    // creating sub windows
+	    slaves.add(new CameraWindow("Camera"));
 	    slaves.add(new EnvWindow("Environment", main.env.getMap()));
-	    
 	    
 	    updateFocus(0);
 	}

@@ -93,4 +93,8 @@ public class Environment {
 	public int getNbAgents() {
 		return agents_list.size();
 	}
+	
+	public InterfaceAgentRobot getInterface(int id) {
+		return agents_list.get(id);
+	}
 }
