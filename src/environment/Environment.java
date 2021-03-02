@@ -106,4 +106,8 @@ public class Environment {
 	public int getStep() {
 		return step;
 	}
+	
+	public int getNbAgents() {
+		return agents_list.size();
+	}
 }
