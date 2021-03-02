@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import objects.Robot;
-import view.View;
 
 public class Environment {
 	

@@ -2,7 +2,6 @@ package main;
 
 import java.awt.Color;
 import environment.Environment;
-import view.ControlView;
 import view.ControlWindow;
 
 
