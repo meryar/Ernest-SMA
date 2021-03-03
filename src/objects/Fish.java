@@ -83,6 +83,7 @@ public class Fish extends Object{
 			break;
 		case UNDYING:
 			reset();
+			break;
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + respawn);
 		}
