@@ -50,7 +50,7 @@ public class SecondarySignPanel extends JPanel{
 							int x = screen_x_offset + small_x_offset * (sensor_id % (Main.robot_vision_range*2 + 1));
 							int y = (int) (small_y_offset * (Math.floor(sensor_id / (Main.robot_vision_range*2 + 1))));
 	
-							
+							/*
 							float weight0Pos = normalize(neuron.getWeights().get(act * offset + 0 * nb_sensors + sensor_id), neuron.max_weight);
 							float weight1Pos = normalize(neuron.getWeights().get(act * offset + 1 * nb_sensors + sensor_id), neuron.max_weight);
 							float weight2Pos = normalize(neuron.getWeights().get(act * offset + 2 * nb_sensors + sensor_id), neuron.max_weight);
@@ -60,7 +60,7 @@ public class SecondarySignPanel extends JPanel{
 									weight1Pos,
 									weight2Pos
 									));
-							g.fillRect(x, y, small_x_offset, small_y_offset);
+							g.fillRect(x, y, small_x_offset, small_y_offset);*/
 						}
 					}
 				}

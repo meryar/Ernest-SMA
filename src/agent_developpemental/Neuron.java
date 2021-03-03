@@ -10,16 +10,14 @@ public class Neuron {
 	private Vector<Float> weights;
 	private float c; 				// learning rate
 	
-	public float max_abs_weight, min_weight, max_weight, bias;
+	public float max_abs_weight, bias;
 	public int index_max, index_min;
 	
 	public Neuron(int input_size, float learning_rate) {
 		weights = new Vector<Float>();
 		entries_number = input_size;
 		c = learning_rate;
-		max_abs_weight = 0.00001f;
-		min_weight = -0.00001f;
-		max_weight = 0.00001f;
+		max_abs_weight = 0;
 		bias = 0;
 		index_max = -1;
 		index_min = -1;
@@ -40,22 +38,13 @@ public class Neuron {
 	}
 	
 	public float learn(Vector<Float> entry, float error) {
-		min_weight = -0.00001f;
-		max_weight = 0.00001f; 
+		max_abs_weight = 0.1f;
         for (int i = 0; i < weights.size(); i++) {
             weights.set(i, weights.get(i) + c * error * entry.get(i));
             
             if (i < weights.size() - (Action.values().length + 1)) {
-	            max_abs_weight = Math.max(Math.abs(Math.abs(weights.get(i))), max_abs_weight);
-	            if (weights.get(i) < min_weight) {
-	            	min_weight = weights.get(i);
-	            	index_min = i;
-	            }
+	            max_abs_weight = Math.max(Math.abs(weights.get(i)), max_abs_weight);
 	            
-	            if (weights.get(i) > max_weight) {
-	            	max_weight = weights.get(i);
-	            	index_max = i;
-	            }
 	        }
         }
         bias = weights.get(weights.size() - 1);

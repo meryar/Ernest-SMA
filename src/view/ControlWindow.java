@@ -51,7 +51,7 @@ public class ControlWindow extends AbstractView{
 	    
 	    // combo box selecting wich agent/robot couple will be the focus of the other windows
 	    JComboBox select = new JComboBox();  
-	    select.setBounds(150,100,95,30);  
+	    select.setBounds(0,0,95,30);  
 	    for (int i=0; i<main.env.getNbAgents(); i++) {
 	    	select.addItem("Agent " + i);
 	    }
@@ -67,6 +67,7 @@ public class ControlWindow extends AbstractView{
 	    
 	    
 	    // creating sub windows
+	    slaves.add(new PrimSignWindow("primary signatures"));
 	    slaves.add(new CameraWindow("Camera"));
 	    slaves.add(new EnvWindow("Environment", main.env.getMap()));
 	    

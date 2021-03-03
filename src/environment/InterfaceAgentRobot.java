@@ -136,4 +136,8 @@ public class InterfaceAgentRobot {
 	public Robot getRobot() {
 		return robot;
 	}
+	
+	public Agent getAgent() {
+		return agent;
+	}
 }

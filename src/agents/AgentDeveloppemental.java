@@ -93,5 +93,9 @@ public class AgentDeveloppemental extends Agent{
 	public void learn(Vector<Float> results) {
 		perceptron.learn(results);
 	}
+	
+	public Perceptron getPerceptron() {
+		return perceptron;
+	}
 
 }

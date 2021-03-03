@@ -3,7 +3,6 @@ package agent_developpemental;
 import java.util.Vector;
 
 import main.Main;
-import view.PerceptronView;
 
 public class Perceptron {
 
@@ -13,7 +12,6 @@ public class Perceptron {
 	public float max_abs_weight;
 	private Vector<Float> lastEntry;
 	private Vector<Float> lastPrediction;
-	private PerceptronView view;
 	
 	public Perceptron() {
 		neurons = new Vector<Neuron>();
@@ -30,10 +28,6 @@ public class Perceptron {
 		
 		lastPrediction.setSize(output_size);
 		lastPrediction.replaceAll(e -> 0f);
-
-		view = new PerceptronView("Signatures", this);
-		view.pack();
-        view.setVisible(true);
 		
 	}
 	
@@ -59,7 +53,6 @@ public class Perceptron {
 				max_abs_weight = Math.max(max_abs_weight, max);
 			}
 		}
-		view.repaint();
 	}
 
 	public Vector<Neuron> getNeurons() {
