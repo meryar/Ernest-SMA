@@ -69,9 +69,6 @@ public class PrimSignPane extends JPanel{
 				
 				int screen_x = act * (screen_width + between_screen_x);
 				
-				g.setColor(Color.BLUE);
-				g.fillRect(screen_x, box_offset, screen_width, screen_height);
-				
 				for (int line=0; line<sensor_map_height; line++) {
 					for (int column=0; column<sensor_map_height; column++) {
 						int x = screen_x + (screen_width/sensor_map_width) * column;
