@@ -92,6 +92,13 @@ public class PrimSignPane extends JPanel{
 						
 						g.fillRect(x, y, screen_width/sensor_map_width, screen_height/sensor_map_height);
 						
+						g.setColor(new Color(
+								normalize(neuron.getWeights().get(act*nb_colors*nb_sensors 
+										+ 3 * nb_sensors + line*sensor_map_width + column), neuron),
+										0.5f,
+										0.5f));
+							
+							g.fillRect(x, y + screen_height + between_screen_y, screen_width/sensor_map_width, screen_height/sensor_map_height);
 					}
 				}
 				
