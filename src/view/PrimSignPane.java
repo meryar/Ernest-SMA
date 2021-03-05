@@ -74,24 +74,15 @@ public class PrimSignPane extends JPanel{
 						int x = screen_x + (screen_width/sensor_map_width) * column;
 						int y = box_offset + (screen_height/sensor_map_height) * line;
 						
-						if (neuron.getWeights().get(act*nb_colors*nb_sensors 
-									+ 2 * nb_sensors + line*sensor_map_width + column) > 1.0) {
-							System.out.println(act*nb_colors*nb_sensors 
-									+ 2 * nb_sensors + line*sensor_map_width + column);
-						}
 						g.setColor(new Color(
-							normalize(neuron.getWeights().get(act*nb_colors*nb_sensors 
-									+ 0 * nb_sensors + line*sensor_map_width + column), neuron),
-							normalize(neuron.getWeights().get(act*nb_colors*nb_sensors 
-									+ 1 * nb_sensors + line*sensor_map_width + column), neuron),
-							normalize(neuron.getWeights().get(act*nb_colors*nb_sensors 
-									+ 2 * nb_sensors + line*sensor_map_width + column), neuron)));
+							normalize(act*nb_colors*nb_sensors + 0 * nb_sensors + line*sensor_map_width + column, neuron),
+							normalize(act*nb_colors*nb_sensors + 1 * nb_sensors + line*sensor_map_width + column, neuron),
+							normalize(act*nb_colors*nb_sensors + 2 * nb_sensors + line*sensor_map_width + column, neuron)));
 						
 						g.fillRect(x, y, screen_width/sensor_map_width, screen_height/sensor_map_height);
 						
 						g.setColor(new Color(
-								normalize(neuron.getWeights().get(act*nb_colors*nb_sensors 
-										+ 3 * nb_sensors + line*sensor_map_width + column), neuron),
+								normalize(act*nb_colors*nb_sensors + 3 * nb_sensors + line*sensor_map_width + column, neuron),
 										0.5f,
 										0.5f));
 							
@@ -121,8 +112,9 @@ public class PrimSignPane extends JPanel{
 		}
 	}
 
-	private float normalize(Float nb, Neuron neuron) {
-		float max = neuron.max_abs_weight;
+	private float normalize(int nb_index, Neuron neuron) {
+		float nb = neuron.getWeights().get(nb_index);
+		float max = neuron.max_abs_weights[neuron.correspondingInteraction(nb_index)];
 		
 		return (float) Math.min((nb / max) / 2 + 0.5, 1f);
 	}
