@@ -11,14 +11,12 @@ public class Neuron {
 	private Vector<Float> weights;
 	private float c; 				// learning rate
 	
-	public float bias;
 	public float[] max_abs_weights;
 	
 	public Neuron(int input_size, float learning_rate) {
 		weights = new Vector<Float>();
 		entries_number = input_size;
 		c = learning_rate;
-		bias = 0;
 		max_abs_weights = new float[Action.values().length];
 		
 		for (int i=0; i<entries_number; i++) {
@@ -38,7 +36,7 @@ public class Neuron {
 	
 	public float learn(Vector<Float> entry, float error) {
 		for (int i = 0; i<max_abs_weights.length; i++) {
-			max_abs_weights[i] = Math.abs(bias);
+			max_abs_weights[i] = 0.00001f;
 		}
 		
         for (int i=0; i<weights.size(); i++) {
@@ -49,18 +47,15 @@ public class Neuron {
 	            
 	        }
         }
-        bias = weights.get(weights.size() - 1);
         return max_abs_weights[0];
 	}
 	
 	public int correspondingInteraction(int index) {
-		if (index < weights.size() - 1 - Action.values().length) {
+		if (index < weights.size() - Action.values().length) {
 			return (int) Math.floor(index / (Main.colors.length * Math.pow(Main.robot_vision_range *2 +1, 2)));
-		} else if (index < weights.size() - 1) {
+		} else {
 			return (int) (index - Action.values().length * Main.colors.length * Math.pow(Main.robot_vision_range *2 +1, 2));
 		}
-		
-		return -1;
 	}
 
 
