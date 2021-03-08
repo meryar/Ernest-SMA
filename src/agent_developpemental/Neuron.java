@@ -52,9 +52,9 @@ public class Neuron {
 	
 	public int correspondingInteraction(int index) {
 		if (index < weights.size() - Action.values().length) {
-			return (int) Math.floor(index / (Main.colors.length * Math.pow(Main.robot_vision_range *2 +1, 2)));
+			return (int) Math.floor(index / (weights.size() - Action.values().length)/Action.values().length) ;
 		} else {
-			return (int) (index - Action.values().length * Main.colors.length * Math.pow(Main.robot_vision_range *2 +1, 2));
+			return (int) (index - (weights.size() - Action.values().length));
 		}
 	}
 

@@ -1,25 +1,32 @@
 package agents;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import agent_developpemental.Data;
-import agent_developpemental.Perceptron;
+import agent_developpemental.Neuron;
 import main.Main;
 import robot.Action;
 
 public class AgentDeveloppemental extends Agent{
 	
-	private static final float certitude_treshold = 0.8f;
+	private static final float certitude_treshold = 0.6f;
 	
 	private Map<Action,Float> utilities;
-	
-	private Perceptron perceptron;
+	private Vector<Neuron> primaries, secondaries;
+	private Vector<Float> lastPerception, lastPrediction;
 
-	public AgentDeveloppemental(int input_size) {
-		perceptron = new Perceptron(input_size, input_size);
+	public AgentDeveloppemental(int data_size, int nb_interactions) {
+		
+		for (int i=0; i<nb_interactions; i++) {
+			primaries.add(new Neuron(data_size, Main.learning_rate));
+		}
+		for (int i=0; i<data_size; i++) {
+			secondaries.add(new Neuron(data_size, Main.learning_rate));
+		}
+		
+		lastPrediction = new Vector<Float>();
+		
 		utilities = new HashMap<>();
 		utilities.put(Action.MOVE_FWD, 5f);
 		utilities.put(Action.BUMP, -10f);
@@ -31,26 +38,37 @@ public class AgentDeveloppemental extends Agent{
 	}
 
 	@Override
-	public Action decide(Data resultsTMinus1) {
+	public Action decide(Vector<Float> resultsTMinus1) {
 		
 		return decideAction(resultsTMinus1);
 	}
 
-	private Action decideAction(Data resultsTMinus1) {
+	private Action decideAction(Vector<Float> perception) {
+		lastPerception = perception;
+		
 		Action choice;
 		
-		// get predictions of success from perceptron
-		Vector<Float> prediction = perceptron.compute(resultsTMinus1.getData());
-		Data predictions = new Data(Action.values().length, 
-				Main.colors.length, 
-				(int) (Math.pow(Main.robot_vision_range*2 +1, 2)),
-				prediction);
-		
-		System.out.println(predictions.getPrimarys());
+		// get predictions of success
+		Vector<Float> predPrim = new Vector<Float>(primaries.size());
+		Vector<Float> predSec = new Vector<Float>(secondaries.size());
+		for (Neuron neuron: primaries) {
+			predPrim.add(neuron.compute(perception));
+		}
+		for (Neuron neuron: secondaries) {
+			predSec.add(neuron.compute(perception));
+		}
 		
 		// isolate predictions for primary interactions
-		HashMap<Integer, Float> enactable = predictions.getEnactable(certitude_treshold);
-
+		HashMap<Integer, Float> enactable = new HashMap<Integer, Float>();
+		for (int index=0; index<predPrim.size(); index++) {			
+			enactable.put(index + secondaries.size(), predPrim.get(index));
+		}
+		for (int index=0; index<predSec.size(); index++) {			
+			if (predPrim.get((int) (Math.floor(index / (secondaries.size() / Action.values().length)))) >= certitude_treshold) {
+				enactable.put(index, predSec.get(index));
+			}
+		}
+		
 		// find the most uncertain prediction
 		float min_abs = 1f;
 		int min_index = -1;
@@ -63,22 +81,28 @@ public class AgentDeveloppemental extends Agent{
 		
 		if (min_abs < certitude_treshold) {
 			// if uncertain primary action then explore it
-			choice = Action.values()[predictions.translate(min_index)[0]];
+			if (min_index < secondaries.size()) {
+				choice = Action.values()[(int)(min_index / (secondaries.size() / Action.values().length))];
+			} else {
+				choice = Action.values()[min_index - secondaries.size()];
+			}
+			
 		} else {
-			choice = mostUseful(predictions);
+			choice = mostUseful(predPrim);
 		} 
+		
+		predSec.addAll(predPrim);
+		lastPrediction = predSec;
 		
 		return choice;
 	}
 
-	private Action mostUseful(Data predictions) {
+	private Action mostUseful(Vector<Float> predPrimaries) {
 		float max_utility = Float.NEGATIVE_INFINITY;
 		int max_index = Action.values().length - 1;
-
-		List<Float> to_consider = predictions.getPrimarys();
 		
-		for (int i=0; i<to_consider.size(); i++) {
-			if (to_consider.get(i) > 0) {
+		for (int i=0; i<predPrimaries.size(); i++) {
+			if (predPrimaries.get(i) > 0) {
 				if (utilities.get(Action.values()[i]) > max_utility) {
 					max_utility = utilities.get(Action.values()[i]);
 					max_index = i;
@@ -90,12 +114,26 @@ public class AgentDeveloppemental extends Agent{
 	}
 
 	@Override
-	public void learn(Vector<Float> results) {
-		perceptron.learn(results);
+	public void learn(Vector<Float> trainingWeights) {
+		for (int i=0; i<trainingWeights.size(); i++) {
+			if (trainingWeights.get(i) != 0) {
+				float error = trainingWeights.get(i) - lastPrediction.get(i);
+				if (i < secondaries.size()) {
+					secondaries.get(i).learn(lastPerception, Main.learning_rate * trainingWeights.get(i) * error);
+				} else {
+					primaries.get(i - secondaries.size()).learn(lastPerception, Main.learning_rate * trainingWeights.get(i) * error);
+				}
+			}
+		}
 	}
 	
-	public Perceptron getPerceptron() {
-		return perceptron;
+
+	public Vector<Float> getLastPerception() {
+		return lastPerception;
+	}
+
+	public Vector<Float> getLastPrediction() {
+		return lastPrediction;
 	}
 
 }

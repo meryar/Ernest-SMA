@@ -3,7 +3,6 @@ package environment;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
-import agent_developpemental.Data;
 import agents.Agent;
 import agents.AgentDeveloppemental;
 import main.Main;
@@ -16,12 +15,11 @@ public class InterfaceAgentRobot {
 	private Robot robot;
 	private Action lastEnacted, lastIntended;
 	private Vector<Boolean> lastSeen;
-	private Data lastEntry;
 	
 	public InterfaceAgentRobot(Robot rob) {
 		robot = rob;
-		int input_size = (Main.colors.length * robot.getSensorNb() + 1) * Action.values().length; 
-		agent = new AgentDeveloppemental(input_size);
+		int input_size = ((Main.colors.length + Direction.values().length - 1) * robot.getSensorNb() + 1) * Action.values().length; 
+		agent = new AgentDeveloppemental(input_size, Action.values().length);
 	}
 
 	public void commandRobot() {
@@ -46,17 +44,14 @@ public class InterfaceAgentRobot {
 	public void getResults() {
 		lastEnacted = robot.getResults();
 		lastSeen = robot.getSensoryInformation();
-		lastEntry = entryForDeciding();
 		
 		agent.learn(entryForLearning());
 		
 	}
 	
-	private Data entryForDeciding(){
+	private Vector<Float> entryForDeciding(){
 		Vector<Float> res = new Vector<>();
 		Vector<Float> enact = new Vector<>();
-		
-		Data entry = new Data(Action.values().length, Main.colors.length, robot.getSensorNb());
 		
 		// first we add the secondary interaction's information (the sight)
 		for (Action act: Action.values()) {
@@ -82,14 +77,12 @@ public class InterfaceAgentRobot {
 		// then we add the primary interaction (touch)
 		res.addAll(enact);
 		
-		entry.replaceData(res);
-		
-		return entry;
+		return res;
 	}
 	
 	private Vector<Float> entryForLearning() {
 		int codeEnacted = -1;
-		Vector<Float> base = entryForDeciding().getData();
+		Vector<Float> base = entryForDeciding();
 		Vector<Float> prim = new Vector<>();
 		Vector<Action> alternates = new Vector<Action>();
 		alternates.add(Action.MOVE_FWD);
@@ -127,10 +120,6 @@ public class InterfaceAgentRobot {
 		base.addAll(prim);
 		
 		return base;
-	}
-	
-	public Data getLastData() {
-		return lastEntry;
 	}
 	
 	public Robot getRobot() {
