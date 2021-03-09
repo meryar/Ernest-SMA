@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import agent_developpemental.Neuron;
 import agent_developpemental.Perceptron;
 import agents.AgentDeveloppemental;
+import environment.Direction;
 import environment.InterfaceAgentRobot;
 import main.Main;
 import robot.Action;
@@ -38,7 +39,7 @@ public class PrimSignPane extends JPanel{
 	@Override
 	public void paintComponent(Graphics g) {
 		if (primaries != null) {
-			int nb_colors = Main.colors.length;
+			int nb_colors = Main.colors.length + Direction.values().length - 1;
 			int nb_sensors = agent.getRobot().getSensorNb();
 			
 			double sensor_map_side = Math.sqrt(agent.getRobot().getSensorNb());
@@ -81,8 +82,8 @@ public class PrimSignPane extends JPanel{
 						
 						g.setColor(new Color(
 								normalize(act*nb_colors*nb_sensors + 3 * nb_sensors + line*sensor_map_width + column, neuron),
-										0.5f,
-										0.5f));
+								normalize(act*nb_colors*nb_sensors + 3 * nb_sensors + line*sensor_map_width + column, neuron),
+								normalize(act*nb_colors*nb_sensors + 3 * nb_sensors + line*sensor_map_width + column, neuron)));
 							
 							g.fillRect(x, y + screen_height + between_screen_y, screen_width/sensor_map_width, screen_height/sensor_map_height);
 					}
@@ -95,7 +96,7 @@ public class PrimSignPane extends JPanel{
 					add(text);
 				}
 
-				labels.get(act).setText("" + neuron.getWeights().get(selected));
+				labels.get(act).setText("" + neuron.getWeights().get(neuron.getWeights().size() - Action.values().length + act));
 				labels.get(act).setBounds(act * (screen_width + between_screen_x), 
 										pane_size.height + box_offset, 
 										screen_width, 

@@ -37,7 +37,8 @@ public class PrimSignWindow extends SlaveView{
 		
 		// selection box
 		JComboBox<Action> select = new JComboBox<Action>();
-	    select.setBounds(window_base_width/2,0,95,box_height);  
+	    select.setBounds(window_base_width/3,0,95,box_height);  
+	    select.setAlignmentX(window_base_width/3);
 	    for (Action act: Action.values()) {
 	    	select.addItem(act);
 	    }
@@ -52,8 +53,6 @@ public class PrimSignWindow extends SlaveView{
 	    add(new JLabel("Signatures for interaction: "));
 	    add(select); 
 	    
-	    // bias display
-	    add(new JLabel("    bias: " + 0.0));
 	}
 
 	@Override
