@@ -162,7 +162,6 @@ public class Robot extends Object{
 				}
 			}
 		}
-		System.out.println("data size: " + res.size());
 		return res;
 	}
 
