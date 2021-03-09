@@ -61,7 +61,7 @@ public class PrimSignWindow extends SlaveView{
 	@Override
 	public void setFocus(int ID, Environment env) {
 		InterfaceAgentRobot agent = env.getInterface(ID);
-		panel.setPerceptron(agent);
+		panel.setAgent(agent);
 	}
 
 }

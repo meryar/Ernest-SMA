@@ -17,11 +17,14 @@ public class AgentDeveloppemental extends Agent{
 	private Vector<Float> lastPerception, lastPrediction;
 
 	public AgentDeveloppemental(int data_size, int nb_interactions) {
+
+		primaries = new Vector<Neuron>(nb_interactions);
+		secondaries = new Vector<Neuron>(data_size - nb_interactions);
 		
 		for (int i=0; i<nb_interactions; i++) {
 			primaries.add(new Neuron(data_size, Main.learning_rate));
 		}
-		for (int i=0; i<data_size; i++) {
+		for (int i=0; i<data_size - nb_interactions; i++) {
 			secondaries.add(new Neuron(data_size, Main.learning_rate));
 		}
 		
@@ -134,6 +137,14 @@ public class AgentDeveloppemental extends Agent{
 
 	public Vector<Float> getLastPrediction() {
 		return lastPrediction;
+	}
+	
+	public Vector<Neuron> getPrimaries(){
+		return primaries;
+	}
+	
+	public Vector<Neuron> getSecondaries(){
+		return secondaries;
 	}
 
 }

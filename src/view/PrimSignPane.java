@@ -25,7 +25,7 @@ public class PrimSignPane extends JPanel{
 	private final int reserved_offset = 30;
 	
 	private InterfaceAgentRobot agent;
-	private Perceptron perceptron;
+	private Vector<Neuron> primaries;
 	private int selected;
 	private int box_offset;
 	private Vector<JLabel> labels;
@@ -37,7 +37,7 @@ public class PrimSignPane extends JPanel{
 	
 	@Override
 	public void paintComponent(Graphics g) {
-		if (perceptron != null) {
+		if (primaries != null) {
 			int nb_colors = Main.colors.length;
 			int nb_sensors = agent.getRobot().getSensorNb();
 			
@@ -61,11 +61,9 @@ public class PrimSignPane extends JPanel{
 			int screen_width = (int) pane_size.width / nb_actions - between_screen_x;
 			int screen_height = (int) pane_size.height / 2 - between_screen_y;
 			
-			int index_selected = perceptron.getNeurons().size() - nb_actions + selected;
-			Neuron neuron = perceptron.getNeurons().get(index_selected);
+			Neuron neuron = primaries.get(selected);
 			
 			for (int act=0; act<nb_actions; act++) {
-				int index_act = perceptron.getNeurons().size() - nb_actions + act;
 				
 				int screen_x = act * (screen_width + between_screen_x);
 				
@@ -97,7 +95,7 @@ public class PrimSignPane extends JPanel{
 					add(text);
 				}
 
-				labels.get(act).setText("" + neuron.getWeights().get(index_act));
+				labels.get(act).setText("" + neuron.getWeights().get(selected));
 				labels.get(act).setBounds(act * (screen_width + between_screen_x), 
 										pane_size.height + box_offset, 
 										screen_width, 
@@ -119,9 +117,9 @@ public class PrimSignPane extends JPanel{
 		return (float) Math.min((nb / max) / 2 + 0.5, 1f);
 	}
 
-	public void setPerceptron(InterfaceAgentRobot agent_) {
+	public void setAgent(InterfaceAgentRobot agent_) {
 		agent = agent_;
-		perceptron = ((AgentDeveloppemental) agent.getAgent()).getPerceptron();
+		primaries = ((AgentDeveloppemental) agent.getAgent()).getPrimaries();
 	}
 
 	public void setFocus(int selectedIndex) {

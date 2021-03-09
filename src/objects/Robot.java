@@ -148,16 +148,30 @@ public class Robot extends Object{
 	
 	public Vector<Boolean> getSensoryInformation(){
 		Vector<Boolean> res = new Vector<Boolean>();
-		res.ensureCapacity(nbColors * getSensorNb());
-		for (int i=0; i<getSensorNb()*nbColors; i++) {res.add(false);}
+		res.setSize((nbColors + Direction.values().length - 1) * getSensorNb());
+		res.replaceAll(e -> false);
 	 
 		for(int i=0; i<sensors_number; i++) {
 			if (((VisualSensor)sensors.get(i)).isAvailable()) {
 				Color seen = ((VisualSensor)sensors.get(i)).getSensoryInformation();
-				res.set(getColorId(seen) * (sensors_number) + sensors.get(i).getId(), true);
+				if (!seen.equals(Environment.ROBOT_COLOR)) {
+					res.set(getColorId(seen) * sensors_number + sensors.get(i).getId(), true);
+				} else {
+					Direction dir = ((VisualSensor)sensors.get(i)).getDirectionSeen();
+					res.set((getColorId(seen) + getDirectionId(dir)) * sensors_number + sensors.get(i).getId(), true);
+				}
 			}
 		}
+		System.out.println("data size: " + res.size());
 		return res;
+	}
+
+	private int getDirectionId(Direction dir) {
+		for (int i=0; i<Direction.values().length; i++) {
+			if (Direction.values()[i].equals(dir)) {return i;}
+		}
+		System.out.println("Error: unknown direction seen by " + getName() + ": " + dir);
+		return -1;
 	}
 
 	private int getColorId(Color seen) {

@@ -34,6 +34,16 @@ public class VisualSensor extends Sensor<Color>{
 		return res;
 	}
 	
+	public Direction getDirectionSeen() {
+		Direction robotOrientation = robot.getDirection();
+		Point posSens = map.getOrientedRelPos(robot.getPosition(), robotOrientation, relPos);
+		if (!map.isLegalPosition(posSens)) {return null;}
+		if (map.getMap()[posSens.y][posSens.x].isEmpty()) {return null;}
+		
+		Direction res = map.getMap()[posSens.y][posSens.x].get(map.getMap()[posSens.y][posSens.x].size() - 1).getDirection();
+		return res;
+	}
+	
 	/*
 	private Vector<Point> makePath(Point relativePos) {
 		Vector<Point> res = new Vector<Point>();
@@ -76,5 +86,6 @@ public class VisualSensor extends Sensor<Color>{
 	public boolean isAvailable() {
 		return !(getSensoryInformation() == null);
 	}
+
 	
 }

@@ -61,7 +61,7 @@ public class InterfaceAgentRobot {
 			} else {
 				inter = new Vector<Boolean>();
 				for (int s=0; s<robot.getSensorNb(); s++) {
-					for (int c=0; c<Main.colors.length; c++) {
+					for (int c=0; c<(Main.colors.length + Direction.values().length - 1); c++) {
 						inter.add(false);
 					}
 				}

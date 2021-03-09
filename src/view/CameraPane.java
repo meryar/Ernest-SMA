@@ -3,11 +3,13 @@ package view;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.util.Vector;
 
 import javax.swing.JPanel;
 
-import agent_developpemental.Data;
+import agents.AgentDeveloppemental;
 import environment.InterfaceAgentRobot;
+import main.Main;
 import robot.Action;
 
 public class CameraPane extends JPanel{
@@ -15,7 +17,7 @@ public class CameraPane extends JPanel{
 	private static final long serialVersionUID = 1L;
 	
 	private InterfaceAgentRobot interface_;
-	private Data data;
+	private Vector<Float> data;
 	private int offset_screen_x, offset_screen_y;
 
 	public CameraPane() {
@@ -25,8 +27,10 @@ public class CameraPane extends JPanel{
 	
 	@Override
 	public void paintComponent(Graphics g){
-		if (interface_ != null && interface_.getLastData() != null) {
+		if (interface_ != null && ((AgentDeveloppemental)interface_.getAgent()).getLastPerception() != null) {
 			updateData();
+			int offsetToInter = data.size() / Action.values().length;
+			int offsetToColor = offsetToInter / Main.colors.length;
 			
 			double sensor_map_side = Math.sqrt(interface_.getRobot().getSensorNb());
 			assert (Math.floor(sensor_map_side) == Math.ceil(sensor_map_side)): 
@@ -57,13 +61,13 @@ public class CameraPane extends JPanel{
 						int y = line * offset_y;
 						
 						Color color1 = new Color(
-								data.getSecondary(act, 0, line*camera_width + column),
-								data.getSecondary(act, 1, line*camera_width + column),
-								data.getSecondary(act, 2, line*camera_width + column)
+								data.get(act * offsetToInter + 0 * offsetToColor + line*camera_width + column),
+								data.get(act * offsetToInter + 1 * offsetToColor + line*camera_width + column),
+								data.get(act * offsetToInter + 2 * offsetToColor + line*camera_width + column)
 								);
 						
 						Color color2 = new Color(
-								data.getSecondary(act, 3, line*camera_width + column),
+								data.get(act * offsetToInter + 3 * offsetToColor + line*camera_width + column),
 								0,
 								0
 								);
@@ -80,8 +84,7 @@ public class CameraPane extends JPanel{
 	}
 
 	private void updateData() {
-		assert (interface_ != null): "ERROR: no interface defined";
-		data = interface_.getLastData();
+		data = ((AgentDeveloppemental) interface_.getAgent()).getLastPerception();
 	}
 
 	public void setInterface(InterfaceAgentRobot robot_interface) {
