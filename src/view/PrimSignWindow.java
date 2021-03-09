@@ -8,8 +8,6 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import agent_developpemental.Perceptron;
-import agents.AgentDeveloppemental;
 import environment.Environment;
 import environment.InterfaceAgentRobot;
 import robot.Action;
@@ -38,7 +36,7 @@ public class PrimSignWindow extends SlaveView{
 		this.setContentPane(panel);
 		
 		// selection box
-		JComboBox select = new JComboBox();
+		JComboBox<Action> select = new JComboBox<Action>();
 	    select.setBounds(window_base_width/2,0,95,box_height);  
 	    for (Action act: Action.values()) {
 	    	select.addItem(act);

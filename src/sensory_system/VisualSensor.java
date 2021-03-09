@@ -2,8 +2,6 @@ package sensory_system;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.util.Vector;
-
 import environment.Direction;
 import environment.Environment;
 import environment._2DMap;

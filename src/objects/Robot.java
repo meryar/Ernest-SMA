@@ -19,7 +19,7 @@ public class Robot extends Object{
 	
 	private List<Point> trace;
 	private int sensors_number;
-	private Vector<Sensor> sensors;  
+	private Vector<Sensor<Color>> sensors;  
 	private Action pending;
 	private int nbColors;
 	
@@ -30,7 +30,7 @@ public class Robot extends Object{
 		nbColors = Main.colors.length;
 		
 		sensors_number = 0;
-		sensors = new Vector<Sensor>();
+		sensors = new Vector<Sensor<Color>>();
 		for (int i= 0; i<2*visionRange; i++) {
 			for (int j=0; j<2*visionRange; j++) {
 				Point location = new Point(i - (int) Math.floor(visionRange), j - (int) Math.floor(visionRange));
@@ -48,7 +48,7 @@ public class Robot extends Object{
 		nbColors = Main.colors.length;
 		
 		sensors_number = 0;
-		sensors = new Vector<Sensor>();
+		sensors = new Vector<Sensor<Color>>();
 		for (int i= 0; i<2*visionRange + 1; i++) {
 			for (int j=0; j<2*visionRange + 1; j++) {
 				Point location = new Point(j - (int) Math.floor(visionRange), i - (int) Math.floor(visionRange));

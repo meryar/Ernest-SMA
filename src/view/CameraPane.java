@@ -89,6 +89,5 @@ public class CameraPane extends JPanel{
 
 	public void setInterface(InterfaceAgentRobot robot_interface) {
 		interface_ = robot_interface;
-		
 	}
 }

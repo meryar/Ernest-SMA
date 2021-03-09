@@ -49,6 +49,7 @@ public class InterfaceAgentRobot {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	private Vector<Float> entryForDeciding(){
 		Vector<Float> res = new Vector<>();
 		Vector<Float> enact = new Vector<>();

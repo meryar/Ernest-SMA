@@ -22,6 +22,7 @@ public class _2DMap {
 	private Map<String,Integer> object_number;
 	private List<Robot> robot_list;
 	
+	@SuppressWarnings("unchecked")
 	public _2DMap(int height_, int width_) {
 		height = height_;
 		width = width_;
@@ -30,6 +31,7 @@ public class _2DMap {
 		robot_list = new ArrayList<Robot>();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public _2DMap(Environment env_, String fileName) {
 		object_number = new HashMap<String,Integer>();
 		robot_list = new ArrayList<Robot>();

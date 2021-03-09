@@ -11,6 +11,8 @@ import environment.Environment;
  */
 public abstract class SlaveView extends AbstractView{
 
+	private static final long serialVersionUID = 1L;
+
 	public SlaveView(String name) {
 		super(name);
 		// TODO Auto-generated constructor stub

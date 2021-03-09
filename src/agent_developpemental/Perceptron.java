@@ -28,6 +28,7 @@ public class Perceptron {
 		lastPrediction.replaceAll(e -> 0f);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Vector<Float> compute(Vector<Float> entry){
 		Vector<Float> res = new Vector<Float>();
 		lastEntry = (Vector<Float>) entry.clone();
@@ -41,7 +42,6 @@ public class Perceptron {
 	}
 
 	public void learn(Vector<Float> trainingWeights) {
-		assert (trainingWeights.size() == neurons.size()): "error: number of learning weights different from neurons number!";
 		
 		for (int i=0; i<neurons.size(); i++) {
 			if (trainingWeights.get(i) != 0) {

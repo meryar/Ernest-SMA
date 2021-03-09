@@ -2,7 +2,6 @@ package agent_developpemental;
 
 import java.util.Vector;
 
-import main.Main;
 import robot.Action;
 
 public class Neuron {
@@ -25,13 +24,15 @@ public class Neuron {
 	}
 
 	public Float compute(Vector<Float> entry) {
-		assert (entry.size() != entries_number): "illegal number of entries: " + entry.size() + " instead of " + entries_number;
+		if (entry.size() != weights.size()) {
+			System.out.println("entry size: " + entry.size() + " / weigths number: " + weights.size());
+		}
 		
 		Float sum = (float) 0;
 		for (int i=0; i<entries_number; i++) {
 			sum += weights.get(i) * entry.get(i);
 		}
-		return (float) ( 1 / (1+Math.exp(-sum)))*2-1;
+		return (float) (1 / (1+Math.exp(-sum)))*2-1;
 	}
 	
 	public float learn(Vector<Float> entry, float error) {
