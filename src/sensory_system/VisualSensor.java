@@ -39,7 +39,12 @@ public class VisualSensor extends Sensor<Color>{
 		if (map.getMap()[posSens.y][posSens.x].isEmpty()) {return null;}
 		
 		Direction res = map.getMap()[posSens.y][posSens.x].get(map.getMap()[posSens.y][posSens.x].size() - 1).getDirection();
-		return res;
+		
+		return getRelativeDirection(robotOrientation, res);
+	}
+	
+	private Direction getRelativeDirection(Direction self, Direction seen) {
+		return Direction.getFromID(Direction.getID(seen) - Direction.getID(self));
 	}
 	
 	/*

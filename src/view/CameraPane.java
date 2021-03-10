@@ -8,6 +8,7 @@ import java.util.Vector;
 import javax.swing.JPanel;
 
 import agents.AgentDeveloppemental;
+import environment.Direction;
 import environment.InterfaceAgentRobot;
 import main.Main;
 import robot.Action;
@@ -33,8 +34,6 @@ public class CameraPane extends JPanel{
 			int offsetToColor = offsetToInter / (Main.colors.length + Direction.values().length -1);
 			
 			double sensor_map_side = Math.sqrt(interface_.getRobot().getSensorNb());
-			assert (Math.floor(sensor_map_side) == Math.ceil(sensor_map_side)): 
-				"ERROR: camera display only handles square sensor repartition";
 			
 			int camera_height = (int) sensor_map_side;
 			int camera_width = (int) sensor_map_side;
@@ -68,8 +67,8 @@ public class CameraPane extends JPanel{
 						
 						Color color2 = new Color(
 								data.get(act * offsetToInter + 3 * offsetToColor + line*camera_width + column),
-								0,
-								0
+								data.get(act * offsetToInter + 4 * offsetToColor + line*camera_width + column),
+								data.get(act * offsetToInter + 5 * offsetToColor + line*camera_width + column)
 								);
 
 						g.setColor(color1);
