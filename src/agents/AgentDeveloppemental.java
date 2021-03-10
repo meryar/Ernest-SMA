@@ -121,10 +121,14 @@ public class AgentDeveloppemental extends Agent{
 		for (int i=0; i<trainingWeights.size(); i++) {
 			if (trainingWeights.get(i) != 0) {
 				float error = trainingWeights.get(i) - lastPrediction.get(i);
-				if (i < secondaries.size()) {
-					secondaries.get(i).learn(lastPerception, Main.learning_rate * trainingWeights.get(i) * error);
-				} else {
-					primaries.get(i - secondaries.size()).learn(lastPerception, error);
+				if (Math.abs(error) > 0.02) {
+					if (i < secondaries.size()) {
+						//System.out.println("learning secondary interaction " + i + " with error " + error);
+						secondaries.get(i).learn(lastPerception, Main.learning_rate * trainingWeights.get(i) * error);
+					} else {
+						//System.out.println("learning primary interaction " + i + " with error " + error);
+						primaries.get(i - secondaries.size()).learn(lastPerception, error);
+					}
 				}
 			}
 		}
