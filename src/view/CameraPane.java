@@ -29,8 +29,8 @@ public class CameraPane extends JPanel{
 	public void paintComponent(Graphics g){
 		if (interface_ != null && ((AgentDeveloppemental)interface_.getAgent()).getLastPerception() != null) {
 			updateData();
-			int offsetToInter = data.size() / Action.values().length;
-			int offsetToColor = offsetToInter / Main.colors.length;
+			int offsetToInter = data.size() / Action.values().length - 1;
+			int offsetToColor = offsetToInter / (Main.colors.length + Direction.values().length -1);
 			
 			double sensor_map_side = Math.sqrt(interface_.getRobot().getSensorNb());
 			assert (Math.floor(sensor_map_side) == Math.ceil(sensor_map_side)): 
