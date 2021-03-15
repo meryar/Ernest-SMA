@@ -18,7 +18,7 @@ public class CameraPane extends JPanel{
 	private static final long serialVersionUID = 1L;
 	
 	private InterfaceAgentRobot interface_;
-	private Vector<Float> data;
+	private float[] data;
 	private int offset_screen_x, offset_screen_y;
 
 	public CameraPane() {
@@ -30,7 +30,7 @@ public class CameraPane extends JPanel{
 	public void paintComponent(Graphics g){
 		if (interface_ != null && ((AgentDeveloppemental)interface_.getAgent()).getLastPerception() != null) {
 			updateData();
-			int offsetToInter = data.size() / Action.values().length - 1;
+			int offsetToInter = data.length / Action.values().length - 1;
 			int offsetToColor = offsetToInter / (Main.colors.length + Direction.values().length -1);
 			
 			double sensor_map_side = Math.sqrt(interface_.getRobot().getSensorNb());
@@ -60,15 +60,15 @@ public class CameraPane extends JPanel{
 						int y = line * offset_y;
 						
 						Color color1 = new Color(
-								data.get(act * offsetToInter + 0 * offsetToColor + line*camera_width + column),
-								data.get(act * offsetToInter + 1 * offsetToColor + line*camera_width + column),
-								data.get(act * offsetToInter + 2 * offsetToColor + line*camera_width + column)
+								data[act * offsetToInter + 0 * offsetToColor + line*camera_width + column],
+								data[act * offsetToInter + 1 * offsetToColor + line*camera_width + column],
+								data[act * offsetToInter + 2 * offsetToColor + line*camera_width + column]
 								);
 						
 						Color color2 = new Color(
-								data.get(act * offsetToInter + 3 * offsetToColor + line*camera_width + column),
-								data.get(act * offsetToInter + 4 * offsetToColor + line*camera_width + column),
-								data.get(act * offsetToInter + 5 * offsetToColor + line*camera_width + column)
+								data[act * offsetToInter + 3 * offsetToColor + line*camera_width + column],
+								data[act * offsetToInter + 4 * offsetToColor + line*camera_width + column],
+								data[act * offsetToInter + 5 * offsetToColor + line*camera_width + column]
 								);
 
 						g.setColor(color1);
