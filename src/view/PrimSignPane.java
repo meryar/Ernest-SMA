@@ -10,7 +10,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import agent_developpemental.Neuron;
-import agent_developpemental.Perceptron;
 import agents.AgentDeveloppemental;
 import environment.Direction;
 import environment.InterfaceAgentRobot;
@@ -26,7 +25,7 @@ public class PrimSignPane extends JPanel{
 	private final int reserved_offset = 30;
 	
 	private InterfaceAgentRobot agent;
-	private Vector<Neuron> primaries;
+	private Neuron[] primaries;
 	private int selected;
 	private int box_offset;
 	private Vector<JLabel> labels;
@@ -62,7 +61,7 @@ public class PrimSignPane extends JPanel{
 			int screen_width = (int) pane_size.width / nb_actions - between_screen_x;
 			int screen_height = (int) pane_size.height / 2 - between_screen_y;
 			
-			Neuron neuron = primaries.get(selected);
+			Neuron neuron = primaries[selected];
 			
 			for (int act=0; act<nb_actions; act++) {
 				

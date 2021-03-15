@@ -1,5 +1,6 @@
 package environment;
 
+import java.util.Collections;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
@@ -46,45 +47,39 @@ public class InterfaceAgentRobot {
 		lastSeen = robot.getSensoryInformation();
 		
 		agent.learn(entryForLearning());
-		
 	}
 	
 	@SuppressWarnings("unchecked")
-	private Vector<Float> entryForDeciding(){
-		Vector<Float> res = new Vector<>();
-		Vector<Float> enact = new Vector<>();
-		
+	private float[] entryForDeciding(){
+		float[] res = new float[Action.values().length * robot.getSensorNb() 
+		                        * (Main.colors.length + Direction.values().length - 1) 
+		                        + Action.values().length];
 		// first we add the secondary interaction's information (the sight)
-		for (Action act: Action.values()) {
+		for (int i=0; i<Action.values().length; i++) {
 			Vector<Boolean> inter;
 			if (lastSeen != null) {
 				inter = (Vector<Boolean>) lastSeen.clone();
 			} else {
 				inter = new Vector<Boolean>();
-				for (int s=0; s<robot.getSensorNb(); s++) {
-					for (int c=0; c<(Main.colors.length + Direction.values().length - 1); c++) {
-						inter.add(false);
-					}
-				}
+				inter.setSize(robot.getSensorNb() * (Main.colors.length + Direction.values().length - 1) );
+				Collections.fill(inter, false);
 			}
-			if (lastEnacted != act) {
-				inter.replaceAll(b -> false);
-				enact.add(0f);
+			if (lastEnacted != Action.values()[i]) {
+				Collections.fill(inter, false);
+				res[res.length - Action.values().length + i] = 0;
 			} else {
-				enact.add(1f);
+				res[res.length - Action.values().length + i] = 1;
 			}
-			res.addAll(inter.stream().map(b -> b ? 1f : 0f).collect(Collectors.toList()));
+			for (int j=0; j<inter.size(); j++) {
+				res[i*inter.size() + j] = inter.get(j)? 1: 0;
+			}
 		}
-		// then we add the primary interaction (touch)
-		res.addAll(enact);
-		
 		return res;
 	}
 	
-	private Vector<Float> entryForLearning() {
+	private float[] entryForLearning() {
 		int codeEnacted = -1;
-		Vector<Float> base = entryForDeciding();
-		Vector<Float> prim = new Vector<>();
+		float[] base = entryForDeciding();
 		Vector<Action> alternates = new Vector<Action>();
 		alternates.add(Action.MOVE_FWD);
 		alternates.add(Action.BUMP);
@@ -92,16 +87,11 @@ public class InterfaceAgentRobot {
 		alternates.add(Action.EAT);
 		alternates.add(Action.FEAST);
 		
-		for (Action act: Action.values()) {
-			base.remove(base.size()-1);
-			prim.add(act == lastEnacted? 1f: 0f);
-		}
-		
 		if (alternates.contains(lastEnacted)) {
 			for (int i=0; i<alternates.size(); i++) {
 				if (lastEnacted != alternates.get(i)) {
-					prim.set(i, -1f);
-				}
+					base[base.length - Action.values().length + i] = -1f;
+				} 
 			}
 		}
 		
@@ -111,15 +101,12 @@ public class InterfaceAgentRobot {
 			}
 		}
 		
-		int offset = base.size() / Action.values().length;
+		int offset = base.length / Action.values().length -1;
 		for (int i=0; i<offset; i++) {
-			if (base.get(codeEnacted * offset + i) == 0f) {
-				base.set(codeEnacted * offset + i, -1f);
+			if (base[codeEnacted * offset + i] == 0f) {
+				base[codeEnacted * offset + i] = -1f;
 			}
 		}
-		
-		base.addAll(prim);
-		
 		return base;
 	}
 	
