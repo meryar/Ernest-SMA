@@ -69,8 +69,12 @@ public class Robot extends Object{
 			if (getMap().isLegalPosition(newPos) && getMap().isFood(newPos)) {
 				List<Object> targets = getMap().getTypedObjects(Environment.Touch.FOOD, newPos);
 				for (Object fish: targets) {
-					if (((Fish) fish).get_attacked(getName())) {break;}
-				}
+					if (fish instanceof OrientedFish) {
+						if (((OrientedFish) fish).get_attacked(getName(), getDirection())) {break;}
+					} else if (fish instanceof Fish) {
+						if (((Fish) fish).get_attacked(getName())) {break;}
+					}
+				}	
 			};
 		case ROTATE_LEFT:
 			break;
@@ -92,8 +96,14 @@ public class Robot extends Object{
 				} else if (getMap().isFood(newPos)) {
 					List<Object> targets = getMap().getTypedObjects(Environment.Touch.FOOD, newPos);
 					for (Object fish: targets) {
-						if (((Fish) fish).was_eaten_by(getName())) {
-							return ((Fish) fish).getAffordedOnDeath();
+						if (fish instanceof OrientedFish) {
+							if (((OrientedFish) fish).was_eaten_by(getName(), getDirection())) {
+								return ((OrientedFish) fish).getAffordedOnDeath();
+							}
+						} else if (fish instanceof Fish) {
+							if (((Fish) fish).was_eaten_by(getName())) {
+								return ((Fish) fish).getAffordedOnDeath();
+							}
 						}
 					}
 					return Action.FIGHT;
