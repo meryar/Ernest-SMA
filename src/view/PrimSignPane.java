@@ -106,7 +106,7 @@ public class PrimSignPane extends JPanel{
 			//((JLabel) getComponent(2)).setText("bias: " + neuron.bias);
 			//((JLabel) getComponent(2)).setBounds((int)(pane_size.width * 0.7), 0, 200, box_offset);
 
-			((JComboBox<Action>) getComponent(1)).setBounds((int)(pane_size.width/2.2), 5, 128, 22);
+			((JComboBox<Action>) getComponent(0)).setBounds((int)(pane_size.width/2.2), 5, 128, 22);
 		}
 	}
 

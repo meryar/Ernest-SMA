@@ -50,7 +50,6 @@ public class PrimSignWindow extends SlaveView{
 	    				repaint();
 	    		    }
 	    		});
-	    add(new JLabel("Signatures for interaction: "));
 	    add(select); 
 	    
 	}
