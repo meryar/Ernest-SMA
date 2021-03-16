@@ -44,10 +44,10 @@ public class Neuron {
 		
 		if (error * learn_sum < 0) {
 			if (error > 0) {
-				error = (float) Math.max(error, -0.05*learn_sum);
+				error = (float) Math.max(error, -0.2*learn_sum);
 			}
 			if (error < 0) {
-				error = (float) Math.min(error, -0.05*learn_sum);
+				error = (float) Math.min(error, -0.2*learn_sum);
 			}
 		}
 		
