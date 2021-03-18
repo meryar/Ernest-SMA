@@ -51,7 +51,7 @@ public class AgentDeveloppemental extends Agent{
 	}
 
 	private Action decideAction(float[] perception) {
-		long start = System.currentTimeMillis();
+		//long start = System.currentTimeMillis();
 		lastPerception = perception;
 		
 		Action choice;
@@ -164,7 +164,7 @@ public class AgentDeveloppemental extends Agent{
 	@Override
 	public void learn(float[] trainingWeights) {
 		
-		long start = System.currentTimeMillis();
+		//long start = System.currentTimeMillis();
 		ExecutorService ex = Executors.newFixedThreadPool(Thread_nb);
 	    int block_size = trainingWeights.length/Thread_nb;
 	    for (int i = 0; i < Thread_nb-1; i++) {

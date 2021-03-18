@@ -6,8 +6,6 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-
 import environment.Environment;
 import environment.InterfaceAgentRobot;
 import robot.Action;

@@ -3,8 +3,6 @@ package view;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.util.Vector;
-
 import javax.swing.JPanel;
 
 import agents.AgentDeveloppemental;
