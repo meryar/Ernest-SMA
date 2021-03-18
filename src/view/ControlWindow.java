@@ -67,6 +67,7 @@ public class ControlWindow extends AbstractView{
 	    
 	    
 	    // creating sub windows
+	    slaves.add(new EntryWindow("entries"));
 	    slaves.add(new PrimSignWindow("primary signatures"));
 	    slaves.add(new CameraWindow("Camera"));
 	    slaves.add(new EnvWindow("Environment", main.env.getMap()));
