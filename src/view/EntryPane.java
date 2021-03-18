@@ -34,17 +34,12 @@ public class EntryPane extends JPanel{
 			updateData();
 			
 			label.setBounds(0, 0, dim.width, dim.height);
-			int charPerLine = dim.width / 40;
 			String output = "<html>";
 			for (float value: data) { 
-				output += (int)value;
-				if(output.length() % charPerLine == 0) {
-					output += " ";
-				}
+				output += (int)value + " ";
 			}
 			output += "</html>";
 			label.setText(output);
-			System.out.println(output);
 		}
 	}
 	
