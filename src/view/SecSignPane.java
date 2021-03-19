@@ -3,6 +3,7 @@ package view;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
 import java.util.Vector;
 
 import javax.swing.JComboBox;
@@ -16,7 +17,7 @@ import environment.InterfaceAgentRobot;
 import main.Main;
 import robot.Action;
 
-public class PrimSignPane extends JPanel{
+public class SecSignPane extends JPanel{
 
 	private static final long serialVersionUID = 1L;
 
@@ -25,21 +26,66 @@ public class PrimSignPane extends JPanel{
 	private final int reserved_offset = 30;
 	
 	private InterfaceAgentRobot agent;
-	private Neuron[] primaries;
-	private int selected;
+	private Neuron[] secondaries;
+	private int interaction, color, sensor;
 	private int box_offset;
 	private Vector<JLabel> labels;
 
-	public PrimSignPane(int offset_y) {
-		box_offset = offset_y;
+	public SecSignPane(int height_top_area) {
+		
+		Dimension dim = getSize();
 		labels = new Vector<JLabel>();
+		box_offset = height_top_area;
+		
+		JComboBox<Action> select = new JComboBox<Action>();
+	    select.setBounds(dim.width/3, 0, 95, height_top_area);  
+	    select.setAlignmentX(dim.width/3);
+	    for (Action act: Action.values()) {
+	    	select.addItem(act);
+	    }
+	    select.addActionListener(
+	    		new java.awt.event.ActionListener(){
+	    			public void actionPerformed(ActionEvent e) {
+	    				System.out.println("Now displaying signature of secondary interaction: color= "
+	    						+ color 
+	    						+ " sensor= " + sensor
+	    						+ " interaction= " + select.getSelectedItem());
+	    				setInter(select.getSelectedIndex());
+	    				repaint();
+	    		    }
+	    		});
+	    add(select); 
+	    
+	    
+	    JComboBox<Integer> selectColor = new JComboBox<Integer>();
+	    selectColor.setBounds(dim.width + 100, 0, 95 , height_top_area);
+	    select.setAlignmentX(dim.width/3 + 100);
+	    for (int i=0; i<Main.colors.length + Direction.values().length -1; i++) {
+	    	selectColor.addItem(i);
+	    }
+	    selectColor.addActionListener(
+	    		new java.awt.event.ActionListener(){
+	    			public void actionPerformed(ActionEvent e) {
+	    				System.out.println("Now displaying signature of secondary interaction: color= "
+	    						+ selectColor.getSelectedItem()
+	    						+ " sensor= " + sensor
+	    						+ " interaction= " + select.getSelectedItem());
+	    				setColor(selectColor.getSelectedIndex());
+	    				repaint();
+	    		    }
+	    		});
+	    add(new JLabel("color:"));
+	    add(selectColor); 
+	    
 	}
 	
 	@Override
 	public void paintComponent(Graphics g) {
-		if (primaries != null) {
+		if (secondaries != null) {
+			
 			int nb_colors = Main.colors.length + Direction.values().length - 1;
 			int nb_sensors = agent.getRobot().getSensorNb();
+			int indexNeuron = interaction * (nb_colors * nb_sensors) + color * nb_sensors + sensor;
 			
 			double sensor_map_side = Math.sqrt(agent.getRobot().getSensorNb());
 			
@@ -59,7 +105,7 @@ public class PrimSignPane extends JPanel{
 			int screen_width = (int) pane_size.width / nb_actions - between_screen_x;
 			int screen_height = (int) pane_size.height / 2 - between_screen_y;
 			
-			Neuron neuron = primaries[selected];
+			Neuron neuron = secondaries[indexNeuron];
 			
 			for (int act=0; act<nb_actions; act++) {
 				
@@ -83,6 +129,7 @@ public class PrimSignPane extends JPanel{
 							normalize(act*nb_colors*nb_sensors + 5 * nb_sensors + line*sensor_map_width + column, neuron)));
 							
 						g.fillRect(x, y + screen_height + between_screen_y, screen_width/sensor_map_width, screen_height/sensor_map_height);
+						
 					}
 				}
 				
@@ -100,11 +147,9 @@ public class PrimSignPane extends JPanel{
 										reserved_offset);
 				
 			}
-
-			((JComboBox<Action>) getComponent(0)).setBounds((int)(pane_size.width/2.2), 5, 128, 22);
 		}
 	}
-
+	
 	private float normalize(int nb_index, Neuron neuron) {
 		float nb = neuron.getWeights().get(nb_index);
 		float max = neuron.max_abs_weights[neuron.correspondingInteraction(nb_index)];
@@ -114,35 +159,20 @@ public class PrimSignPane extends JPanel{
 
 	public void setAgent(InterfaceAgentRobot agent_) {
 		agent = agent_;
-		primaries = ((AgentDeveloppemental) agent.getAgent()).getPrimaries();
+		secondaries = ((AgentDeveloppemental) agent.getAgent()).getSecondaries();
 	}
 
-	public void setFocus(int selectedIndex) {
-		selected = selectedIndex;
+	public void setInter(int selectedIndex) {
+		interaction = selectedIndex;
+	}
+
+	public void setColor(int colorIndex) {
+		color = colorIndex;
 	}
 	
-	public int getScreenHeight() {
-		return (int) (getHeight() - box_offset - reserved_offset) / 2 - between_screen_y;
-	}
-
-	public int getYOffset() {
-		return between_screen_y;
-	}
-
-	public int getScreenWidth() {
-		return (int) getWidth() / Action.values().length - between_screen_x;
-	}
-
-	public int getXOffset() {
-		return between_screen_x;
+	public void setPositon(int sensorIndex) {
+		sensor = sensorIndex;
 	}
 	
-	public Dimension getSensorsDimension() {
-		double sensor_map_side = Math.sqrt(agent.getRobot().getSensorNb());
-		
-		int sensor_map_height = (int) sensor_map_side;
-		int sensor_map_width = (int) sensor_map_side;
-		
-		return new Dimension(sensor_map_width, sensor_map_height);
-	}
+	
 }

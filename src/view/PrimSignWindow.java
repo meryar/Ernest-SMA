@@ -14,7 +14,7 @@ public class PrimSignWindow extends SlaveView{
 
 	private static final long serialVersionUID = 1L;
 	
-	private final int box_height = 30; 
+	private static final int box_height = 30; 
 	
 	private PrimSignPane panel;
 	
@@ -30,7 +30,7 @@ public class PrimSignWindow extends SlaveView{
 		this.setBounds(0, 0, window_base_width, window_base_height);
 
 		// creating pane
-		panel = new PrimSignPane(box_height+5);
+		panel = new PrimSignPane(getTopOffset());
 		this.setContentPane(panel);
 		
 		// selection box
@@ -58,4 +58,27 @@ public class PrimSignWindow extends SlaveView{
 		panel.setAgent(agent);
 	}
 
+	public int getTopOffset() {
+		return box_height + 5;
+	}
+	
+	public int getScreenHeight() {
+		return panel.getScreenHeight();
+	}
+
+	public int getYOffset() {
+		return panel.getYOffset();
+	}
+	
+	public int getScreenWidth() {
+		return panel.getScreenWidth();
+	}
+
+	public int getXOffset() {
+		return panel.getXOffset();
+	}
+
+	public Dimension getSensorsDimension() {
+		return panel.getSensorsDimension();
+	}
 }
