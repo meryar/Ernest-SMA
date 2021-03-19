@@ -16,7 +16,6 @@ public class SecSignWindow extends SlaveView implements MouseListener{
 
 	private static final long serialVersionUID = 1L;
 	private static final int offset_top_border = 27;
-	private static final int height_top_area = 30;
 	
 	private SecSignPane panel;
 	private PrimSignWindow primWindow;
