@@ -20,33 +20,48 @@ public class AgentDeveloppemental extends Agent{
 
 	private static final float certitude_treshold = 0.6f;
 	private static final int Thread_nb = 24;
-	
-	private Map<Action,Float> utilities;
+
+	private Map<Action,Integer> utilities;
 	private Neuron[] primaries, secondaries;
 	private float[] lastPrediction, lastPerception;
-	
-	public AgentDeveloppemental(int data_size, int nb_interactions) {
+	private int data_size;
+
+	public AgentDeveloppemental(int data_size_) {
+		data_size = data_size_;
+
+		lastPrediction = new float[data_size];
+
+		utilities = new HashMap<>();
+		utilities.put(Action.MOVE_FWD, 5);
+		utilities.put(Action.BUMP, -10);
+		utilities.put(Action.FIGHT, -20);
+		utilities.put(Action.EAT, 50);
+		utilities.put(Action.FEAST, 200);
+		utilities.put(Action.ROTATE_LEFT, -3);
+		utilities.put(Action.ROTATE_RIGHT, -3);
+	}
+
+	public AgentDeveloppemental(int data_size_, int nb_interactions) {
+		this(data_size_);
 
 		primaries = new Neuron[nb_interactions];
 		secondaries = new  Neuron[data_size - nb_interactions];
-		
+
 		for (int i=0; i<nb_interactions; i++) {
 			primaries[i] = new Neuron(data_size, Main.learning_rate);
 		}
 		for (int i=0; i<data_size - nb_interactions; i++) {
 			secondaries[i] = new Neuron(data_size, Main.learning_rate);
 		}
-		
-		lastPrediction = new float[data_size];
-		
-		utilities = new HashMap<>();
-		utilities.put(Action.MOVE_FWD, 5f);
-		utilities.put(Action.BUMP, -10f);
-		utilities.put(Action.FIGHT, -20f);
-		utilities.put(Action.EAT, 50f);
-		utilities.put(Action.FEAST, 200f);
-		utilities.put(Action.ROTATE_LEFT, -3f);
-		utilities.put(Action.ROTATE_RIGHT, -3f);
+	}
+
+	public AgentDeveloppemental(int data_size_, int nb_interactions, String filename) {
+		this(data_size_);
+
+		primaries = new Neuron[nb_interactions];
+		secondaries = new  Neuron[data_size - nb_interactions];
+
+		load(filename);
 	}
 
 	@Override
@@ -248,7 +263,28 @@ public class AgentDeveloppemental extends Agent{
 	public Neuron[] getSecondaries(){
 		return secondaries;
 	}
-	
+
+	public void load(String file_name) {
+		try {
+			File myObj = new File(file_name);
+			Scanner myReader = new Scanner(myObj);
+			int counter = 0;
+			while (myReader.hasNextLine()) {
+				if (counter < data_size - Action.values().length) {
+					secondaries[counter] = new Neuron(data_size, Main.learning_rate, myReader.nextLine());
+				} else if(counter < data_size){
+					primaries[counter + Action.values().length - data_size] = new Neuron(data_size, Main.learning_rate, myReader.nextLine());
+				} else {
+					System.err.println("Too many lines in file: " + file_name);
+				}
+				counter += 1;
+			}
+			myReader.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("no such file: " + file_name);
+			e.printStackTrace();
+		}
+	}
 
 	public void save(String file_name) {
 

@@ -25,6 +25,18 @@ public class Neuron {
 		}
 	}
 
+	public Neuron(int input_size, float learning_rate, String line) {
+		weights = new Vector<Float>();
+		entries_number = input_size;
+		c = learning_rate;
+		max_abs_weights = new float[Action.values().length];
+		learn_sum = 0;
+		
+		for (String nb: line.split(" ")) {
+			weights.add(Float.parseFloat(nb));
+		}
+	}
+
 	public Float compute(float[] perception) {
 		if (perception.length != weights.size()) {
 			System.out.println("entry size: " + perception.length + " / weigths number: " + weights.size());
