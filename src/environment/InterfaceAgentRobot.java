@@ -14,7 +14,7 @@ public class InterfaceAgentRobot {
 	private Robot robot;
 	private Action lastEnacted, lastIntended;
 	private Vector<Boolean> lastSeen;
-	
+
 	public InterfaceAgentRobot(Robot rob) {
 		robot = rob;
 		int input_size = ((Main.colors.length + Direction.values().length - 1) * robot.getSensorNb() + 1) * Action.values().length; 
@@ -28,6 +28,7 @@ public class InterfaceAgentRobot {
 	}
 
 	public void commandRobot() {
+		lastSeen = robot.getSensoryInformation();
 		lastIntended = agent.decide(entryForDeciding());
 		switch (lastIntended) {
 		case BUMP:
