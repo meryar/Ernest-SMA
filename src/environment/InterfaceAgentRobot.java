@@ -21,6 +21,12 @@ public class InterfaceAgentRobot {
 		agent = new AgentDeveloppemental(input_size, Action.values().length);
 	}
 
+	public InterfaceAgentRobot(Robot rob, String file_name) {
+		robot = rob;
+		int input_size = ((Main.colors.length + Direction.values().length - 1) * robot.getSensorNb() + 1) * Action.values().length; 
+		agent = new AgentDeveloppemental(input_size, Action.values().length, file_name);
+	}
+
 	public void commandRobot() {
 		lastIntended = agent.decide(entryForDeciding());
 		switch (lastIntended) {
