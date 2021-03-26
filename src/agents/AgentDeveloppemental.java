@@ -1,7 +1,12 @@
 package agents;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -244,4 +249,45 @@ public class AgentDeveloppemental extends Agent{
 		return secondaries;
 	}
 	
+
+	public void save(String file_name) {
+
+		try {
+			File myObj = new File(file_name);
+			if (myObj.createNewFile()) {
+				System.out.println("File created: " + myObj.getName());
+				try {
+					FileWriter myWriter = new FileWriter(file_name);
+
+					int counter = 0;
+					for(Neuron neuron: secondaries) {
+						for (float weight: neuron.getWeights()) {
+							myWriter.write(weight + " ");
+						}
+						myWriter.write("\n");
+						System.out.println("neuron " + counter + " parsed");
+						counter++;
+					}
+					for(Neuron neuron: primaries) {
+						for (float weight: neuron.getWeights()) {
+							myWriter.write(weight + " ");
+						}
+						myWriter.write("\n");
+					}
+
+					myWriter.close();
+					System.out.println("Successfully wrote to the file.");
+				} catch (IOException e) {
+					System.out.println("An error occurred.");
+					e.printStackTrace();
+				}
+			} else {
+				System.out.println("File already exists.");
+			}
+		} catch (IOException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		}
+	}
+
 }

@@ -75,6 +75,17 @@ public class ControlWindow extends AbstractView{
 	    slaves.add(new EnvWindow("Environment", main.env.getMap()));
 	    
 	    updateFocus(0);
+
+		JButton save = new JButton("save");  
+		save.setBounds(150,100,95,30);  
+		save.addActionListener(
+				new java.awt.event.ActionListener(){
+					public void actionPerformed(ActionEvent e) {
+						main.save();;
+					}
+				});
+		add(save);
+
 	}
 
 	/**

@@ -45,7 +45,11 @@ public class Main {
 				controlView.updateSlaves();
 			}
 		}
-		
+
+	}
+
+	public void save() {
+		env.saveAgents();
 	}
 	
 	public static void main(String[] args){

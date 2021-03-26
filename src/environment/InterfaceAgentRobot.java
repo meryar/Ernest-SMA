@@ -115,5 +115,9 @@ public class InterfaceAgentRobot {
 	public Agent getAgent() {
 		return agent;
 	}
-	
+
+	public void save(String file_name) {
+		((AgentDeveloppemental) agent).save(file_name);
+	}
+
 }

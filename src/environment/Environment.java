@@ -76,4 +76,11 @@ public class Environment {
 	public InterfaceAgentRobot getInterface(int id) {
 		return agents_list.get(id);
 	}
+
+	public void saveAgents() {
+		for (int i=0; i<agents_list.size(); i++) {
+			String file_name = "ressources/agents/agent_" + i + ".txt";
+			agents_list.get(i).save(file_name);
+		}
+	}
 }
