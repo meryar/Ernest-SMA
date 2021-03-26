@@ -10,14 +10,14 @@ import environment.Environment;
 public class CameraWindow extends SlaveView{
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private CameraPane panel;
 
 	public CameraWindow(String name) {
 		super(name);
 
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		// setting starting screen size
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int window_base_height = (int) (screenSize.getHeight() * 0.5);

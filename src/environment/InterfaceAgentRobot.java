@@ -43,10 +43,10 @@ public class InterfaceAgentRobot {
 	public void getResults() {
 		lastEnacted = robot.getResults();
 		lastSeen = robot.getSensoryInformation();
-		
+
 		agent.learn(entryForLearning());
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private float[] entryForDeciding(){
 		float[] res = new float[Action.values().length * robot.getSensorNb() 
@@ -74,7 +74,7 @@ public class InterfaceAgentRobot {
 		}
 		return res;
 	}
-	
+
 	private float[] entryForLearning() {
 		int codeEnacted = -1;
 		float[] base = entryForDeciding();
@@ -84,7 +84,7 @@ public class InterfaceAgentRobot {
 		alternates.add(Action.FIGHT);
 		alternates.add(Action.EAT);
 		alternates.add(Action.FEAST);
-		
+
 		if (alternates.contains(lastEnacted)) {
 			for (int i=0; i<alternates.size(); i++) {
 				if (lastEnacted != alternates.get(i)) {
@@ -92,13 +92,13 @@ public class InterfaceAgentRobot {
 				} 
 			}
 		}
-		
+
 		for (int i = 0; i < Action.values().length; i++) {
 			if (Action.values()[i].equals(lastEnacted)) {
 				codeEnacted = i;
 			}
 		}
-		
+
 		int offset = base.length / Action.values().length -1;
 		for (int i=0; i<offset; i++) {
 			if (base[codeEnacted * offset + i] == 0f) {
@@ -107,11 +107,11 @@ public class InterfaceAgentRobot {
 		}
 		return base;
 	}
-	
+
 	public Robot getRobot() {
 		return robot;
 	}
-	
+
 	public Agent getAgent() {
 		return agent;
 	}

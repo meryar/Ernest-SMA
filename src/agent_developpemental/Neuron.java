@@ -49,7 +49,7 @@ public class Neuron {
 		return (float) (1 / (1+Math.exp(-sum)))*2-1;
 	}
 	
-	public float learn(float[] lastPerception, float error) {
+	public void learn(float[] lastPerception, float error) {
 		for (int i = 0; i<max_abs_weights.length; i++) {
 			max_abs_weights[i] = 0;
 		}
@@ -61,19 +61,16 @@ public class Neuron {
 			if (error < 0) {
 				error = (float) Math.min(error, -0.2*learn_sum);
 			}
-		}
+		} 
 		
         for (int i=0; i<weights.size(); i++) {
-        	
-            weights.set(i, weights.get(i) + c * error * lastPerception[i]);
+        	float delta = c * error * lastPerception[i];
+            weights.set(i, weights.get(i) + delta);
             
-            if (i < weights.size() - 1) {
-	            max_abs_weights[correspondingInteraction(i)] = Math.max(Math.abs(weights.get(i)), max_abs_weights[correspondingInteraction(i)]);  
-	        }
+            max_abs_weights[correspondingInteraction(i)] = Math.max(Math.abs(weights.get(i)), max_abs_weights[correspondingInteraction(i)]);  
+	        
         }
         learn_sum += error; 
-        
-        return max_abs_weights[0];
 	}
 	
 	public int correspondingInteraction(int index) {

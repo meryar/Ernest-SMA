@@ -17,19 +17,19 @@ public class Main {
 	public static final int robot_vision_range 		= 1;	// distance at which the robot is able to see
 	public static final float learning_rate			= 0.01f; // learning rate of the agent's perceptron
 	public static final Color[] colors              = {Environment.FISH2,
-													   Environment.WALL1,
-													   //Environment.FIELD_COLOR,
-													   Environment.FISH1,
-													   Environment.ROBOT_COLOR};	
+														Environment.WALL1,
+														//Environment.FIELD_COLOR,
+														Environment.FISH1,
+														Environment.ROBOT_COLOR};	
 
 	public Main() {
-		
+
 		// create environment and control panel
 		env = new Environment(env_path);
 		controlView = new ControlWindow("Control panel", this);
 		controlView.pack();
 		controlView.setVisible(true);
-		
+
 		// launch simulation loop
 		run = true;
 		pause = true;
@@ -51,7 +51,7 @@ public class Main {
 	public void save() {
 		env.saveAgents();
 	}
-	
+
 	public static void main(String[] args){
 		new Main();	
 	}

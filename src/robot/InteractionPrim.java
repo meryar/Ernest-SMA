@@ -1,14 +1,14 @@
 package robot;
 
 public class InteractionPrim {
-	
+
 	private Action intended_action;
 	private Action enacted_action;
-	
+
 	public InteractionPrim(Action intended) {
 		intended_action = intended;
 	}
-	
+
 	public InteractionPrim(Action intended, Action enacted) {
 		intended_action = intended;
 		enacted_action = enacted;

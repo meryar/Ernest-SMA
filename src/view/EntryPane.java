@@ -16,23 +16,23 @@ public class EntryPane extends JPanel{
 	private InterfaceAgentRobot interface_;
 	private float[] data;
 	private JLabel label;
-	
+
 
 	public EntryPane() {
 		label = new JLabel("start simulation");
 		add(label);
 		label.setSize(this.getSize());
 	}
-	
+
 	@Override
 	public void paintComponent(Graphics g){
 		Dimension dim = this.getSize();
 		g.setColor(Color.white);
 		g.fillRect(0, 0, dim.width, dim.height);
-		
+
 		if (interface_ != null && ((AgentDeveloppemental)interface_.getAgent()).getLastPerception() != null) {
 			updateData();
-			
+
 			label.setBounds(0, 0, dim.width, dim.height);
 			String output = "<html>";
 			for (float value: data) { 
@@ -42,7 +42,7 @@ public class EntryPane extends JPanel{
 			label.setText(output);
 		}
 	}
-	
+
 	private void updateData() {
 		data = ((AgentDeveloppemental) interface_.getAgent()).getLastPerception();
 	}

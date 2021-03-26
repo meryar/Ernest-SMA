@@ -12,18 +12,18 @@ public class EntryWindow extends SlaveView{
 
 	private EntryPane panel;
 
-	
+
 	public EntryWindow(String name) {
 		super(name);
-		
+
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		// setting starting screen size
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int window_base_height = (int) (screenSize.getHeight() * 0.8);
 		int window_base_width = (int) (screenSize.getWidth() * 0.9);
 		this.setBounds(0, 0, window_base_width, window_base_height);
-		
+
 		// creating pane
 		panel = new EntryPane();
 		this.setContentPane(panel);

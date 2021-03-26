@@ -3,7 +3,7 @@ package agents;
 import robot.Action;
 
 public abstract class Agent {
-	
+
 	public Agent() {
 	}
 

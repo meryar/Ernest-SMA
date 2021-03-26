@@ -13,16 +13,16 @@ import robot.Action;
 public class PrimSignWindow extends SlaveView{
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private static final int box_height = 30; 
-	
+
 	private PrimSignPane panel;
-	
+
 	public PrimSignWindow(String name) {
 		super(name);
 
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		// setting starting screen size
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int window_base_height = (int) (screenSize.getHeight() * 0.5);
@@ -32,24 +32,24 @@ public class PrimSignWindow extends SlaveView{
 		// creating pane
 		panel = new PrimSignPane(getTopOffset());
 		this.setContentPane(panel);
-		
+
 		// selection box
 		JComboBox<Action> select = new JComboBox<Action>();
-	    select.setBounds(window_base_width/3,0,95,box_height);  
-	    select.setAlignmentX(window_base_width/3);
-	    for (Action act: Action.values()) {
-	    	select.addItem(act);
-	    }
-	    select.addActionListener(
-	    		new java.awt.event.ActionListener(){
-	    			public void actionPerformed(ActionEvent e) {
-	    				System.out.println("Now displaying signature of primary interaction " + select.getSelectedItem());
-	    				panel.setFocus(select.getSelectedIndex());
-	    				repaint();
-	    		    }
-	    		});
-	    add(select); 
-	    
+		select.setBounds(window_base_width/3,0,95,box_height);  
+		select.setAlignmentX(window_base_width/3);
+		for (Action act: Action.values()) {
+			select.addItem(act);
+		}
+		select.addActionListener(
+				new java.awt.event.ActionListener(){
+					public void actionPerformed(ActionEvent e) {
+						System.out.println("Now displaying signature of primary interaction " + select.getSelectedItem());
+						panel.setFocus(select.getSelectedIndex());
+						repaint();
+					}
+				});
+		add(select); 
+
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class PrimSignWindow extends SlaveView{
 	public int getTopOffset() {
 		return box_height + 5;
 	}
-	
+
 	public int getScreenHeight() {
 		return panel.getScreenHeight();
 	}
@@ -69,7 +69,7 @@ public class PrimSignWindow extends SlaveView{
 	public int getYOffset() {
 		return panel.getYOffset();
 	}
-	
+
 	public int getScreenWidth() {
 		return panel.getScreenWidth();
 	}

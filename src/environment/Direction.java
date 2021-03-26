@@ -5,7 +5,7 @@ public enum Direction {
 	WEST,
 	SOUTH,
 	EAST;
-	
+
 	public static int getID(Direction dir) {
 		return (switch (dir){
 		case EAST:
@@ -20,7 +20,7 @@ public enum Direction {
 			yield -1;
 		});
 	}
-	
+
 	public static Direction getFromID(int id) {
 		id += values().length; 
 		id %= values().length; 

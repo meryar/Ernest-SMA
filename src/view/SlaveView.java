@@ -17,7 +17,7 @@ public abstract class SlaveView extends AbstractView{
 		super(name);
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	/**
 	 * Method used to set which entity the view should display the information of.
 	 * 

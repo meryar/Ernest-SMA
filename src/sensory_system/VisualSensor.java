@@ -8,7 +8,7 @@ import environment._2DMap;
 import objects.Robot;
 
 public class VisualSensor extends Sensor<Color>{
-	
+
 	private Point relPos;
 	//Vector<Point> path;
 
@@ -26,27 +26,27 @@ public class VisualSensor extends Sensor<Color>{
 		Point posSens = map.getOrientedRelPos(robot.getPosition(), robotOrientation, relPos);
 		if (!map.isLegalPosition(posSens)) {return null;}
 		if (map.getMap()[posSens.y][posSens.x].isEmpty()) {return null;}
-		
+
 		Color res = map.getMap()[posSens.y][posSens.x].get(map.getMap()[posSens.y][posSens.x].size() - 1).getColor();
 		if (res.equals(Environment.FIELD_COLOR)) {return null;}
 		return res;
 	}
-	
+
 	public Direction getDirectionSeen() {
 		Direction robotOrientation = robot.getDirection();
 		Point posSens = map.getOrientedRelPos(robot.getPosition(), robotOrientation, relPos);
 		if (!map.isLegalPosition(posSens)) {return null;}
 		if (map.getMap()[posSens.y][posSens.x].isEmpty()) {return null;}
-		
+
 		Direction res = map.getMap()[posSens.y][posSens.x].get(map.getMap()[posSens.y][posSens.x].size() - 1).getDirection();
-		
+
 		return getRelativeDirection(robotOrientation, res);
 	}
-	
+
 	private Direction getRelativeDirection(Direction self, Direction seen) {
 		return Direction.getFromID(Direction.getID(seen) - Direction.getID(self));
 	}
-	
+
 	/*
 	private Vector<Point> makePath(Point relativePos) {
 		Vector<Point> res = new Vector<Point>();
@@ -63,7 +63,7 @@ public class VisualSensor extends Sensor<Color>{
 		double er01 = -1;
 		int sign = (int) (!reverse ? Math.signum(relativePos.x) : Math.signum(relativePos.y));
 		if (sign == 0) {sign = 1;}
-		
+
 		if (!reverse) {
 			for (int x = relativePos.x; x != 0; x-= 1*sign) {
 				res.add(0, (Point) relativePos.clone());
@@ -90,5 +90,5 @@ public class VisualSensor extends Sensor<Color>{
 		return !(getSensoryInformation() == null);
 	}
 
-	
+
 }

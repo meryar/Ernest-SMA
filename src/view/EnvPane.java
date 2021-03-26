@@ -16,27 +16,27 @@ import environment._2DMap;
 import objects.Robot;
 
 public class EnvPane extends JPanel{
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	private _2DMap map;
 	private int IDFocused;
-	
+
 	public EnvPane(_2DMap map_) {
 		map = map_;
 		IDFocused = 0;
 	}
-	
+
 	@Override
 	public void paintComponent(Graphics g){
-		
+
 		int map_height = map.getHeight();
 		int map_width = map.getWidth();
-		
+
 		Dimension pane_size = this.getSize();
 		g.setColor(Color.white);
 		g.fillRect(0, 0, pane_size.width, pane_size.height);
-		
+
 		for (int line=0; line<map_height; line++) {
 			for (int column=0; column<map_width; column++) {
 				for (Object obj: map.getMap()[line][column]) {
@@ -44,25 +44,25 @@ public class EnvPane extends JPanel{
 				}
 			}
 		}
-		
+
 		drawTrace(map.getRobot(IDFocused), g, pane_size);
-					
+
 	}
 
 	private void drawObject(Graphics g2d, Object obj, int y_map, int x_map, Dimension pane_size) {
 		int y_offset = pane_size.height / map.getHeight();
 		int x_offset = pane_size.width / map.getWidth();
-		
+
 		int y_pane = y_offset * y_map;
 		int x_pane = x_offset * x_map;
-		
+
 		if (obj.getImage() == null) {
 			g2d.setColor(obj.getColor());
 			g2d.fillRect(x_pane, y_pane, x_offset, y_offset);
 		} else {
 			BufferedImage image = (BufferedImage) obj.getImage();
 			double angle = directionToAngle(obj.getDirection());
-			
+
 			AffineTransform backup = ((Graphics2D) g2d).getTransform();
 			AffineTransform a = AffineTransform.getRotateInstance(Math.toRadians(angle), x_pane + x_offset/2, y_pane + y_offset/2);
 			((Graphics2D) g2d).setTransform(a);
@@ -80,7 +80,7 @@ public class EnvPane extends JPanel{
 			((Graphics2D) g2d).setTransform(backup);
 		}
 	}
-	
+
 	private void drawTrace(Robot robot, Graphics g2d, Dimension pane_size) {
 		int y_offset = (int)Math.floor(pane_size.width / map.getWidth());
 		int x_offset = (int)Math.floor(pane_size.height / map.getHeight());
@@ -100,18 +100,18 @@ public class EnvPane extends JPanel{
 
 	private double directionToAngle(Direction direction) {
 		switch (direction) {
-			case NORTH:
-				return 0;
-			case SOUTH:
-				return 180;
-			case WEST:
-				return 270;
-			case EAST:
-				return 90;
+		case NORTH:
+			return 0;
+		case SOUTH:
+			return 180;
+		case WEST:
+			return 270;
+		case EAST:
+			return 90;
 		}
 		return 0;
 	}
-	
+
 	public void setFocus(int IDRobot) {
 		IDFocused = IDRobot;
 	}

@@ -16,19 +16,19 @@ import sensory_system.VisualSensor;
 
 
 public class Robot extends Object{
-	
+
 	private List<Point> trace;
 	private int sensors_number;
 	private Vector<Sensor<Color>> sensors;  
 	private Action pending;
 	private int nbColors;
-	
+
 	public Robot(_2DMap map_, Color color_, Environment.Touch touch_, String name_,
 			boolean visible_, Point position, double visionRange) {
 		super(color_, touch_, name_, visible_, map_, position);
 		trace = new ArrayList<Point>();
 		nbColors = Main.colors.length;
-		
+
 		sensors_number = 0;
 		sensors = new Vector<Sensor<Color>>();
 		for (int i= 0; i<2*visionRange; i++) {
@@ -39,14 +39,14 @@ public class Robot extends Object{
 			}
 		}
 	}
-	
+
 	public Robot(_2DMap map_, Color color, String imageName, Environment.Touch touch_, String name_,
 			boolean visible_, Direction direction_ , Point position, double visionRange) {
 		super(imageName, color, touch_, name_, visible_, direction_, map_, position);
 
 		trace = new ArrayList<Point>();
 		nbColors = Main.colors.length;
-		
+
 		sensors_number = 0;
 		sensors = new Vector<Sensor<Color>>();
 		for (int i= 0; i<2*visionRange + 1; i++) {
@@ -57,12 +57,12 @@ public class Robot extends Object{
 			}
 		}
 	}
-	
+
 	public int getSensorNb() {return sensors_number;}
 
 	public void prepareAction(Action command) {
 		pending = command;
-		
+
 		switch(command) {
 		case MOVE_FWD:
 			Point newPos = getMap().getOrientedRelPos(getPosition(), getDirection(), new Point(0,-1));
@@ -86,7 +86,7 @@ public class Robot extends Object{
 	}
 
 	public Action getResults() {
-		
+
 		switch(pending) {
 		case MOVE_FWD:
 			Point newPos = getMap().getOrientedRelPos(getPosition(), getDirection(), new Point(0,-1));
@@ -126,41 +126,41 @@ public class Robot extends Object{
 	}
 
 	private Direction rotatedDirection(Direction direction, String side) {
-		
+
 		return switch (side) {
-			case "left":
-				yield (switch (direction) {
-				case NORTH:
-					yield (Direction.WEST);
-				case WEST:
-					yield (Direction.SOUTH);
-				case SOUTH:
-					yield (Direction.EAST);
-				case EAST:
-					yield (Direction.NORTH);
-				});
-			case "right":
-				yield (switch (direction) {
-				case NORTH:
-					yield (Direction.EAST);
-				case EAST:
-					yield (Direction.SOUTH);
-				case SOUTH:
-					yield (Direction.WEST);
-				case WEST:
-					yield (Direction.NORTH);
-				});
-			
-			default:
-				throw new IllegalStateException("can only rotate 'left' or 'right' and not: " + side);
+		case "left":
+			yield (switch (direction) {
+			case NORTH:
+				yield (Direction.WEST);
+			case WEST:
+				yield (Direction.SOUTH);
+			case SOUTH:
+				yield (Direction.EAST);
+			case EAST:
+				yield (Direction.NORTH);
+			});
+		case "right":
+			yield (switch (direction) {
+			case NORTH:
+				yield (Direction.EAST);
+			case EAST:
+				yield (Direction.SOUTH);
+			case SOUTH:
+				yield (Direction.WEST);
+			case WEST:
+				yield (Direction.NORTH);
+			});
+
+		default:
+			throw new IllegalStateException("can only rotate 'left' or 'right' and not: " + side);
 		};
 	}
-	
+
 	public Vector<Boolean> getSensoryInformation(){
 		Vector<Boolean> res = new Vector<Boolean>();
 		res.setSize((nbColors + Direction.values().length - 1) * getSensorNb());
 		res.replaceAll(e -> false);
-	 
+
 		for(int i=0; i<sensors_number; i++) {
 			if (((VisualSensor)sensors.get(i)).isAvailable()) {
 				Color seen = ((VisualSensor)sensors.get(i)).getSensoryInformation();
@@ -190,7 +190,7 @@ public class Robot extends Object{
 		System.out.println("Error: unknown color seen by " + getName() + ": " + seen);
 		return -1;
 	}
-	
+
 	@Override
 	public void move(Point newPosition) {
 		trace.add((Point)newPosition.clone());
@@ -199,11 +199,11 @@ public class Robot extends Object{
 		}
 		getMap().moveObject(getName(), getPosition(), newPosition);
 	}
-	
+
 	public List<Point> getTrace(){
 		return trace;
 	}
-	
+
 	public int getId() {
 		String name = getName();
 		return Integer.parseInt(String.valueOf(name.charAt(name.length()-1)));

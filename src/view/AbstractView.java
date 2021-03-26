@@ -8,9 +8,9 @@ public abstract class AbstractView extends JFrame{
 
 	public AbstractView(String name) {
 		super(name);
-		
+
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		pack();
 		setVisible(true);
 	}

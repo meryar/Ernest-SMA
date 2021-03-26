@@ -66,58 +66,55 @@ public class AgentDeveloppemental extends Agent{
 
 	@Override
 	public Action decide(float[] resultsTMinus1) {
-		
+
 		return decideAction(resultsTMinus1);
 	}
 
 	private Action decideAction(float[] perception) {
 		//long start = System.currentTimeMillis();
 		lastPerception = perception;
-		
+
 		Action choice;
 		float[] predSec = new float[secondaries.length];
-		
+
 		// get predictions of success.... but EVEN FASTER
 		ExecutorService ex = Executors.newFixedThreadPool(Thread_nb);
-	    int block_size = predSec.length/Thread_nb;
-	    for (int i = 0; i < Thread_nb-1; i++) {
-	        final int istart = i * block_size;
-	        final int iend = (i + 1) * block_size;
-	        ex.execute(new Runnable() {
+		int block_size = predSec.length/Thread_nb;
+		for (int i = 0; i < Thread_nb-1; i++) {
+			final int istart = i * block_size;
+			final int iend = (i + 1) * block_size;
+			ex.execute(new Runnable() {
 				@Override
 				public void run() {
 					for (int j=istart; j<iend; j++) {
 						predSec[j] = secondaries[j].compute(perception);
 					}
 				}
-	        });
-	    }
-	    ex.execute(new Runnable() {
+			});
+		}
+		ex.execute(new Runnable() {
 			@Override
 			public void run() {
 				for (int j=(Thread_nb-1)*block_size; j<secondaries.length; j++) {
 					predSec[j] = secondaries[j].compute(perception);
 				}
 			}
-        });
-	    
-	    ex.shutdown();
-	    try {
+		});
+
+		ex.shutdown();
+		try {
 			ex.awaitTermination(1, TimeUnit.MINUTES);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+
 		// get predictions of success
 		Vector<Float> predPrim = new Vector<Float>(primaries.length);
 		for (Neuron neuron: primaries) {
 			predPrim.add(neuron.compute(perception));
-		}/*
-		for (Neuron neuron: secondaries) {
-			predSec.add(neuron.compute(perception));
-		}*/
+		}
 		//System.out.println(predPrim);
-		
+
 		// isolate predictions for primary interactions
 		HashMap<Integer, Float> enactable = new HashMap<Integer, Float>();
 		for (int index=0; index<predPrim.size(); index++) {			
@@ -128,7 +125,7 @@ public class AgentDeveloppemental extends Agent{
 				enactable.put(index, predSec[index]);
 			}
 		}
-		
+
 		// find the most uncertain prediction
 		float min_abs = 1f;
 		int min_index = -1;
@@ -138,7 +135,7 @@ public class AgentDeveloppemental extends Agent{
 				min_index = key;
 			}
 		}
-		
+
 		if (min_abs < certitude_treshold) {
 			// if uncertain interaction then explore it
 			System.out.println("exploring interaction " + min_index + " of absolute certitude " + min_abs);
@@ -147,12 +144,12 @@ public class AgentDeveloppemental extends Agent{
 			} else {
 				choice = Action.values()[min_index - secondaries.length];
 			}
-			
+
 		} else {
 			System.out.println("agent in exploitation mode");
 			choice = mostUseful(predPrim);
 		} 
-		
+
 		float[] buffer = new float[predSec.length + predPrim.size()];
 		for (int i=0; i<predSec.length; i++) {
 			buffer[i] = predSec[i];
@@ -168,7 +165,7 @@ public class AgentDeveloppemental extends Agent{
 	private Action mostUseful(Vector<Float> predPrimaries) {
 		float max_utility = Float.NEGATIVE_INFINITY;
 		int max_index = Action.values().length - 1;
-		
+
 		for (int i=0; i<predPrimaries.size(); i++) {
 			if (predPrimaries.get(i) > 0) {
 				if (utilities.get(Action.values()[i]) > max_utility) {
@@ -177,20 +174,20 @@ public class AgentDeveloppemental extends Agent{
 				}	
 			}
 		}
-		
+
 		return Action.values()[max_index];
 	}
 
 	@Override
 	public void learn(float[] trainingWeights) {
-		
+
 		//long start = System.currentTimeMillis();
 		ExecutorService ex = Executors.newFixedThreadPool(Thread_nb);
-	    int block_size = trainingWeights.length/Thread_nb;
-	    for (int i = 0; i < Thread_nb-1; i++) {
-	        final int istart = i * block_size;
-	        final int iend = (i + 1) * block_size;
-	        ex.execute(new Runnable() {
+		int block_size = trainingWeights.length/Thread_nb;
+		for (int i = 0; i < Thread_nb-1; i++) {
+			final int istart = i * block_size;
+			final int iend = (i + 1) * block_size;
+			ex.execute(new Runnable() {
 				@Override
 				public void run() {
 					for(int next_id=istart; next_id<iend; next_id++) {
@@ -202,9 +199,9 @@ public class AgentDeveloppemental extends Agent{
 						}
 					}
 				}
-	        });
-	    }
-	    ex.execute(new Runnable() {
+			});
+		}
+		ex.execute(new Runnable() {
 			@Override
 			public void run() {
 				for(int next_id=(Thread_nb-1)*block_size; next_id<trainingWeights.length; next_id++) {
@@ -222,31 +219,15 @@ public class AgentDeveloppemental extends Agent{
 					}
 				}
 			}
-        });
-	    ex.shutdown();
-	    try {
+		});
+		ex.shutdown();
+		try {
 			ex.awaitTermination(1, TimeUnit.MINUTES);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-	    //System.out.println("learning took " + (System.currentTimeMillis() - start) + "ms");
-		/*
-		for(int next_id=0; next_id<trainingWeights.size(); next_id++) {
-			if (trainingWeights.get(next_id) != 0) {
-				float error = trainingWeights.get(next_id) - lastPrediction.get(next_id);
-				if (Math.abs(error) > 0.02) {
-					if (next_id < secondaries.size()) {
-						//System.out.println("learning secondary interaction " + next_id + " with error " + error);
-						secondaries.get(next_id).learn(lastPerception, Main.learning_rate * trainingWeights.get(next_id) * error);
-					} else {
-						//System.out.println("learning primary interaction " + next_id + " with error " + error);
-						primaries.get(next_id - secondaries.size()).learn(lastPerception, error);
-					}
-				}
-			}
-		}*/
 	}
-	
+
 
 	public float[] getLastPerception() {
 		return lastPerception;
@@ -255,11 +236,11 @@ public class AgentDeveloppemental extends Agent{
 	public float[] getLastPrediction() {
 		return lastPrediction;
 	}
-	
+
 	public Neuron[] getPrimaries(){
 		return primaries;
 	}
-	
+
 	public Neuron[] getSecondaries(){
 		return secondaries;
 	}
