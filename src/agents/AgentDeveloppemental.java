@@ -177,13 +177,7 @@ public class AgentDeveloppemental extends Agent{
 						if (trainingWeights[next_id] != 0) {
 							float error = trainingWeights[next_id] - lastPrediction[next_id];
 							if (Math.abs(error) > 0.02) {
-								if (next_id < secondaries.length) {
-									//System.out.println("learning secondary interaction " + next_id + " with error " + error);
-									secondaries[next_id].learn(lastPerception, Main.learning_rate * trainingWeights[next_id] * error);
-								} else {
-									//System.out.println("learning primary interaction " + next_id + " with error " + error);
-									primaries[next_id - secondaries.length].learn(lastPerception, error);
-								}
+								secondaries[next_id].learn(lastPerception, error);
 							}
 						}
 					}
@@ -199,7 +193,7 @@ public class AgentDeveloppemental extends Agent{
 						if (Math.abs(error) > 0.02) {
 							if (next_id < secondaries.length) {
 								//System.out.println("learning secondary interaction " + next_id + " with error " + error);
-								secondaries[next_id].learn(lastPerception, Main.learning_rate * trainingWeights[next_id] * error);
+								secondaries[next_id].learn(lastPerception, error);
 							} else {
 								//System.out.println("learning primary interaction " + next_id + " with error " + error);
 								primaries[next_id - secondaries.length].learn(lastPerception, error);
