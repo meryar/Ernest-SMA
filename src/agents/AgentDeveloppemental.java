@@ -121,7 +121,8 @@ public class AgentDeveloppemental extends Agent{
 			enactable.put(index + secondaries.length, predPrim.get(index));
 		}
 		for (int index=0; index<predSec.length; index++) {			
-			if (predPrim.get((int) (Math.floor(index / (secondaries.length / Action.values().length)))) >= certitude_treshold) {
+			if (predPrim.get((int) (Math.floor(index / (secondaries.length / Action.values().length)))) >= certitude_treshold 
+					&& SelectiveNeuron.isInteresting(secondaries[index], Math.signum(predSec[index]))) {
 				enactable.put(index, predSec[index]);
 			}
 		}
@@ -192,8 +193,9 @@ public class AgentDeveloppemental extends Agent{
 				public void run() {
 					for(int next_id=istart; next_id<iend; next_id++) {
 						if (trainingWeights[next_id] != 0) {
+							secondaries[next_id].succeded(trainingWeights[next_id] == 1);
 							float error = trainingWeights[next_id] - lastPrediction[next_id];
-							if (Math.abs(error) > 0.02) {
+							if (Math.abs(error) > 0.01) {
 								secondaries[next_id].learn(lastPerception, error);
 							}
 						}
@@ -207,12 +209,14 @@ public class AgentDeveloppemental extends Agent{
 				for(int next_id=(Thread_nb-1)*block_size; next_id<trainingWeights.length; next_id++) {
 					if (trainingWeights[next_id] != 0) {
 						float error = trainingWeights[next_id] - lastPrediction[next_id];
-						if (Math.abs(error) > 0.02) {
+						if (Math.abs(error) > 0.01) {
 							if (next_id < secondaries.length) {
 								//System.out.println("learning secondary interaction " + next_id + " with error " + error);
+								secondaries[next_id].succeded(trainingWeights[next_id] == 1);
 								secondaries[next_id].learn(lastPerception, error);
 							} else {
 								//System.out.println("learning primary interaction " + next_id + " with error " + error);
+								primaries[next_id - secondaries.length].succeded(trainingWeights[next_id] == 1);
 								primaries[next_id - secondaries.length].learn(lastPerception, error);
 							}
 						}
@@ -259,6 +263,7 @@ public class AgentDeveloppemental extends Agent{
 					System.err.println("Too many lines in file: " + file_name);
 				}
 				counter += 1;
+				if(counter % 100 == 0) System.out.println("loaded " + counter + " weights");
 			}
 			myReader.close();
 		} catch (FileNotFoundException e) {
