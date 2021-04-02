@@ -13,6 +13,8 @@ public class Main {
 	
 	// program arguments (change them here)
 	private static final String env_path 			= "ressources/maps/test_10x10.txt";	// path to the file containing the environment layout
+	//public static final String load_path 			= "ressources/agents/grp_test/agent_1.txt";
+	public static final String load_path 			= null;
 	public static final int trace_size 				= 10;	// number of previous actions of the robot displayed
 	public static final int robot_vision_range 		= 1;	// distance at which the robot is able to see
 	public static final float learning_rate			= 0.01f; // learning rate of the agent's perceptron

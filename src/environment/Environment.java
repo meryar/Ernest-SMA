@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import main.Main;
 import objects.Robot;
 
 public class Environment {
@@ -55,9 +56,13 @@ public class Environment {
 		step += 1;
 	}
 
+	@SuppressWarnings("unused")
 	public void addAgent(Robot rob) {
 		nb_agents += 1;
-		agents_list.add(new InterfaceAgentRobot(rob));
+		if (Main.load_path == null)  agents_list.add(new InterfaceAgentRobot(rob));
+		else {
+			agents_list.add(new InterfaceAgentRobot(rob, Main.load_path));
+		}
 	}
 
 	public _2DMap getMap() {return map;}
