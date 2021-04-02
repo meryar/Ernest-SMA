@@ -126,5 +126,9 @@ public class InterfaceAgentRobot {
 	public void save(String file_name) {
 		((AgentDeveloppemental) agent).save(file_name);
 	}
+	
+	public void updateNeurons() {
+		((AgentDeveloppemental)agent).updateNeurons();
+	}
 
 }

@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import agent_developpemental.Neuron;
+import agent_developpemental.SelectiveNeuron;
 import agents.AgentDeveloppemental;
 import environment.Direction;
 import environment.InterfaceAgentRobot;
@@ -26,7 +27,7 @@ public class SecSignPane extends JPanel{
 	private final int reserved_offset = 30;
 
 	private InterfaceAgentRobot agent;
-	private Neuron[] secondaries;
+	private SelectiveNeuron[] secondaries;
 	private int interaction, color, sensor;
 	private int box_offset;
 	private Vector<JLabel> labels;
@@ -105,7 +106,7 @@ public class SecSignPane extends JPanel{
 			int screen_width = (int) pane_size.width / nb_actions - between_screen_x;
 			int screen_height = (int) pane_size.height / 2 - between_screen_y;
 
-			Neuron neuron = secondaries[indexNeuron];
+			SelectiveNeuron neuron = secondaries[indexNeuron];
 
 			for (int act=0; act<nb_actions; act++) {
 
@@ -140,7 +141,7 @@ public class SecSignPane extends JPanel{
 					add(text);
 				}
 
-				labels.get(act).setText("" + neuron.getWeights().get(neuron.getWeights().size() - Action.values().length + act));
+				labels.get(act).setText("" + neuron.getWeights()[neuron.getWeights().length - Action.values().length + act]);
 				labels.get(act).setBounds(act * (screen_width + between_screen_x), 
 						pane_size.height + box_offset, 
 						screen_width, 
@@ -150,8 +151,8 @@ public class SecSignPane extends JPanel{
 		}
 	}
 
-	private float normalize(int nb_index, Neuron neuron) {
-		float nb = neuron.getWeights().get(nb_index);
+	private float normalize(int nb_index, SelectiveNeuron neuron) {
+		float nb = neuron.getWeights()[nb_index];
 		float max = neuron.max_abs_weights[neuron.correspondingInteraction(nb_index)];
 
 		return (float) Math.min((nb / max) / 2 + 0.5, 1f);
