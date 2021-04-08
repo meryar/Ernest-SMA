@@ -59,8 +59,12 @@ public class SelectiveNeuron {
 		}
 		
 		float sum = 0;
-		for(int key: map) sum += weights[key] * perception[key];
-
+		if (!map.isEmpty()) {
+			for(int key: map) sum += weights[key] * perception[key];
+		} else {
+			for (int i=0; i<entries_number; i++) sum += weights[i] * perception[i];
+		}
+		
 		return (float) (1 / (1+Math.exp(-sum)))*2-1;
 	}
 

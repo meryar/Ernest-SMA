@@ -43,7 +43,9 @@ public class Environment {
 					"==================================================================== step " +
 							step +
 					" ===================================================================");
-			for (InterfaceAgentRobot inter: agents_list) inter.updateNeurons();
+			if (step != 0 && step % 1000 == 0) {
+				for (InterfaceAgentRobot inter: agents_list) inter.updateNeurons();
+			}
 		}
 
 		map.reset();
