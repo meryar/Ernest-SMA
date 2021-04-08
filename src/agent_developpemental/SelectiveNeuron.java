@@ -15,7 +15,7 @@ public class SelectiveNeuron {
 	private float avg_err_suc, avg_err_fail;
 	private float[] weights;
 	private float alpha; 				// learning rate
-	private Set<Integer> map;
+	private Set<Short> map;
 	private float relevant_weight_treshold;
 	
 	public float[] max_abs_weights;
@@ -34,7 +34,7 @@ public class SelectiveNeuron {
 		Arrays.fill(weights, 0);
 
 		max_abs_weights = new float[Action.values().length];
-		map = new HashSet<Integer>();
+		map = new HashSet<Short>();
 	}
 	
 	public SelectiveNeuron(int input_size, float learning_rate, float treshold, String line) {
@@ -111,7 +111,7 @@ public class SelectiveNeuron {
 		float max = 0;
 		for (float weight: weights) { if (Math.abs(weight) > max) max = weight; }
 		
-		for (int i=0; i<weights.length; i++) {
+		for (short i=0; i<weights.length; i++) {
 			if (Math.abs(weights[i]) >= max*relevant_weight_treshold) map.add(i);
 		}
 	}
