@@ -51,6 +51,8 @@ public class SelectiveNeuron {
 		for (int i=0; i<tab.length; i++) {
 			weights[i] = Float.parseFloat(tab[i]);
 		}
+		max_abs_weights = new float[Action.values().length];
+		map = new HashSet<Short>();
 	}
 
 	public float compute(float[] perception) {
