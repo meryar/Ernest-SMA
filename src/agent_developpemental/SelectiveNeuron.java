@@ -51,6 +51,7 @@ public class SelectiveNeuron {
 		for (int i=0; i<tab.length; i++) {
 			weights[i] = Float.parseFloat(tab[i]);
 		}
+		
 		max_abs_weights = new float[Action.values().length];
 		map = new HashSet<Short>();
 	}
@@ -80,11 +81,11 @@ public class SelectiveNeuron {
 		
 		if (error > 0) {
 			rate = (float)nb_successes / (nb_fails + nb_successes);
-			avg_err_fail = (error + avg_err_fail * 100) / 101;
+			avg_err_suc = (error + avg_err_suc * 100) / 101;
 			alpha_prime = alpha / (rate * 2); 
 		} else {
 			rate = (float)nb_fails / (nb_fails + nb_successes);
-			avg_err_suc = (error + avg_err_suc * 100) / 101;
+			avg_err_fail = (error + avg_err_fail * 100) / 101;
 			alpha_prime = alpha / (rate * 2);
 		}
 		
