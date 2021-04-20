@@ -10,8 +10,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import agent_developpemental.Neuron;
-import agent_developpemental.SelectiveNeuron;
+import agent_developpemental.FastNeuron;
 import agents.AgentDeveloppemental;
 import environment.Direction;
 import environment.InterfaceAgentRobot;
@@ -27,7 +26,7 @@ public class SecSignPane extends JPanel{
 	private final int reserved_offset = 30;
 
 	private InterfaceAgentRobot agent;
-	private SelectiveNeuron[] secondaries;
+	private FastNeuron[] secondaries;
 	private int interaction, color, sensor;
 	private int box_offset;
 	private Vector<JLabel> labels;
@@ -106,7 +105,7 @@ public class SecSignPane extends JPanel{
 			int screen_width = (int) pane_size.width / nb_actions - between_screen_x;
 			int screen_height = (int) pane_size.height / 2 - between_screen_y;
 
-			SelectiveNeuron neuron = secondaries[indexNeuron];
+			FastNeuron neuron = secondaries[indexNeuron];
 
 			for (int act=0; act<nb_actions; act++) {
 
@@ -151,7 +150,7 @@ public class SecSignPane extends JPanel{
 		}
 	}
 
-	private float normalize(int nb_index, SelectiveNeuron neuron) {
+	private float normalize(int nb_index, FastNeuron neuron) {
 		float nb = neuron.getWeights()[nb_index];
 		float max = neuron.max_abs_weights[neuron.correspondingInteraction(nb_index)];
 

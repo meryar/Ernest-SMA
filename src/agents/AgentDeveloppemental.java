@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.xml.crypto.Data;
 
-import agent_developpemental.SelectiveNeuron;
+import agent_developpemental.FastNeuron;
 import main.Main;
 import robot.Action;
 
@@ -35,12 +35,11 @@ public class AgentDeveloppemental extends Agent{
 	}
 	
 	private static final float certitude_treshold = 0.6f;
-	private static final float relevancy_treshold = 0.05f;
 	private static final int Thread_nb = 24;
 	private static final int Research_depth = 5;
 
 	private Map<Action,Integer> utilities;
-	private SelectiveNeuron[] primaries, secondaries;
+	private FastNeuron[] primaries, secondaries;
 	private float[] lastPrediction, lastPerception;
 	private int data_size;
 
@@ -62,22 +61,22 @@ public class AgentDeveloppemental extends Agent{
 	public AgentDeveloppemental(int data_size_, int nb_interactions) {
 		this(data_size_);
 
-		primaries = new SelectiveNeuron[nb_interactions];
-		secondaries = new SelectiveNeuron[data_size - nb_interactions];
+		primaries = new FastNeuron[nb_interactions];
+		secondaries = new FastNeuron[data_size - nb_interactions];
 
 		for (int i=0; i<nb_interactions; i++) {
-			primaries[i] = new SelectiveNeuron(data_size, Main.learning_rate, relevancy_treshold);
+			primaries[i] = new FastNeuron(data_size, Main.learning_rate);
 		}
 		for (int i=0; i<data_size - nb_interactions; i++) {
-			secondaries[i] = new SelectiveNeuron(data_size, Main.learning_rate, relevancy_treshold);
+			secondaries[i] = new FastNeuron(data_size, Main.learning_rate);
 		}
 	}
 
 	public AgentDeveloppemental(int data_size_, int nb_interactions, String filename) {
 		this(data_size_);
 
-		primaries = new SelectiveNeuron[nb_interactions];
-		secondaries = new  SelectiveNeuron[data_size - nb_interactions];
+		primaries = new FastNeuron[nb_interactions];
+		secondaries = new  FastNeuron[data_size - nb_interactions];
 
 		load(filename);
 	}
@@ -96,11 +95,11 @@ public class AgentDeveloppemental extends Agent{
 
 		// 1) get primary and secondary predictions
 		Vector<Float> predPrim = new Vector<Float>(primaries.length);
-		for (SelectiveNeuron neuron: primaries) {
+		for (FastNeuron neuron: primaries) {
 			predPrim.add(neuron.compute(perception));
 		}
 		float[] predSec = getPredSec(perception);
-		System.out.println(predPrim);
+		//System.out.println(predPrim);
 		
 		// 2) check if there is something interesting to explore
 		
@@ -111,7 +110,7 @@ public class AgentDeveloppemental extends Agent{
 		}
 		for (int index=0; index<predSec.length; index++) {			
 			if (predPrim.get((int) (Math.floor(index / (secondaries.length / Action.values().length)))) >= certitude_treshold 
-					&& SelectiveNeuron.isInteresting(secondaries[index], Math.signum(predSec[index]))) {
+					&& FastNeuron.isInteresting(secondaries[index], Math.signum(predSec[index]))) {
 				enactable.put(index, predSec[index]);
 			}
 		}
@@ -129,7 +128,7 @@ public class AgentDeveloppemental extends Agent{
 		// 2.3) check if there is an uncertain prediction
 		if (min_abs < certitude_treshold) {
 			// 2.3.1) if uncertain interaction then explore it
-			System.out.println("exploring interaction " + min_index + " of absolute certitude " + min_abs);
+			//System.out.println("exploring interaction " + min_index + " of absolute certitude " + min_abs);
 			if (min_index < secondaries.length) {
 				choice = Action.values()[(int)(min_index / (secondaries.length / Action.values().length))];
 			} else {
@@ -221,7 +220,7 @@ public class AgentDeveloppemental extends Agent{
 		// 1) checking if uncertain interesting prediction
 		// 1.1) making primary and secondary predictions
 		Vector<Float> predPrim = new Vector<Float>(primaries.length);
-		for (SelectiveNeuron neuron: primaries) {
+		for (FastNeuron neuron: primaries) {
 			predPrim.add(neuron.compute(context));
 		}
 		float[] predSec = getPredSec(context);
@@ -234,7 +233,7 @@ public class AgentDeveloppemental extends Agent{
 		}
 		for (int index=0; index<predSec.length; index++) {			
 			if (predPrim.get((int) (Math.floor(index / (secondaries.length / Action.values().length)))) >= certitude_treshold 
-					&& SelectiveNeuron.isInteresting(secondaries[index], Math.signum(predSec[index]))) {
+					&& FastNeuron.isInteresting(secondaries[index], Math.signum(predSec[index]))) {
 				enactable.put(index, predSec[index]);
 			}
 		}
@@ -389,11 +388,11 @@ public class AgentDeveloppemental extends Agent{
 		return lastPrediction;
 	}
 
-	public SelectiveNeuron[] getPrimaries(){
+	public FastNeuron[] getPrimaries(){
 		return primaries;
 	}
 
-	public SelectiveNeuron[] getSecondaries(){
+	public FastNeuron[] getSecondaries(){
 		return secondaries;
 	}
 
@@ -404,9 +403,9 @@ public class AgentDeveloppemental extends Agent{
 			int counter = 0;
 			while (myReader.hasNextLine()) {
 				if (counter < data_size - Action.values().length) {
-					secondaries[counter] = new SelectiveNeuron(data_size, Main.learning_rate, relevancy_treshold, myReader.nextLine());
+					secondaries[counter] = new FastNeuron(data_size, Main.learning_rate, myReader.nextLine());
 				} else if(counter < data_size){
-					primaries[counter + Action.values().length - data_size] = new SelectiveNeuron(data_size, Main.learning_rate, relevancy_treshold, myReader.nextLine());
+					primaries[counter + Action.values().length - data_size] = new FastNeuron(data_size, Main.learning_rate, myReader.nextLine());
 				} else {
 					System.err.println("Too many lines in file: " + file_name);
 				}
@@ -430,7 +429,8 @@ public class AgentDeveloppemental extends Agent{
 					FileWriter myWriter = new FileWriter(file_name);
 
 					int counter = 0;
-					for(SelectiveNeuron neuron: secondaries) {
+					for(FastNeuron neuron: secondaries) {
+						myWriter.write(neuron.getData());
 						for (float weight: neuron.getWeights()) {
 							myWriter.write(weight + " ");
 						}
@@ -438,7 +438,8 @@ public class AgentDeveloppemental extends Agent{
 						System.out.println("neuron " + counter + " parsed");
 						counter++;
 					}
-					for(SelectiveNeuron neuron: primaries) {
+					for(FastNeuron neuron: primaries) {
+						myWriter.write(neuron.getData());
 						for (float weight: neuron.getWeights()) {
 							myWriter.write(weight + " ");
 						}
@@ -460,10 +461,11 @@ public class AgentDeveloppemental extends Agent{
 		}
 	}
 	
+	/*
 	public void updateNeurons() {
 		for (SelectiveNeuron n: primaries) n.update();
 		for (SelectiveNeuron n: secondaries) n.update();
-	}
+	}*/
 	
 	public int correspondingInteraction(int index) {
 		if (index < data_size - Action.values().length) {
