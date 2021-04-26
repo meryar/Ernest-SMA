@@ -39,8 +39,8 @@ private static float error_margin = 0.25f;
 
 		avg_err_fail = Float.parseFloat(tab[0]);
 		avg_err_suc = Float.parseFloat(tab[1]);
-		nb_fails = Integer.parseInt(tab[2]);
-		nb_successes = Integer.parseInt(tab[3]);
+		nb_fails = Long.parseLong(tab[2]);
+		nb_successes = Long.parseLong(tab[3]);
 		
 		String[] weights_list = tab[4].split(" ");
 		for (int i=0; i<weights_list.length; i++) {
