@@ -153,6 +153,7 @@ public class SecSignPane extends JPanel{
 	private float normalize(int nb_index, FastNeuron neuron) {
 		float nb = neuron.getWeights()[nb_index];
 		float max = neuron.max_abs_weights[neuron.correspondingInteraction(nb_index)];
+		if (max == 0) return 0.5f;
 
 		return (float) Math.min((nb / max) / 2 + 0.5, 1f);
 	}
