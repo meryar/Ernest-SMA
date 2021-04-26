@@ -26,11 +26,13 @@ public class AgentDeveloppemental extends Agent{
 		Action action;
 		float certitude;
 		int utility;
+		int depth;
 		
-		DataStruct(Action action_, float certitude_, int utility_){
+		DataStruct(Action action_, float certitude_, int utility_, int depth_){
 			action = action_;
 			certitude = certitude_;
 			utility = utility_;
+			depth = depth_;
 		}
 	}
 	
@@ -195,20 +197,24 @@ public class AgentDeveloppemental extends Agent{
 		boolean under_treshold = false;
 		float certainty = 1;
 		int utility = Integer.MIN_VALUE;
+		int depth = Integer.MAX_VALUE;
 		
 		for(DataStruct data: choice_list) {
 			if (under_treshold) {
-				if (Math.abs(data.certitude) < certainty) {
+				if (Math.abs(data.certitude) < certainty || (Math.abs(data.certitude) == certainty && data.depth < depth)) {
 					certainty = Math.abs(data.certitude);
 					best = data;
+					depth = data.depth;
 				}
 			} else if (Math.abs(data.certitude) < certitude_treshold) {
 				best = data;
 				certainty = Math.abs(data.certitude);
+				depth = data.depth;
 				under_treshold = true;
 			} else if (data.utility > utility) {
 				best = data;
 				utility = data.utility;
+				depth = data.depth;
 			}
 		}
 		return best;
@@ -252,7 +258,7 @@ public class AgentDeveloppemental extends Agent{
 		
 		// 1.4) if under treshold, return it.
 		if (min_abs < certitude_treshold) {
-			return new DataStruct(first_action, min, 0);
+			return new DataStruct(first_action, min, 0, depth);
 		}
 		// 2) else if not at max depth, look further
 		else if (depth < Research_depth) {
@@ -266,7 +272,7 @@ public class AgentDeveloppemental extends Agent{
 		// 3) else return action with highest utility
 		else {
 			for (int i=0; i<enactables.size(); i++) {
-				dataset[i] = new DataStruct(first_action, 1, current_utility + utilities.get(enactables.get(i)));
+				dataset[i] = new DataStruct(first_action, 1, current_utility + utilities.get(enactables.get(i)), depth);
 			}
 		}
 		
