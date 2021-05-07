@@ -4,7 +4,7 @@ import java.util.Arrays;
 import robot.Action;
 
 public class FastNeuron {
-private static float error_margin = 0.25f;
+private static float error_margin = 0.2f;
 	
 	private int entries_number;
 	private long nb_fails, nb_successes;
@@ -102,11 +102,15 @@ private static float error_margin = 0.25f;
 	
 	public static boolean isInteresting(FastNeuron neuron, float sign) {
 		if (sign == -1) {
-			return neuron.avg_err_fail <= error_margin;
+			if (neuron.nb_fails < 10) return true;
+			//System.out.println("fail: " + -neuron.avg_err_fail);
+			return -neuron.avg_err_fail <= error_margin;
 		} else if(sign == 1) {
-			return -neuron.avg_err_suc <= error_margin;
+			if (neuron.nb_successes < 10) return true;
+			//System.out.println("success: " + neuron.avg_err_suc);
+			return neuron.avg_err_suc <= error_margin;
 		} else {
-			return neuron.avg_err_fail <= error_margin || -neuron.avg_err_suc <= error_margin;
+			return -neuron.avg_err_fail <= error_margin && neuron.avg_err_suc <= error_margin;
 		}
 	}
 	
