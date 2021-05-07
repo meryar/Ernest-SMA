@@ -12,12 +12,12 @@ public abstract class Object {
 
 	private Color color;
 	private Environment.Touch touch;
-	private String name;
+	protected String name;
 	private boolean visible;
 	private Image image;
 	private Direction direction;
-	private _2DMap map;
-	private Point position;
+	protected _2DMap map;
+	protected Point position;
 
 	public Object(Color color_, Environment.Touch touch_, String name_, boolean visible_, _2DMap map_, Point position) {
 		color = color_;

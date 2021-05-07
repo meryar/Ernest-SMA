@@ -126,7 +126,7 @@ public class _2DMap {
 		case "°":
 			object_number.compute("big_fish", (k,v) -> (v==null) ? 1 : v+1);
 			return new OrientedFish("big_fish" + (object_number.get("big_fish") - 1), true, Direction.NORTH, this, position, 
-					OrientedFish.on_death.UNDYING, Action.FEAST);
+					OrientedFish.on_death.RESPAWN_ELSEWHERE, Action.FEAST);
 
 		default:
 			throw new IllegalStateException(tile_type);
@@ -135,7 +135,11 @@ public class _2DMap {
 
 	public boolean moveObject(String name, Point startPos, Point endPos) {
 		if (!isLegalPosition(endPos)) {return false;}
-
+		/*String[] names = {"big_fish0","big_fish1","big_fish2","big_fish3","big_fish4"};
+		for (String name_: names) {
+			if (name_.equals(name)) System.out.println(endPos);
+		}*/
+		
 		for (Object obj: map[startPos.y][startPos.x]) {
 			if (obj.getName().equals(name)) {
 				map[endPos.y][endPos.x].add(obj);
@@ -147,9 +151,39 @@ public class _2DMap {
 		return false;
 	}
 
+	public boolean randomIsolatedMove(String name, Point startPos) {
+		Point newPos = new Point(-1,-1);
+		Point pointL = new Point();
+		Point pointR = new Point();
+		Point pointS = new Point();
+		Point pointN = new Point();
+		int count = (int) Math.floor(width * height);
+		do {
+			newPos.x = (int)(Math.random() * width);
+			newPos.y = (int)(Math.random() * height);
+			pointL.x = newPos.x -1;
+			pointL.y = newPos.y;
+			pointR.x = newPos.x +1;
+			pointR.y = newPos.y;
+			pointS.x = newPos.x;
+			pointS.y = newPos.y +1;
+			pointS.x = newPos.x;
+			pointS.y = newPos.y -1;
+			count--;
+		} while (count > 0 && ((isHard(newPos) || isFood(newPos)) ||
+				(((!isLegalPosition(pointL) || isHard(pointL) || isFood(pointL))
+				||(!isLegalPosition(pointR) || isHard(pointR) || isFood(pointR))) 
+				&& ((!isLegalPosition(pointS) || isHard(pointS) || isFood(pointS))
+				||(!isLegalPosition(pointN) || isHard(pointN) || isFood(pointN))))));
+		
+		//System.out.println(newPos + " hard: " + isHard(newPos) + " food: " + isFood(newPos));
+		
+		return moveObject(name, startPos, newPos);
+	}
+
 	public boolean randomMove(String name, Point startPos) {
-		Point newPos = new Point();
-		int count = (int) Math.floor(width * height / 5);
+		Point newPos = new Point(-1,-1);
+		int count = (int) Math.floor(width * height);
 		do {
 			newPos.x = (int)(Math.random() * width);
 			newPos.y = (int)(Math.random() * height);
@@ -161,8 +195,14 @@ public class _2DMap {
 
 	public boolean isHard(Point location) {
 		for (Object obj: map[location.y][location.x]) {
-			if (obj.getTouch() == Environment.Touch.HARD) {return true;}
+			if (obj.getTouch() == Environment.Touch.HARD) {
+				return true;
+			}
+			if (obj.getTouch() == Environment.Touch.HARD) {
+				System.out.println("wtf?");
+			}
 		}
+		
 		return false;
 	}
 

@@ -73,6 +73,11 @@ public class OrientedFish extends environment.Object {
 		winners.clear();
 		eaten = false;
 	}
+	
+	@Override
+	public void randomTeleport() {
+		map.randomIsolatedMove(name, position);
+	}
 
 	private void die() {
 		switch (respawn) {
