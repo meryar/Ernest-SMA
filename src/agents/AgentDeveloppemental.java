@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,8 +14,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import javax.xml.crypto.Data;
-
 import agent_developpemental.FastNeuron;
 import main.Main;
 import robot.Action;
@@ -23,22 +21,33 @@ import robot.Action;
 public class AgentDeveloppemental extends Agent{
 
 	private class DataStruct{
-		Action action;
+		ArrayList<Action> action;
 		float certitude;
 		int utility;
 		int depth;
+		int interaction;
 		
-		DataStruct(Action action_, float certitude_, int utility_, int depth_){
-			action = action_;
+		DataStruct(Action action_, float certitude_, int utility_, int depth_, int interaction_){
+			action = new ArrayList<Action>();
+			action.add(action_);
 			certitude = certitude_;
 			utility = utility_;
 			depth = depth_;
+			interaction = interaction_;
+		}
+		
+		void update(Action new_action, float certitude_, int utility_, int depth_, int interaction_) {
+			action.add(new_action);
+			certitude = certitude_;
+			utility = utility_;
+			depth = depth_;
+			interaction = interaction_;
 		}
 	}
 	
 	private static final float certitude_treshold = 0.6f;
 	private static final int Thread_nb = 24;
-	private static final int Research_depth = 5;
+	private static final int Research_depth = 4;
 
 	private Map<Action,Integer> utilities;
 	private FastNeuron[] primaries, secondaries;
@@ -130,7 +139,7 @@ public class AgentDeveloppemental extends Agent{
 		// 2.3) check if there is an uncertain prediction
 		if (min_abs < certitude_treshold) {
 			// 2.3.1) if uncertain interaction then explore it
-			//System.out.println("exploring interaction " + min_index + " of absolute certitude " + min_abs);
+			System.out.println("exploring interaction " + min_index + " of absolute certitude " + min_abs);
 			if (min_index < secondaries.length) {
 				choice = Action.values()[(int)(min_index / (secondaries.length / Action.values().length))];
 			} else {
@@ -147,14 +156,18 @@ public class AgentDeveloppemental extends Agent{
 			}
 			DataStruct[] choice_list = new DataStruct[nb_enctable_act];
 			for (int i=0; i<nb_enctable_act; i++) {
-				choice_list[i] = getValue(enactable_act.get(i), 
-						propagate(perception, enactable_act.get(i), predSec), 
+				float[] next_context = propagate(perception, enactable_act.get(i), predSec);
+				if (!next_context.equals(perception)) {
+					DataStruct data = new DataStruct(enactable_act.get(i), 0, utilities.get(enactable_act.get(i)), 0, 0);
+					choice_list[i] = getValue(data, 
+						next_context, 
 						0, 
 						utilities.get(enactable_act.get(i)));
+				}
 			}
 			
 			// 3.2) choose best action 
-			choice = choose_function(choice_list).action;
+			choice = choose_function(choice_list).action.get(0);
 		} 
 		
 		// 4) storing predictions
@@ -193,6 +206,8 @@ public class AgentDeveloppemental extends Agent{
 	}
 
 	private DataStruct choose_function(DataStruct[] choice_list) {
+		System.out.println("choosing best candidate amongst:");
+		
 		DataStruct best = null;
 		boolean under_treshold = false;
 		float certainty = 1;
@@ -200,6 +215,8 @@ public class AgentDeveloppemental extends Agent{
 		int depth = Integer.MAX_VALUE;
 		
 		for(DataStruct data: choice_list) {
+			System.out.println("action= " + data.action + " / certitude= " + data.certitude + " / utility= " + data.utility 
+					+ " / depth= " + data.depth + " / interaction= " + data.interaction);
 			if (under_treshold) {
 				if (Math.abs(data.certitude) < certainty || (Math.abs(data.certitude) == certainty && data.depth < depth)) {
 					certainty = Math.abs(data.certitude);
@@ -217,10 +234,15 @@ public class AgentDeveloppemental extends Agent{
 				depth = data.depth;
 			}
 		}
+		System.out.println("winner: action=" + best.action + "/ certitude=" + best.certitude 
+				+ "/ utility=" + best.utility + "/ depth=" + best.depth + "/ interaction=" + best.interaction);
 		return best;
 	}
 
-	private DataStruct getValue(Action first_action, float[] context, int depth, int current_utility) {
+	private DataStruct getValue(DataStruct data_, float[] context) {
+		DataStruct data = (DataStruct) data_.clone();
+		System.out.println("exploring on path " + data.action.toString() + " at depth " + data.depth);
+		
 		Vector<Action> enactables = new Vector<Action>();
 		
 		// 1) checking if uncertain interesting prediction
@@ -249,30 +271,40 @@ public class AgentDeveloppemental extends Agent{
 		// 1.3) find the most uncertain prediction
 		float min_abs = 1;
 		float min = 0;
+		int min_key = -1;
 		for (int key: enactable.keySet()) {
 			if (Math.abs(enactable.get(key)) < min_abs) {
 				min_abs = Math.abs(enactable.get(key));
 				min = enactable.get(key);
+				min_key = key;
 			}
 		}
 		
 		// 1.4) if under treshold, return it.
 		if (min_abs < certitude_treshold) {
-			return new DataStruct(first_action, min, 0, depth);
+			System.out.println("found uncertain prediction " + min_key + " at depth " + data.depth + " of certitude " + min);
+			Action act = Action.values()[(int) (Math.floor(min_key / (secondaries.length / Action.values().length)))];
+			data.update(act, min, data.utility + utilities.get(act), data.depth+1, min_key);
+			return data;
 		}
 		// 2) else if not at max depth, look further
 		else if (depth < Research_depth) {
+			System.out.println("going deeper because min absolute certitude is " + min_abs);
 			for (int i=0; i<enactables.size(); i++) {
-				dataset[i] = getValue(first_action, 
-						propagate(context, enactables.get(i), predSec), 
-						depth+1, 
-						current_utility + utilities.get(enactables.get(i)));
+				float[] next_context = propagate(context, enactables.get(i), predSec);
+				if (!next_context.equals(context)) {
+					dataset[i] = getValue(first_action, 
+							propagate(context, enactables.get(i), predSec), 
+							depth+1, 
+							current_utility + utilities.get(enactables.get(i)));
+				}
 			}
 		}
 		// 3) else return action with highest utility
 		else {
+			System.out.println("max depth(" + depth + ") reached, returning interaction with highest utility");
 			for (int i=0; i<enactables.size(); i++) {
-				dataset[i] = new DataStruct(first_action, 1, current_utility + utilities.get(enactables.get(i)), depth);
+				dataset[i] = new DataStruct(first_action, 1, current_utility + utilities.get(enactables.get(i)), depth, -1);
 			}
 		}
 		
