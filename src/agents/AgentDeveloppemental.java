@@ -86,12 +86,16 @@ public class AgentDeveloppemental extends Agent{
 	private int data_size, id, target;
 	private ArrayList<Action> currentPath;
 	private ArrayList<Turn> history;
+	private Action actionToEnact;
+	
+	
 
 	public AgentDeveloppemental(int id_, int data_size_) {
 		data_size = data_size_;
 		id = id_;
 		target = -1;
-
+		actionToEnact = null;
+		
 		currentPath = new ArrayList<Action>();
 		lastPrediction = new float[data_size];
 
@@ -103,6 +107,7 @@ public class AgentDeveloppemental extends Agent{
 		utilities.put(Action.FEAST, 200);
 		utilities.put(Action.ROTATE_LEFT, -3);
 		utilities.put(Action.ROTATE_RIGHT, -3);
+		
 		history = new ArrayList<Turn>(history_size);
 	}
 
@@ -131,8 +136,8 @@ public class AgentDeveloppemental extends Agent{
 
 	@Override
 	public Action decide(float[] resultsTMinus1) {
-
-		return decideAction(resultsTMinus1);
+		actionToEnact = decideAction(resultsTMinus1);
+		return actionToEnact;
 	}
 
 	private Action decideAction(float[] perception) {
@@ -611,6 +616,7 @@ public class AgentDeveloppemental extends Agent{
 
 	@Override
 	public void storeResult(Action lastEnacted) {
+		if (lastEnacted != actionToEnact) currentPath.clear();
 		if (!history.isEmpty()) {
 			history.get(history.size()-1).setReward(utilities.get(lastEnacted), lastEnacted);
 		}
