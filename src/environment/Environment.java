@@ -64,7 +64,7 @@ public class Environment {
 		nb_agents += 1;
 		if (Main.load_path == null)  agents_list.add(new InterfaceAgentRobot(rob));
 		else {
-			agents_list.add(new InterfaceAgentRobot(rob, Main.load_path));
+			agents_list.add(new InterfaceAgentRobot(rob, Main.load_path + "agent_" + (nb_agents-1) + ".txt"));
 		}
 	}
 
