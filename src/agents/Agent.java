@@ -11,4 +11,6 @@ public abstract class Agent {
 
 	public abstract void learn(float[] fs);
 
+	public abstract void storeResult(Action lastEnacted);
+
 }

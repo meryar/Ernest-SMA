@@ -36,6 +36,15 @@ public class AgentDeveloppemental extends Agent{
 			interaction = interaction_;
 		}
 		
+		@SuppressWarnings("unchecked")
+		DataStruct(DataStruct to_copy){
+			action = (ArrayList<Action>) to_copy.action.clone();
+			certitude = to_copy.certitude;
+			utility = to_copy.utility;
+			depth = to_copy.depth;
+			interaction = to_copy.interaction;
+		}
+		
 		void update(Action new_action, float certitude_, int utility_, int depth_, int interaction_) {
 			action.add(new_action);
 			certitude = certitude_;
@@ -45,18 +54,45 @@ public class AgentDeveloppemental extends Agent{
 		}
 	}
 	
+	private class Turn{
+		Action intended, enacted;
+		boolean motivated_by_curiosity;
+		int target_interaction;
+		ArrayList<Action> path;
+		int reward;
+		
+		Turn(Action act_, boolean motivated_by_curiosity_, int target_interaction_, ArrayList<Action> path_){
+			intended = act_;
+			motivated_by_curiosity = motivated_by_curiosity_;
+			target_interaction = target_interaction_;
+			path = path_;
+			reward = 0;
+		}
+		
+		void setReward(int reward_, Action enacted_) {
+			reward = reward_;
+			enacted = enacted_;
+		}
+	}
+	
 	private static final float certitude_treshold = 0.6f;
 	private static final int Thread_nb = 24;
 	private static final int Research_depth = 4;
+	private static final int history_size = 1000;
 
 	private Map<Action,Integer> utilities;
 	private FastNeuron[] primaries, secondaries;
 	private float[] lastPrediction, lastPerception;
-	private int data_size;
+	private int data_size, id, target;
+	private ArrayList<Action> currentPath;
+	private ArrayList<Turn> history;
 
-	public AgentDeveloppemental(int data_size_) {
+	public AgentDeveloppemental(int id_, int data_size_) {
 		data_size = data_size_;
+		id = id_;
+		target = -1;
 
+		currentPath = new ArrayList<Action>();
 		lastPrediction = new float[data_size];
 
 		utilities = new HashMap<>();
@@ -67,10 +103,11 @@ public class AgentDeveloppemental extends Agent{
 		utilities.put(Action.FEAST, 200);
 		utilities.put(Action.ROTATE_LEFT, -3);
 		utilities.put(Action.ROTATE_RIGHT, -3);
+		history = new ArrayList<Turn>(history_size);
 	}
 
-	public AgentDeveloppemental(int data_size_, int nb_interactions) {
-		this(data_size_);
+	public AgentDeveloppemental(int id, int data_size_, int nb_interactions) {
+		this(id, data_size_);
 
 		primaries = new FastNeuron[nb_interactions];
 		secondaries = new FastNeuron[data_size - nb_interactions];
@@ -83,8 +120,8 @@ public class AgentDeveloppemental extends Agent{
 		}
 	}
 
-	public AgentDeveloppemental(int data_size_, int nb_interactions, String filename) {
-		this(data_size_);
+	public AgentDeveloppemental(int id, int data_size_, int nb_interactions, String filename) {
+		this(id, data_size_);
 
 		primaries = new FastNeuron[nb_interactions];
 		secondaries = new  FastNeuron[data_size - nb_interactions];
@@ -102,6 +139,7 @@ public class AgentDeveloppemental extends Agent{
 		//long start = System.currentTimeMillis();
 		lastPerception = perception;
 		
+		boolean curiosity_motivated = true;
 		Action choice;
 
 		// 1) get primary and secondary predictions
@@ -111,6 +149,23 @@ public class AgentDeveloppemental extends Agent{
 		}
 		float[] predSec = getPredSec(perception);
 		//System.out.println(predPrim);
+		
+		// 1.1) storing predictions
+		float[] buffer = new float[predSec.length + predPrim.size()];
+		for (int i=0; i<predSec.length; i++) {
+			buffer[i] = predSec[i];
+		}
+		for (int i=0; i<predPrim.size(); i++) {
+			buffer[i + predSec.length] = predPrim.get(i);
+		}
+		lastPrediction = buffer;
+		
+		if (!currentPath.isEmpty()) {
+			choice = currentPath.get(0);
+			currentPath.remove(0);
+			history.add(new Turn(choice, curiosity_motivated, target, (ArrayList<Action>) currentPath.clone()));
+			return choice;
+		}
 		
 		// 2) check if there is something interesting to explore
 		
@@ -140,6 +195,7 @@ public class AgentDeveloppemental extends Agent{
 		if (min_abs < certitude_treshold) {
 			// 2.3.1) if uncertain interaction then explore it
 			System.out.println("exploring interaction " + min_index + " of absolute certitude " + min_abs);
+			target = min_index;
 			if (min_index < secondaries.length) {
 				choice = Action.values()[(int)(min_index / (secondaries.length / Action.values().length))];
 			} else {
@@ -160,26 +216,24 @@ public class AgentDeveloppemental extends Agent{
 				if (!next_context.equals(perception)) {
 					DataStruct data = new DataStruct(enactable_act.get(i), 0, utilities.get(enactable_act.get(i)), 0, 0);
 					choice_list[i] = getValue(data, 
-						next_context, 
-						0, 
-						utilities.get(enactable_act.get(i)));
+						next_context);
 				}
 			}
 			
 			// 3.2) choose best action 
-			choice = choose_function(choice_list).action.get(0);
+			DataStruct chosen = choose_function(choice_list); 
+			currentPath = chosen.action;
+			choice = currentPath.get(0);
+			currentPath.remove(0);
+			curiosity_motivated = chosen.certitude != 1;
+			target = chosen.interaction;
 		} 
 		
-		// 4) storing predictions
-		float[] buffer = new float[predSec.length + predPrim.size()];
-		for (int i=0; i<predSec.length; i++) {
-			buffer[i] = predSec[i];
-		}
-		for (int i=0; i<predPrim.size(); i++) {
-			buffer[i + predSec.length] = predPrim.get(i);
-		}
-		lastPrediction = buffer;
+		
 		//System.out.println("deciding took " + (System.currentTimeMillis() - start) + "ms");
+		
+		// 4) storing decision for comportment evaluation
+		history.add(new Turn(choice, curiosity_motivated, target, (ArrayList<Action>) currentPath.clone()));
 		
 		return choice;
 	}
@@ -240,7 +294,7 @@ public class AgentDeveloppemental extends Agent{
 	}
 
 	private DataStruct getValue(DataStruct data_, float[] context) {
-		DataStruct data = (DataStruct) data_.clone();
+		DataStruct data = new DataStruct(data_);
 		System.out.println("exploring on path " + data.action.toString() + " at depth " + data.depth);
 		
 		Vector<Action> enactables = new Vector<Action>();
@@ -259,12 +313,12 @@ public class AgentDeveloppemental extends Agent{
 			enactable.put(index + secondaries.length, predPrim.get(index));
 			if (predPrim.get(index) >= certitude_treshold) enactables.add(Action.values()[index]);
 		}
-		for (int index=0; index<predSec.length; index++) {			
+		/*for (int index=0; index<predSec.length; index++) {			
 			if (predPrim.get((int) (Math.floor(index / (secondaries.length / Action.values().length)))) >= certitude_treshold 
 					&& FastNeuron.isInteresting(secondaries[index], Math.signum(predSec[index]))) {
 				enactable.put(index, predSec[index]);
 			}
-		}
+		}*/
 		
 		DataStruct[] dataset = new DataStruct[enactables.size()];
 
@@ -283,28 +337,34 @@ public class AgentDeveloppemental extends Agent{
 		// 1.4) if under treshold, return it.
 		if (min_abs < certitude_treshold) {
 			System.out.println("found uncertain prediction " + min_key + " at depth " + data.depth + " of certitude " + min);
-			Action act = Action.values()[(int) (Math.floor(min_key / (secondaries.length / Action.values().length)))];
+			Action act;
+			if (min_key < secondaries.length) {
+				act = Action.values()[(int) (Math.floor(min_key / (secondaries.length / Action.values().length)))];
+			} else {
+				act = Action.values()[min_key - secondaries.length];
+			}
 			data.update(act, min, data.utility + utilities.get(act), data.depth+1, min_key);
 			return data;
 		}
 		// 2) else if not at max depth, look further
-		else if (depth < Research_depth) {
+		else if (data.depth < Research_depth) {
 			System.out.println("going deeper because min absolute certitude is " + min_abs);
 			for (int i=0; i<enactables.size(); i++) {
 				float[] next_context = propagate(context, enactables.get(i), predSec);
 				if (!next_context.equals(context)) {
-					dataset[i] = getValue(first_action, 
-							propagate(context, enactables.get(i), predSec), 
-							depth+1, 
-							current_utility + utilities.get(enactables.get(i)));
+					DataStruct data1 = new DataStruct(data);
+					data1.update(enactables.get(i), 0, data1.utility + utilities.get(enactables.get(i)), data1.depth + 1, -1);
+					dataset[i] = getValue(data1, propagate(context, enactables.get(i), predSec)); 
 				}
 			}
 		}
 		// 3) else return action with highest utility
 		else {
-			System.out.println("max depth(" + depth + ") reached, returning interaction with highest utility");
+			System.out.println("max depth(" + data.depth + ") reached, returning interaction with highest utility");
 			for (int i=0; i<enactables.size(); i++) {
-				dataset[i] = new DataStruct(first_action, 1, current_utility + utilities.get(enactables.get(i)), depth, -1);
+				DataStruct data1 = new DataStruct(data);
+				data1.update(enactables.get(i), 1, data1.utility + utilities.get(enactables.get(i)), data1.depth + 1, -1);
+				dataset[i] = data1;
 			}
 		}
 		
@@ -348,6 +408,7 @@ public class AgentDeveloppemental extends Agent{
 		return res;
 	}
 
+	@SuppressWarnings("unused")
 	private Action mostUseful(Vector<Float> predPrimaries) {
 		float max_utility = Float.NEGATIVE_INFINITY;
 		int max_index = Action.values().length - 1;
@@ -366,6 +427,8 @@ public class AgentDeveloppemental extends Agent{
 
 	@Override
 	public void learn(float[] trainingWeights) {
+
+		if (history.size() >= history_size) save_history();
 
 		//long start = System.currentTimeMillis();
 		ExecutorService ex = Executors.newFixedThreadPool(Thread_nb);
@@ -510,6 +573,46 @@ public class AgentDeveloppemental extends Agent{
 			return (int) Math.floor(index / (data_size - Action.values().length)/Action.values().length) ;
 		} else {
 			return (int) (index - (data_size - Action.values().length));
+		}
+	}
+	
+	
+	private void save_history() {
+		String file_name = "trace_agent_" + id + ".txt";
+		try {
+			File myObj = new File(file_name);
+			if (myObj.createNewFile()) {
+				System.out.println("File created: " + myObj.getName());
+			} else {
+				System.out.println("adding to trace.");
+			}
+			
+			FileWriter myWriter = new FileWriter(file_name, true);
+			
+			for (Turn turn: history) {
+				myWriter.write(turn.intended + ";" 
+						+ turn.target_interaction + ";" 
+						+ turn.path.toString() + ";" 
+						+ turn.motivated_by_curiosity + ";"
+						+ turn.enacted+ ";"
+						+ turn.reward + "\n");	
+			}
+				
+			myWriter.close();
+			System.out.println("Successfully wrote to the file.");
+			
+			history.clear();
+			
+		} catch (IOException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void storeResult(Action lastEnacted) {
+		if (!history.isEmpty()) {
+			history.get(history.size()-1).setReward(utilities.get(lastEnacted), lastEnacted);
 		}
 	}
 
