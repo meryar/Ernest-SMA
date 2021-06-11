@@ -22,6 +22,7 @@ public class _2DMap {
 	private Environment env;
 	private Map<String,Integer> object_number;
 	private List<Robot> robot_list;
+	private HashMap<Integer, Action> intentions;
 
 	@SuppressWarnings("unchecked")
 	public _2DMap(int height_, int width_) {
@@ -30,6 +31,7 @@ public class _2DMap {
 		map = (ArrayList<environment.Object> [][]) new ArrayList[height][width];
 		object_number = new HashMap<String,Integer>();
 		robot_list = new ArrayList<Robot>();
+		intentions = new HashMap<Integer, Action>();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -37,6 +39,7 @@ public class _2DMap {
 		object_number = new HashMap<String,Integer>();
 		robot_list = new ArrayList<Robot>();
 		env = env_;
+		intentions = new HashMap<Integer, Action>();
 
 		// reading and copying file
 		List<String[]> file_copy = new ArrayList<String[]>();
@@ -290,5 +293,122 @@ public class _2DMap {
 	public int getNbRobot() {
 		return robot_list.size();
 	}
-
+	
+	public void booking(int id, Action act) {
+		intentions.put(id, act);
+	}
+	
+	public void solve_conflicts() {
+		Integer[][][] conflicts_map;
+		HashMap<Integer, Point> targetPos = new HashMap<Integer, Point>();
+		
+		for (int id: intentions.keySet()) {
+			Robot rob = getRobot(id);
+			switch (intentions.get(id)) {
+				case ROTATE_LEFT:  
+					targetPos.put(id, rob.getPosition());
+					break;
+				case ROTATE_RIGHT:
+					targetPos.put(id, rob.getPosition());
+					break;
+				case MOVE_FWD:
+					Point newPos = getOrientedRelPos(rob.getPosition(), rob.getDirection(), new Point(0,-1));
+					if (isLegalPosition(newPos) && !isHard(newPos) && !isFood(newPos)) { 
+						targetPos.put(id, newPos);
+					} else {
+						targetPos.put(id, rob.getPosition());
+						if (isFood(newPos)) {
+							List<Object> targets = getTypedObjects(Environment.Touch.FOOD, newPos);
+							for (Object fish: targets) {
+								if (fish instanceof OrientedFish) {
+									if (((OrientedFish) fish).get_attacked(rob.getName(), rob.getDirection())) {break;}
+								} else if (fish instanceof Fish) {
+									if (((Fish) fish).get_attacked(rob.getName())) {break;}
+								}
+							}	
+						}
+					}
+					
+					break;
+				
+				default:
+			}
+		}
+		
+		boolean conflict_found = true;
+		
+		while(conflict_found) {
+			conflicts_map = new Integer[height][width][4];
+			
+			for (int id: targetPos.keySet()) {
+				for (int i=0; i<4; i++) {
+					if (conflicts_map[targetPos.get(id).y][targetPos.get(id).x][i] == null) {
+						conflicts_map[targetPos.get(id).y][targetPos.get(id).x][i] = id;
+						break;
+					}
+				}
+			}
+			
+			conflict_found = false;
+			for (Integer[][] line: conflicts_map) {
+				for (Integer[] _case: line) {
+					if (_case[1] != null) {
+						conflict_found = true;
+						int i = 0;
+						while (i<4 && _case[i] !=null) {
+							targetPos.put(_case[i], getRobot(_case[i]).getPosition());
+							i++;
+						}
+					}
+				}
+			}
+		}
+		
+		// TODO: enact robot's actions and send theim feedback
+		
+		
+		
+		for (int id: intentions.keySet()) {
+			Robot rob = getRobot(id);
+			switch (intentions.get(id)) {
+				case MOVE_FWD:
+					Point newPos = getOrientedRelPos(getRobot(id).getPosition(), getRobot(id).getDirection(), new Point(0,-1));
+					if (isLegalPosition(newPos)) {
+						if (isHard(newPos) || (targetPos.get(id) == getRobot(id).getPosition() && !isFood(newPos))) {
+							intentions.put(id, Action.BUMP);
+						} else if (isFood(newPos)) {
+							List<Object> targets = getTypedObjects(Environment.Touch.FOOD, newPos);
+							for (Object fish: targets) {
+								if (fish instanceof OrientedFish) {
+									if (((OrientedFish) fish).was_eaten_by(rob.getName(), rob.getDirection())) {
+										intentions.put(id, ((OrientedFish) fish).getAffordedOnDeath());
+									}
+								} else if (fish instanceof Fish) {
+									if (((Fish) fish).was_eaten_by(rob.getName())) {
+										intentions.put(id, ((Fish) fish).getAffordedOnDeath());
+									}
+								}
+							}
+							intentions.put(id, Action.FIGHT);
+						}else {
+							rob.move(newPos);
+							intentions.put(id, Action.MOVE_FWD);
+						}
+					} 
+					break;
+				case ROTATE_LEFT:
+					rob.setDirection(rob.rotatedDirection(rob.getDirection(), "left"));
+					break;
+				case ROTATE_RIGHT:
+					rob.setDirection(rob.rotatedDirection(rob.getDirection(), "right"));
+					break;
+				default:
+					System.err.println("UNEXPECTED COMMAND: " + intentions.get(id));
+					break;
+			}
+		}
+		
+	}
+	
+	public Action check_results(int id) {return intentions.get(id);}
 }

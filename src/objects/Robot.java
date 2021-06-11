@@ -20,7 +20,7 @@ public class Robot extends Object{
 	private List<Point> trace;
 	private int sensors_number;
 	private Vector<Sensor<Color>> sensors;  
-	private Action pending;
+	private Action pending, result;
 	private int nbColors;
 
 	public Robot(_2DMap map_, Color color_, Environment.Touch touch_, String name_,
@@ -62,10 +62,21 @@ public class Robot extends Object{
 
 	public void prepareAction(Action command) {
 		pending = command;
+		switch (command) {
+		case MOVE_FWD:
+		case ROTATE_LEFT:
+		case ROTATE_RIGHT:
+			getMap().booking(getId(), command);
+			break;
+		default:
+			System.err.println("unexpected command: " + command);;
+		}
 
+		/*
 		switch(command) {
 		case MOVE_FWD:
 			Point newPos = getMap().getOrientedRelPos(getPosition(), getDirection(), new Point(0,-1));
+			getMap().booking(getId(), getPosition());
 			if (getMap().isLegalPosition(newPos) && getMap().isFood(newPos)) {
 				List<Object> targets = getMap().getTypedObjects(Environment.Touch.FOOD, newPos);
 				for (Object fish: targets) {
@@ -75,23 +86,33 @@ public class Robot extends Object{
 						if (((Fish) fish).get_attacked(getName())) {break;}
 					}
 				}	
-			};
+			} else if (getMap().isLegalPosition(newPos) &&
+					!getMap().isHard(newPos)) {
+				getMap().booking(getId(), newPos);
+			}
+			break;
 		case ROTATE_LEFT:
+			map.booking(getId(), getPosition());
 			break;
 		case ROTATE_RIGHT:
+			map.booking(getId(), getPosition());
 			break;
 		default:
 			throw new IllegalStateException("Illegal command from agent: " + command);
 		}
+		*/
 	}
 
 	public Action getResults() {
-
+		
+		return getMap().check_results(getId());
+		
+		/*
 		switch(pending) {
 		case MOVE_FWD:
 			Point newPos = getMap().getOrientedRelPos(getPosition(), getDirection(), new Point(0,-1));
 			if (getMap().isLegalPosition(newPos)) {
-				if (getMap().isHard(newPos)) {
+				if (getMap().isHard(newPos) || (getMap().check_conflicts(getId()) == getPosition() && !getMap().isFood(newPos))) {
 					return Action.BUMP;
 				} else if (getMap().isFood(newPos)) {
 					List<Object> targets = getMap().getTypedObjects(Environment.Touch.FOOD, newPos);
@@ -122,10 +143,10 @@ public class Robot extends Object{
 			return Action.ROTATE_RIGHT;
 		default:
 			throw new IllegalStateException("Illegal command pending: " + pending);
-		}
+		}*/
 	}
 
-	private Direction rotatedDirection(Direction direction, String side) {
+	public Direction rotatedDirection(Direction direction, String side) {
 
 		return switch (side) {
 		case "left":
@@ -207,5 +228,9 @@ public class Robot extends Object{
 	public int getId() {
 		String name = getName();
 		return Integer.parseInt(String.valueOf(name.charAt(name.length()-1)));
+	}
+	
+	public void setResult(Action result_) {
+		result = result_;
 	}
 }

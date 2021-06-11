@@ -52,6 +52,7 @@ public class Environment {
 		for (InterfaceAgentRobot ag: agents_list) {
 			ag.commandRobot();
 		}
+		map.solve_conflicts();
 		for (InterfaceAgentRobot ag: agents_list) {
 			ag.getResults();
 		}
