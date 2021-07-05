@@ -165,12 +165,13 @@ public class AgentDeveloppemental extends Agent{
 		}
 		lastPrediction = buffer;
 		
+		/*
 		if (!currentPath.isEmpty()) {
 			choice = currentPath.get(0);
 			currentPath.remove(0);
 			history.add(new Turn(choice, curiosity_motivated, target, (ArrayList<Action>) currentPath.clone()));
 			return choice;
-		}
+		}*/
 		
 		// 2) check if there is something interesting to explore
 		
