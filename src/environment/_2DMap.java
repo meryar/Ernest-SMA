@@ -364,10 +364,6 @@ public class _2DMap {
 			}
 		}
 		
-		// TODO: enact robot's actions and send theim feedback
-		
-		
-		
 		for (int id: intentions.keySet()) {
 			Robot rob = getRobot(id);
 			switch (intentions.get(id)) {
@@ -379,17 +375,20 @@ public class _2DMap {
 						} else if (isFood(newPos)) {
 							List<Object> targets = getTypedObjects(Environment.Touch.FOOD, newPos);
 							for (Object fish: targets) {
-								if (fish instanceof OrientedFish) {
+								if (fish instanceof OrientedFish) { 
 									if (((OrientedFish) fish).was_eaten_by(rob.getName(), rob.getDirection())) {
 										intentions.put(id, ((OrientedFish) fish).getAffordedOnDeath());
+									} else {
+										intentions.put(id, Action.FIGHT);
 									}
 								} else if (fish instanceof Fish) {
 									if (((Fish) fish).was_eaten_by(rob.getName())) {
 										intentions.put(id, ((Fish) fish).getAffordedOnDeath());
+									} else {
+										intentions.put(id, Action.FIGHT);
 									}
 								}
 							}
-							intentions.put(id, Action.FIGHT);
 						}else {
 							rob.move(newPos);
 							intentions.put(id, Action.MOVE_FWD);
