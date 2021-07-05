@@ -376,7 +376,7 @@ public class AgentDeveloppemental extends Agent{
 		return choose_function(dataset);
 	}
 
-	private float[] getPredSec(float[] perception) {
+	public float[] getPredSec(float[] perception) {
 		float[] res = new float[secondaries.length];
 		
 		// get predictions of success.... but EVEN FASTER
