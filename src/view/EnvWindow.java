@@ -14,7 +14,7 @@ public class EnvWindow extends SlaveView{
 
 	private EnvPane panel;
 
-	public EnvWindow(String name, _2DMap map) {
+	public EnvWindow(String name, Environment env) {
 		super(name);
 
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -26,7 +26,7 @@ public class EnvWindow extends SlaveView{
 		this.setBounds(0, 0, window_base_width, window_base_height);
 
 		// creating pane
-		panel = new EnvPane(map);
+		panel = new EnvPane(env);
 		this.setContentPane(panel);
 	}
 

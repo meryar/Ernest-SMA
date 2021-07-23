@@ -87,13 +87,15 @@ public class _2DMap {
 		switch (tile_type) {
 		case "w":
 			object_number.compute("wall", (k,v) -> (v==null) ? 1 : v+1);
-			return new Block(this, Environment.Touch.HARD, Environment.WALL1,"wall", true, position);
+			Object.make_trace_creation("wall", "wall_" + object_number.get("wall"), position);
+			return new Block(this, Environment.Touch.HARD, Environment.WALL1,"wall_" + (object_number.get("wall") - 1), true, position);
 		case "v":
 			object_number.compute("robot", (k,v) -> (v==null) ? 1 : v+1);
 			Robot rob_down = new Robot(this, Environment.ROBOT_COLOR, "robot.jpg", Environment.Touch.HARD, "robot_" + (object_number.get("robot") - 1), 
 					true, Direction.SOUTH, position, Main.robot_vision_range);
 			robot_list.add(rob_down);
 			env.addAgent(rob_down);
+			Object.make_trace_creation("robot", "robot_" + (object_number.get("robot") - 1), position, "SOUTH");
 			return rob_down;
 		case ">":
 			object_number.compute("robot", (k,v) -> (v==null) ? 1 : v+1);
@@ -101,6 +103,7 @@ public class _2DMap {
 					true, Direction.EAST, position, Main.robot_vision_range);
 			robot_list.add(rob_right);
 			env.addAgent(rob_right);
+			Object.make_trace_creation("robot", "robot_" + (object_number.get("robot") - 1), position, "EAST");
 			return rob_right;
 		case "^":
 			object_number.compute("robot", (k,v) -> (v==null) ? 1 : v+1);
@@ -108,6 +111,7 @@ public class _2DMap {
 					true, Direction.NORTH, position, Main.robot_vision_range);
 			robot_list.add(rob_up);
 			env.addAgent(rob_up);
+			Object.make_trace_creation("robot", "robot_" + (object_number.get("robot") - 1), position, "NORTH");
 			return rob_up;
 		case "<":
 			object_number.compute("robot", (k,v) -> (v==null) ? 1 : v+1);
@@ -115,21 +119,29 @@ public class _2DMap {
 					true, Direction.WEST, position, Main.robot_vision_range);
 			robot_list.add(rob_left);
 			env.addAgent(rob_left);
+			Object.make_trace_creation("robot", "robot_" + (object_number.get("robot") - 1), position, "WEST");
 			return rob_left;
 
 		case "-":
 			object_number.compute("empty", (k,v) -> (v==null) ? 1 : v+1);
+			Object.make_trace_creation("empty", "empty_" + (object_number.get("empty") - 1), position);
 			return new Block(this, Environment.Touch.EMPTY, Environment.FIELD_COLOR,"empty", false, position);
 
 		case "*":
 			object_number.compute("small_fish", (k,v) -> (v==null) ? 1 : v+1);
-			return new Fish("small_fish.jpg", Environment.FISH1, Environment.Touch.FOOD, "small_fish"  + (object_number.get("small_fish") - 1)
+			Object.make_trace_creation("small fish", "small_fish_" + (object_number.get("empty") - 1), position);
+			Fish obj_f = new Fish("small_fish.jpg", Environment.FISH1, Environment.Touch.FOOD, "small_fish"  + (object_number.get("small_fish") - 1)
 					, true, Direction.NORTH, this, position, 1, Fish.on_death.RESPAWN_ELSEWHERE, Action.EAT);
+			obj_f.make_trace();
+			return obj_f;
 
 		case "°":
 			object_number.compute("big_fish", (k,v) -> (v==null) ? 1 : v+1);
-			return new OrientedFish("big_fish" + (object_number.get("big_fish") - 1), true, Direction.NORTH, this, position, 
-					OrientedFish.on_death.RESPAWN_ELSEWHERE, Action.FEAST);
+			Object.make_trace_creation("big_fish", "big_fish_" + (object_number.get("empty") - 1), position);
+			OrientedFish obj = new OrientedFish("big_fish" + (object_number.get("big_fish") - 1), true, Direction.NORTH, this, position, 
+					OrientedFish.on_death.RESPAWN_ELSEWHERE, Action.FEAST); 
+			obj.make_trace();
+			return obj;
 
 		default:
 			throw new IllegalStateException(tile_type);
@@ -323,7 +335,9 @@ public class _2DMap {
 								if (fish instanceof OrientedFish) {
 									if (((OrientedFish) fish).get_attacked(rob.getName(), rob.getDirection())) {break;}
 								} else if (fish instanceof Fish) {
-									if (((Fish) fish).get_attacked(rob.getName())) {break;}
+									if (((Fish) fish).get_attacked(rob.getName())) {
+										break;
+									}
 								}
 							}	
 						}

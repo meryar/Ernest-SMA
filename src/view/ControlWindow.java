@@ -82,7 +82,7 @@ public class ControlWindow extends AbstractView{
 		slaves.add(new SecSignWindow("secondary signatures", prim));
 		slaves.add(prim);
 		slaves.add(new CameraWindow("Camera"));
-		slaves.add(new EnvWindow("Environment", main.env.getMap()));
+		slaves.add(new EnvWindow("Environment", main.env));
 
 		updateFocus(0);
 	}

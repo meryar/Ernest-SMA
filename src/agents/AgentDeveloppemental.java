@@ -1,5 +1,6 @@
 package agents;
 
+import java.awt.Point;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -15,15 +16,18 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import agent_developpemental.FastNeuron;
+import environment.Direction;
+import environment.InterfaceAgentRobot;
 import main.Main;
 import robot.Action;
+import useful.Pair;
 
 public class AgentDeveloppemental extends Agent{
 
 	private class DataStruct{
 		ArrayList<Action> action;
 		float certitude;
-		int utility;
+		float utility;
 		int depth;
 		int interaction;
 		
@@ -45,10 +49,10 @@ public class AgentDeveloppemental extends Agent{
 			interaction = to_copy.interaction;
 		}
 		
-		void update(Action new_action, float certitude_, int utility_, int depth_, int interaction_) {
+		void update(Action new_action, float certitude_, float f, int depth_, int interaction_) {
 			action.add(new_action);
 			certitude = certitude_;
-			utility = utility_;
+			utility = f;
 			depth = depth_;
 			interaction = interaction_;
 		}
@@ -77,7 +81,7 @@ public class AgentDeveloppemental extends Agent{
 	
 	private static final float certitude_treshold = 0.6f;
 	private static final int Thread_nb = 24;
-	private static final int Research_depth = 4;
+	private static final int Research_depth = 3;
 	private static final int history_size = 1000;
 
 	private Map<Action,Integer> utilities;
@@ -85,18 +89,22 @@ public class AgentDeveloppemental extends Agent{
 	private float[] lastPrediction, lastPerception;
 	private int data_size, id, target;
 	private ArrayList<Action> currentPath;
+	private ArrayList<Pair<Pair<Point, Direction> ,ArrayList<Action>>> rejectedPaths;
 	private ArrayList<Turn> history;
 	private Action actionToEnact;
+	private InterfaceAgentRobot interfac;
 	
 	
 
-	public AgentDeveloppemental(int id_, int data_size_) {
+	public AgentDeveloppemental(InterfaceAgentRobot inter, int id_, int data_size_) {
 		data_size = data_size_;
 		id = id_;
 		target = -1;
 		actionToEnact = null;
+		interfac = inter;
 		
 		currentPath = new ArrayList<Action>();
+		rejectedPaths = new ArrayList<Pair<Pair<Point, Direction> ,ArrayList<Action>>>();
 		lastPrediction = new float[data_size];
 
 		utilities = new HashMap<>();
@@ -111,8 +119,8 @@ public class AgentDeveloppemental extends Agent{
 		history = new ArrayList<Turn>(history_size);
 	}
 
-	public AgentDeveloppemental(int id, int data_size_, int nb_interactions) {
-		this(id, data_size_);
+	public AgentDeveloppemental(InterfaceAgentRobot interfac, int id, int data_size_, int nb_interactions) {
+		this(interfac, id, data_size_);
 
 		primaries = new FastNeuron[nb_interactions];
 		secondaries = new FastNeuron[data_size - nb_interactions];
@@ -125,8 +133,8 @@ public class AgentDeveloppemental extends Agent{
 		}
 	}
 
-	public AgentDeveloppemental(int id, int data_size_, int nb_interactions, String filename) {
-		this(id, data_size_);
+	public AgentDeveloppemental(InterfaceAgentRobot interfac, int id, int data_size_, int nb_interactions, String filename) {
+		this(interfac, id, data_size_);
 
 		primaries = new FastNeuron[nb_interactions];
 		secondaries = new  FastNeuron[data_size - nb_interactions];
@@ -207,6 +215,8 @@ public class AgentDeveloppemental extends Agent{
 			} else {
 				choice = Action.values()[min_index - secondaries.length];
 			}
+			currentPath.clear();
+			rejectedPaths.clear();
 		} else {
 		// 3) else check if there is something interesting to explore after each enactable primary
 			// 3.1) get the least certain or most valuable interaction on each possible path
@@ -233,6 +243,16 @@ public class AgentDeveloppemental extends Agent{
 			currentPath.remove(0);
 			curiosity_motivated = chosen.certitude != 1;
 			target = chosen.interaction;
+			
+			rejectedPaths.clear();
+			for (int i=0; i<choice_list.length; i++) {
+				if (choice_list[i] != chosen) {
+					Pair<Pair<Point, Direction>, ArrayList<Action>> path = new Pair<Pair<Point, Direction>, ArrayList<Action>>(
+							new Pair<Point, Direction>(interfac.getRobot().getPosition(), interfac.getRobot().getDirection()), 
+							choice_list[i].action);
+					rejectedPaths.add(path);
+				}
+			}
 		} 
 		
 		
@@ -271,7 +291,7 @@ public class AgentDeveloppemental extends Agent{
 		DataStruct best = null;
 		boolean under_treshold = false;
 		float certainty = 1;
-		int utility = Integer.MIN_VALUE;
+		float utility = Float.NEGATIVE_INFINITY;
 		int depth = Integer.MAX_VALUE;
 		
 		for(DataStruct data: choice_list) {
@@ -349,7 +369,7 @@ public class AgentDeveloppemental extends Agent{
 			} else {
 				act = Action.values()[min_key - secondaries.length];
 			}
-			data.update(act, min, data.utility + utilities.get(act), data.depth+1, min_key);
+			data.update(act, min, data.utility + (utilities.get(act)  * (1 - (float)data.depth/(Research_depth+2))), data.depth+1, min_key);
 			return data;
 		}
 		// 2) else if not at max depth, look further
@@ -359,7 +379,7 @@ public class AgentDeveloppemental extends Agent{
 				float[] next_context = propagate(context, enactables.get(i), predSec);
 				if (!next_context.equals(context)) {
 					DataStruct data1 = new DataStruct(data);
-					data1.update(enactables.get(i), 0, data1.utility + utilities.get(enactables.get(i)), data1.depth + 1, -1);
+					data1.update(enactables.get(i), 0, data1.utility + (utilities.get(enactables.get(i)) * (1 - ((float)data1.depth)/(Research_depth+2))), data1.depth + 1, -1);
 					dataset[i] = getValue(data1, propagate(context, enactables.get(i), predSec)); 
 				}
 			}
@@ -369,7 +389,7 @@ public class AgentDeveloppemental extends Agent{
 			System.out.println("max depth(" + data.depth + ") reached, returning interaction with highest utility");
 			for (int i=0; i<enactables.size(); i++) {
 				DataStruct data1 = new DataStruct(data);
-				data1.update(enactables.get(i), 1, data1.utility + utilities.get(enactables.get(i)), data1.depth + 1, -1);
+				data1.update(enactables.get(i), 1, data1.utility + (utilities.get(enactables.get(i)) * (1 - ((float)data1.depth)/(Research_depth+2))), data1.depth + 1, -1);
 				dataset[i] = data1;
 			}
 		}
@@ -621,6 +641,14 @@ public class AgentDeveloppemental extends Agent{
 		if (!history.isEmpty()) {
 			history.get(history.size()-1).setReward(utilities.get(lastEnacted), lastEnacted);
 		}
+	}
+	
+	public ArrayList<Action> getCurrentPath(){
+		return currentPath;
+	}
+	
+	public ArrayList<Pair<Pair<Point, Direction>, ArrayList<Action>>> getRejectedPaths(){
+		return rejectedPaths;
 	}
 
 }

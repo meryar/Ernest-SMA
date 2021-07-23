@@ -7,6 +7,7 @@ import java.util.Vector;
 import agent_developpemental.FastNeuron;
 import agents.AgentDeveloppemental;
 import environment.Direction;
+import environment.InterfaceAgentRobot;
 import main.Main;
 import robot.Action;
 
@@ -61,7 +62,7 @@ public class Bundle {
 		int nb_sensors = (int) Math.pow(Main.robot_vision_range*2 +1, 2);
 		int input_size = ((Main.colors.length + Direction.values().length - 1) * (nb_sensors) + 1) * Action.values().length;
 		
-		AgentDeveloppemental agent = new AgentDeveloppemental(0, input_size, Action.values().length, file_name);
+		AgentDeveloppemental agent = new AgentDeveloppemental(new InterfaceAgentRobot(), 0, input_size, Action.values().length, file_name);
 		
 		
 		long start = System.currentTimeMillis();

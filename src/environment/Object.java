@@ -4,9 +4,12 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Point;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+
+import main.Main;
 
 public abstract class Object {
 
@@ -78,5 +81,31 @@ public abstract class Object {
 
 	public void makeDisappear() {
 		map.getMap()[position.y][position.x].remove(this);
+	}
+	
+	public static void make_trace_creation(String object_type, String name, Point pos, String direction) {
+		String file_name = Main.env_trace;
+		
+		try {
+			File myObj = new File(file_name);
+			if (myObj.createNewFile()) {
+				System.out.println("File created: " + myObj.getName());
+			} else {
+				System.out.println("adding to trace.");
+			}
+			
+			FileWriter myWriter = new FileWriter(file_name, true);
+			
+			myWriter.write("creation, " + name + ", " + object_type + ", " + pos + ", " + direction + "\n");
+			
+			myWriter.close();
+		} catch (IOException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		}
+	}
+	
+	public static void make_trace_creation(String object_type, String name, Point pos) {
+		make_trace_creation(object_type, name, pos, "NORTH");
 	}
 }

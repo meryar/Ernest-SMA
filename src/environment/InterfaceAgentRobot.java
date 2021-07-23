@@ -15,16 +15,20 @@ public class InterfaceAgentRobot {
 	private Action lastEnacted, lastIntended;
 	private Vector<Boolean> lastSeen;
 
+	public InterfaceAgentRobot() {
+		
+	}
+	
 	public InterfaceAgentRobot(Robot rob) {
 		robot = rob;
 		int input_size = ((Main.colors.length + Direction.values().length - 1) * robot.getSensorNb() + 1) * Action.values().length; 
-		agent = new AgentDeveloppemental(rob.getId(), input_size, Action.values().length);
+		agent = new AgentDeveloppemental(this, rob.getId(), input_size, Action.values().length);
 	}
 
 	public InterfaceAgentRobot(Robot rob, String file_name) {
 		robot = rob;
 		int input_size = ((Main.colors.length + Direction.values().length - 1) * robot.getSensorNb() + 1) * Action.values().length; 
-		agent = new AgentDeveloppemental(rob.getId() ,input_size, Action.values().length, file_name);
+		agent = new AgentDeveloppemental(this, rob.getId() ,input_size, Action.values().length, file_name);
 	}
 
 	public void commandRobot() {
